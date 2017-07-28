@@ -1,0 +1,111 @@
+import spacy
+
+from ..auxiliary import tag_is_verb, tag_is_noun, tag_is_adjective
+
+parser = spacy.load('en_core_web_sm')
+
+
+def simplify_tag(tag):
+    if tag == 'PRP' or tag == 'PRP$':
+        return tag
+    if tag_is_adjective(tag):
+        return 'j'
+    if tag_is_noun(tag):
+        return 'n'
+    if tag_is_verb(tag):
+        return 'v'
+    return tag
+
+
+class SpacyParser:
+    _character_that_defines_unifier_string = ':'
+    _character_that_opens_entity_tag = '-'
+    _character_that_closes_entity_tag = '-'
+
+    def __init__(self, graph_database):
+        self.parser = parser
+        self.db = graph_database
+
+    def execute(self, sentence):
+        names, words, entities = self.__get_names_words_and_entities(sentence)
+        edges, tags, types = self.__get_edges_tags_and_types(names, words, entities)
+        g = self.__create_graph_from_elements(names, words, edges, tags, types, entities)
+        return g
+
+    # Private
+
+    def __get_names_words_and_entities(self, sentence):
+        names = []
+        words = []
+        entities = []
+        tokens = self.parser.tokenizer(sentence)
+        for index, item in enumerate(tokens):
+            entity = ''
+            splitted_word = item.orth_.split(self._character_that_defines_unifier_string)
+            word = splitted_word[0].strip()
+            if word[0] == self._character_that_opens_entity_tag and word[-1] == self._character_that_closes_entity_tag:
+                word = word[1:-1]
+                entity = word
+            words.append(word)
+            entities.append(entity)
+            if len(splitted_word) > 1:
+                names.append(splitted_word[1])
+            else:
+                names.append("v" + str(index))
+        return names, words, entities
+
+    def __get_edges_tags_and_types(self, names, words, entities):
+        sentence = ' '.join(words)
+        parsed = self.parser(sentence, 'utf8')
+        edges = []
+        tags = []
+        types = []
+        i = 0
+        items_dict = dict()
+        for item in parsed:
+            items_dict[item.idx] = i
+            i += 1
+        for item in parsed:
+            index = items_dict[item.idx]
+            for child_index in [items_dict[l.idx] for l in item.children]:
+                edges.append((index, child_index))
+            tags.append(simplify_tag(item.tag_))
+            types.append(item.dep_)
+        return edges, tags, types
+
+    def __create_graph_from_elements(self, names, words, edges, tags, types, entities):
+        db = self.db
+        for edge in edges:
+            lhs_vertex = edge[0]
+            rhs_vertex = edge[1]
+            lhs_name = names[lhs_vertex]
+            rhs_name = names[rhs_vertex]
+            lhs_word = words[lhs_vertex]
+            rhs_word = words[rhs_vertex]
+            lhs_entity = entities[lhs_vertex]
+            rhs_entity = entities[rhs_vertex]
+            lhs_compound = lhs_word
+            rhs_compound = rhs_word
+            lhs_tag = tags[lhs_vertex]
+            rhs_tag = tags[rhs_vertex]
+            edge_type = types[rhs_vertex].upper()
+
+            if lhs_entity == lhs_word:
+                lhs_word = '*'
+                lhs_tag = '*'
+                lhs_compund = '*'
+            if rhs_entity == rhs_word:
+                rhs_word = '*'
+                rhs_tag = '*'
+                rhs_compund = '*'
+
+            lhs_dict = {'word': lhs_word, 'tag': lhs_tag, 'compound': lhs_compound, 'entity': lhs_entity}
+            lhs_string = str(lhs_dict) + '(' + lhs_name + ')'
+            rhs_dict = {'word': rhs_word, 'tag': rhs_tag, 'compound': rhs_compound, 'entity': rhs_entity}
+            rhs_string = str(rhs_dict) + '(' + rhs_name + ')'
+
+            edge_dict = {'type': edge_type}
+            edge_string = str(edge_dict) + '(' + lhs_name + ',' + rhs_name + ')'
+            query_string = 'CREATE ' + lhs_string + ',' + edge_string + ',' + rhs_string
+            db.query(query_string)
+        return db

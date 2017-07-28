@@ -1,0 +1,42 @@
+
+# Deleting the articles
+
+MATCH {'tag': 'DT'}(a), {'name': 'r', 'type':'DET'}(b,a), {}(b)
+  WHERE (in (get a "word") ["a", "an", "the", "A", "An", "The"])
+DELETE a, r;
+
+
+# Deleting the existentials
+
+MATCH {'tag': 'EX'}(a), {'name': 'r'}(b,a), {}(b)
+DELETE a, r;
+
+
+# Deleting WDTs
+
+MATCH {'tag': 'WDT'}(a), {'name': 'r'}(b,a), {}(b)
+DELETE a, r;
+
+
+# Deleting WDTs
+
+MATCH {'tag': 'IN', 'word': 'that'}(a), {'name': 'r'}(b,a), {}(b)
+DELETE a, r;
+
+
+# Deleting the auxiliaries
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'AUX'}(b,a), {}(b)
+DELETE a, r;
+
+MATCH {'tag': 'TO'}(a), {'name': 'r', 'type':'AUX'}(b,a), {}(b)
+DELETE a, r;
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'AUXPASS'}(b,a), {}(b)
+DELETE a, r;
+
+
+# Deleting punctuation
+
+MATCH {'tag': '.'}(a), {'name': 'r'}(b,a), {}(b)
+DELETE a, r;

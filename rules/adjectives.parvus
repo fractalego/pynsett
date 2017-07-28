@@ -1,0 +1,29 @@
+
+# Process adjectives
+
+MATCH {}(a), {'name': 'r', 'type': 'AMOD'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'ADJECTIVE'}(a,b), {}(b);
+
+
+# Process adverbs
+
+MATCH {}(a), {'name': 'r', 'type': 'ADVMOD'}(a,b), {'word': 'not'}(b)
+DELETE r
+CREATE {}(a), {'type': 'NEGATION'}(a,b), {}(b);
+
+MATCH {}(a), {'name': 'r', 'type': 'ADVMOD'}(a,b), {'word': 'n\'t'}(b)
+DELETE r
+CREATE {}(a), {'type': 'NEGATION'}(a,b), {}(b);
+
+MATCH {}(a), {'name': 'r', 'type': 'NEG'}(a,b), {'word': 'not'}(b)
+DELETE r
+CREATE {}(a), {'type': 'NEGATION'}(a,b), {}(b);
+
+MATCH {}(a), {'name': 'r', 'type': 'NEG'}(a,b), {'word': 'n\'t'}(b)
+DELETE r
+CREATE {}(a), {'type': 'NEGATION'}(a,b), {}(b);
+
+MATCH {}(a), {'name': 'r', 'type': 'ADVMOD'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'ADVERB'}(a,b), {}(b);

@@ -1,0 +1,28 @@
+# Restructuring open subordinates
+
+# "Jane is ready to go"
+MATCH {'tag': 'v', 'word': 'be'}(1), {'tag': 'n'}(2), {'tag': 'j'}(3), {'tag': 'v'}(2), {'tag': 'v'}(4),
+      {'type': 'AGENT'}(1,2), {'type': 'ADJECTIVE'}(1,3), {'type': 'OPEN_SUBORDINATE', 'name': '_open'}(3,4)
+DELETE _open
+CREATE  {}(1), {}(2), {}(4), {'type': 'SUBORDINATE'}(1,4), {'type': 'AGENT'}(4,2);
+
+# "Jane goes to work for microsoft"
+MATCH {'tag': 'v'}(1), {'tag': 'n'}(2), {'tag': 'v'}(3),
+      {'type': 'AGENT'}(1,2), {'type': 'OPEN_SUBORDINATE', 'name': '_open'}(1,3)
+DELETE _open
+CREATE  {}(1), {}(2), {}(3), {'type': 'SUBORDINATE'}(1,3), {'type': 'AGENT'}(3,2);
+
+
+# Restructuring advocative clauses
+"I jog if I have the time"
+MATCH {'tag': 'v'}(1), {'tag': 'IN'}(_if), {'tag': 'v'}(3),
+      {'type': 'MARK', 'name': '_mark'}(1,_if), {'type': 'ADVOCATIVE_CLAUSE', 'name': '_adv'}(3,1)
+DELETE _adv, _mark, _if
+CREATE {}(1), {'type': 'CONDITION'}(1,3), {}(3);
+
+"I jog when I have the time"
+MATCH {'tag': 'v'}(1), {'tag': 'RB', 'word': 'when'}(_when), {'tag': 'v'}(3),
+      {'type': 'ADVMOD', 'name': '_advmod'}(1,_when), {'type': 'ADVOCATIVE_CLAUSE', 'name': '_adv'}(3,1)
+DELETE _adv, _advmod, _when
+CREATE {}(1), {'type': 'TIME_AT'}(1,3), {}(3);
+

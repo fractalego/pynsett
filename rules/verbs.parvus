@@ -1,0 +1,84 @@
+
+# Renaming the subject into AGENT
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'NSUBJ'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'AGENT'}(a,b), {}(b);
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'CSUBJ'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'AGENT'}(a,b), {}(b);
+
+
+# Renaming the object into PATIENT
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'DOBJ'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'PATIENT'}(a,b), {}(b);
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'NSUBJPASS'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'PATIENT'}(a,b), {}(b);
+
+
+# Rule for DATIVE
+MATCH {}(a), {'name': 'r', 'type':'IOBJ'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'DATIVE'}(a,b), {}(b);
+
+
+# Renaming the copula
+MATCH {}(a), {'name': 'r', 'type':'ATTR'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'ATTR'}(a,b), {}(b);
+
+MATCH {}(a), {'name': 'r', 'type':'ACOMP'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'ADJECTIVE'}(a,b), {}(b);
+
+
+# Conjunction
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'CONJ'}(a,b), {'tag': 'v'}(b)
+DELETE r
+CREATE {}(a), {'type': 'CONJUNCTION'}(a,b), {}(b);
+
+
+# Rules for subordinates
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'CCOMP'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'SUBORDINATE'}(a,b), {}(b);
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'XCOMP'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'OPEN_SUBORDINATE'}(a,b), {}(b);
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'XCOMP'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'OPEN_SUBORDINATE'}(a,b), {}(b);
+
+MATCH {}(a), {'name': 'r', 'type':'ADVCL'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'ADVOCATIVE_CLAUSE'}(a,b), {}(b);
+
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'ACL'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'OPEN_SUBORDINATE'}(a,b), {}(b);
+
+
+# The preposition node should become an edge
+MATCH {}(a), {'type': 'PREP', 'name': 'r1'}(a,b), {}(b), {'type': 'POBJ', 'name': 'r2'}(b,c), {}(c)
+CREATE {}(a), {'name': 'new_rel'}(a,c), {}(c)
+SET (assoc new_rel "type" (get b "word"))
+DELETE b, r1, r2;
+
+
+# Create a MODAL edge
+MATCH {}(a), {'name': 'r', 'type': 'AUX'}(a,b), {'tag': 'MD'}(b)
+DELETE r
+CREATE {}(a), {'type': 'MODAL'}(a,b), {}(b);
+
+
+# Rules for the passive AGENT
+MATCH {}(a), {'type': 'AGENT', 'name': 'r1'}(a,b), {}(b), {'type': 'POBJ', 'name': 'r2'}(b,c), {}(c)
+DELETE b, r1, r2
+CREATE {}(a), {'type': 'AGENT'}(a,c), {}(c);

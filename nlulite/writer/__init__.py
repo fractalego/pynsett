@@ -1,0 +1,1 @@
+from .relation_triplets_writer import RelationTripletsWriter

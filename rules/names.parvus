@@ -1,0 +1,17 @@
+
+# Conjunction between names
+
+MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'CONJ'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'CONJUNCTION'}(a,b), {}(b);
+
+
+MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'COMPOUND'}(a,b), {'tag': 'n'}(b)
+DELETE r
+CREATE {}(a), {'type': 'of'}(a,b), {}(b)
+SET (assoc a "compound" (+ (get b "word") " " (get a "word")));
+
+
+MATCH {}(a), {'name': 'r', 'NUMMOD':'conj'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'NUMBER'}(a,b), {}(b);

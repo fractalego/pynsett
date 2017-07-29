@@ -1,6 +1,7 @@
 import spacy
 
 from ..auxiliary import tag_is_verb, tag_is_noun, tag_is_adjective
+from ..auxiliary import Collator
 
 parser = spacy.load('en_core_web_sm')
 
@@ -18,41 +19,63 @@ def simplify_tag(tag):
 
 
 class SpacyParser:
-    _character_that_defines_unifier_string = ':'
-    _character_that_opens_entity_tag = '-'
-    _character_that_closes_entity_tag = '-'
+    _character_that_opens_entity_tag = '{'
+    _character_that_closes_entity_tag = '}'
+    _character_that_defines_unifier_string = '#'
+
+    collator = Collator(names_to_collate_forward=[_character_that_opens_entity_tag],
+                        names_to_collate_backward=[_character_that_closes_entity_tag])
 
     def __init__(self, graph_database):
         self.parser = parser
         self.db = graph_database
 
     def execute(self, sentence):
-        names, words, entities = self.__get_names_words_and_entities(sentence)
+        words = self.__get_words(sentence)
+        print(words)
+        words = self.collator.collate(words)
+        names, words = self.__get_names(words)
+        entities, words = self.__get_entities(words)
+
+        print('collated:', words)
         edges, tags, types = self.__get_edges_tags_and_types(names, words, entities)
         g = self.__create_graph_from_elements(names, words, edges, tags, types, entities)
         return g
 
     # Private
 
-    def __get_names_words_and_entities(self, sentence):
-        names = []
+    def __get_words(self, sentence):
         words = []
-        entities = []
         tokens = self.parser.tokenizer(sentence)
-        for index, item in enumerate(tokens):
-            entity = ''
-            splitted_word = item.orth_.split(self._character_that_defines_unifier_string)
-            word = splitted_word[0].strip()
-            if word[0] == self._character_that_opens_entity_tag and word[-1] == self._character_that_closes_entity_tag:
-                word = word[1:-1]
-                entity = word
+        for _, item in enumerate(tokens):
+            word = item.orth_
             words.append(word)
-            entities.append(entity)
+        return words
+
+    def __get_names(self, words):
+        new_words = []
+        names = []
+        for index, item in enumerate(words):
+            splitted_word = item.split(self._character_that_defines_unifier_string)
+            word = splitted_word[0].strip()
+            new_words.append(word)
             if len(splitted_word) > 1:
                 names.append(splitted_word[1])
             else:
                 names.append("v" + str(index))
-        return names, words, entities
+        return names, new_words
+
+    def __get_entities(self, words):
+        new_words = []
+        entities = []
+        for word in words:
+            entity = ''
+            if word[0] == self._character_that_opens_entity_tag and word[-1] == self._character_that_closes_entity_tag:
+                word = word[1:-1]
+                entity = word
+            new_words.append(word)
+            entities.append(entity)
+        return entities, new_words
 
     def __get_edges_tags_and_types(self, names, words, entities):
         sentence = ' '.join(words)
@@ -93,11 +116,11 @@ class SpacyParser:
             if lhs_entity == lhs_word:
                 lhs_word = '*'
                 lhs_tag = '*'
-                lhs_compund = '*'
+                lhs_compound = '*'
             if rhs_entity == rhs_word:
                 rhs_word = '*'
                 rhs_tag = '*'
-                rhs_compund = '*'
+                lhs_compound = '*'
 
             lhs_dict = {'word': lhs_word, 'tag': lhs_tag, 'compound': lhs_compound, 'entity': lhs_entity}
             lhs_string = str(lhs_dict) + '(' + lhs_name + ')'

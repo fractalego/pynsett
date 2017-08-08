@@ -32,12 +32,10 @@ class SpacyParser:
 
     def execute(self, sentence):
         words = self.__get_words(sentence)
-        print(words)
         words = self.collator.collate(words)
         names, words = self.__get_names(words)
         entities, words = self.__get_entities(words)
 
-        print('collated:', words)
         edges, tags, types = self.__get_edges_tags_and_types(names, words, entities)
         g = self.__create_graph_from_elements(names, words, edges, tags, types, entities)
         return g

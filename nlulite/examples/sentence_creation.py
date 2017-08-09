@@ -9,7 +9,7 @@ from nlulite.metric import Metric
 
 _path = os.path.dirname(__file__)
 
-sentence = '{PERSON}#l1 works for {ORG}'
+sentence = 'Jane works for Google'
 drs = Drs.create_from_natural_language(sentence)
 print(drs)
 knowledge = Knowledge(Metric())

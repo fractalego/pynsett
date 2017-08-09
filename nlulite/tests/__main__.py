@@ -72,7 +72,7 @@ class Tests:
         self.__print_test_title('A single clause is applied correcly')
         data_drs = Drs.create_from_natural_language('Jim works at Google')
         rule = """
-        MATCH "-PERSON-:1 works at -ORG-:2"
+        MATCH "{PERSON}#1 works at {ORG}#2"
         CREATE {}(1), {"type": "WORKS_AT"}(1,2), {}(2)
         """
         knowledge = Knowledge(metric)

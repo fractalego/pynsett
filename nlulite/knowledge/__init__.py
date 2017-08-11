@@ -1,3 +1,4 @@
+import re
 import logging
 from nlulite.drt import Drs, DrsRule
 
@@ -15,11 +16,10 @@ def _get_list_of_rules_from_text(text):
 
 
 def _substitute_text_with_graph(text):
-    import re
-    p = re.compile('MATCH.\"(.*)\"')
+    p = re.compile('MATCH.*\"(.*)\"')
     lst = p.findall(text)
     if not lst:
-        p = re.compile('MATCH.\'(.*)\'')
+        p = re.compile('MATCH.*\'(.*)\'')
         lst = p.findall(text)
     for item in lst:
         drs = Drs.create_from_natural_language(item)
@@ -27,33 +27,80 @@ def _substitute_text_with_graph(text):
     return text
 
 
+def _get_substition_rule(line):
+    p = re.compile('DEFINE(.*)AS(.*)')
+    lst = p.findall(line)
+    for item1, item2 in lst:
+        return item1, item2
+
+
+def _create_list_from_string(string):
+    string = string.strip()
+    if not string or len(string) < 2:
+        return []
+    string = string[1:-1]
+    lst = string.split(',')
+    lst = [item.strip() for item in lst]
+    return lst
+
+
+def _looks_like_list(string):
+    string = string.strip()
+    if string[0] == '[' and string[-1] == ']':
+        return True
+    return False
+
+
+def _substitute_list_into_metric(metric, substitution):
+    subst_name = substitution[0].strip()
+    if _looks_like_list(substitution[1]):
+        subst_list = _create_list_from_string(substitution[1])
+        metric.add_substitution(subst_name, subst_list)
+    return metric
+
+
+def _substitute_string_into_rule(rule_str, substitution):
+    subst_from = substitution[0].strip()
+    subst_to = substitution[1].strip()
+    rule_str = rule_str.replace(subst_from, subst_to)
+    return rule_str
+
+
 class Knowledge:
     def __init__(self, metric):
-        self.rules = []
-        self.metric = metric
+        self._rules = []
+        self._metric = metric
+        self._substitution_list = []
 
     def add_drs(self, drs, sentence_number=None):
         pass
 
     def add_rule(self, rule, weight=1.0):
-        self.rules.append((rule, weight))
+        self._rules.append((rule, weight))
 
     def add_rules(self, text):
         rules_lines = _get_list_of_rules_from_text(text)
         for rule_text in rules_lines:
-            rule_text = _substitute_text_with_graph(rule_text)
             if not rule_text.strip():
                 continue
-            self.add_rule(DrsRule(rule_text, self.metric))
+            for s in self._substitution_list:
+                rule_text = _substitute_string_into_rule(rule_text, s)
+            rule_text = _substitute_text_with_graph(rule_text)
+            substitution = _get_substition_rule(rule_text)
+            if substitution:
+                self.metric = _substitute_list_into_metric(self._metric, substitution)
+                if not _looks_like_list(substitution[1]):
+                    self._substitution_list.append(substitution)
+            self.add_rule(DrsRule(rule_text, self._metric))
 
     def ask_drs(self, drs):
         pass
 
     def ask_rule(self, drs):
-        return self.rules
+        return self._rules
 
     def ask_rule_fw(self, drs):
-        return self.rules
+        return self._rules
 
     def ask_rule_bw(self, drs):
-        return self.rules
+        return self._rules

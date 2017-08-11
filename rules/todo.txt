@@ -1,0 +1,2 @@
+1) simple string subst
+2) use spacy NER into nl/

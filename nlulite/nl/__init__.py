@@ -36,7 +36,7 @@ class SpacyParser:
         names, words = self.__get_names(words)
         entities, words = self.__get_entities(words)
 
-        edges, tags, types = self.__get_edges_tags_and_types(names, words, entities)
+        edges, tags, types = self.__get_edges_tags_types_and_entities(names, words, entities)
         g = self.__create_graph_from_elements(names, words, edges, tags, types, entities)
         return g
 
@@ -75,7 +75,7 @@ class SpacyParser:
             entities.append(entity)
         return entities, new_words
 
-    def __get_edges_tags_and_types(self, names, words, entities):
+    def __get_edges_tags_types_and_entities(self, names, words, entities):
         sentence = ' '.join(words)
         parsed = self.parser(sentence, 'utf8')
         edges = []
@@ -92,6 +92,10 @@ class SpacyParser:
                 edges.append((index, child_index))
             tags.append(simplify_tag(item.tag_))
             types.append(item.dep_)
+        for i, entity in enumerate(entities):
+            token = parsed[i]
+            if not entity:
+                entities[i] = token.ent_type_
         return edges, tags, types
 
     def __create_graph_from_elements(self, names, words, edges, tags, types, entities):

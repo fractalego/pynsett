@@ -1,118 +1,125 @@
 # Rules for WORKS_AT
 
-MATCH "{PERSON}#1 works at {ORG}#2"
+DEFINE PERSON AS {PERSON};
+DEFINE ORG AS {ORG};
+DEFINE GPE AS {ORG};
+
+DEFINE ROLE AS [engineer, doctor, researcher];
+
+
+MATCH "PERSON#1 works at ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'WORKS_AT'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 works for {ORG}#2"
+MATCH "PERSON#1 works for ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'WORKS_AT'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 is employed by {ORG}#2"
+MATCH "PERSON#1 is employed by ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'WORKS_AT'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 is hired by {ORG}#2"
+MATCH "PERSON#1 is hired by ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'WORKS_AT'}(1,2), {}(2);
 
 
 # Rules for HAS_ROLE
 
-MATCH "{PERSON}#1 works as a {ROLE}#2"
+MATCH "PERSON#1 works as a ROLE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 is a {ROLE}#2"
+MATCH "PERSON#1 is a ROLE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);
 
 
 # Rules for HAS_SIZE
 
-MATCH "{ORG}#1 has 3 {PERSON}#2"
+MATCH "ORG#1 has 3 PERSON#2"
 CREATE {}(1), {'type': 'relation', 'text': 'HAS_SIZE'}(1,2), {}(2);
 
 
 # Rules for INVEST_IN
 
-MATCH "{ORG}#1 invests in {ORG}#2"
+MATCH "ORG#1 invests in ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'INVESTS_IN'}(1,2), {}(2);
 
-MATCH "{ORG}#1 pays {ORG}#2"
+MATCH "ORG#1 pays ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'INVESTS_IN'}(1,2), {}(2);
 
-MATCH "{ORG}#1 founds {ORG}#2"
+MATCH "ORG#1 founds ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'INVESTS_IN'}(1,2), {}(2);
 
 
 # Rules for IS_LOCATED_IN
 
-MATCH "{PERSON}#1 works at {GPE}#2"
+MATCH "PERSON#1 works at GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
-MATCH "{ORG}#1 is in {GPE}#2"
+MATCH "ORG#1 is in GPE#2"
+CREATE {}(1), 'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
+
+MATCH "ORG#1 is located in GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
-MATCH "{ORG}#1 is located in {GPE}#2"
-CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
+MATCH "ORG#1 is found in GPE#2"
+CREATE {}(1), 'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
-MATCH "{ORG}#1 is found in {GPE}#2"
-CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
-
-MATCH "{ORG}#1 has activity in {GPE}#2"
+MATCH "ORG#1 has activity in GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
 
 # Rules for MAKES
 
-MATCH "{PERSON}#1 invests in {ORG}#2"
+MATCH "PERSON#1 invests in ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'MAKES'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 gives to {ORG}#2"
-CREATE {}(1), {'type': 'relation', 'text': 'MAKES'}(1,2), {}(2);
+MATCH "PERSON#1 gives to ORG#2"
+CREATE {}(1), 'type': 'relation', 'text': 'MAKES'}(1,2), {}(2);
 
 
 # Rules for OBTAINED_FROM
 
-MATCH "degree#1 from {ORG}#2"
+MATCH "degree#1 from ORG#2"
   WHERE (in (get 1 "word") [PhD,BSc,MEng,MSc,master,degree])
 CREATE {}(1), {'type': 'relation', 'text': 'OBTAINED_FROM'}(1,2), {}(2);
 
-MATCH "degree#1 from {GPE}#2"
+MATCH "degree#1 from GPE#2"
   WHERE (in (get 1 "word") [PhD,BSc,MEng,MSc,master,degree])
 CREATE {}(1), {'type': 'relation', 'text': 'OBTAINED_FROM'}(1,2), {}(2);
 
 
 # Rules for OPERATES_IN
 
-MATCH "{PERSON}#1 operates in {GPE}#2"
+MATCH "PERSON#1 operates in GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'OPERATES_IN'}(1,2), {}(2);
 
 
 # Rules for OWN
 
-MATCH "{PERSON}#1 has {ARTIFACT}#2"
+MATCH "PERSON#1 has ARTIFACT#2"
 CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 owns {ARTIFACT}#2"
-CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
+MATCH "PERSON#1 owns ARTIFACT#2"
+CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), (2);
 
-MATCH "{PERSON}#1 buys {ARTIFACT}#2"
-CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
+MATCH "PERSON#1 buys ARTIFACT#2"
+CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), (2);
 
 
 # Rules for POSSESSES
 
-MATCH "{PERSON}#1 is able to {ACT}#2"
+MATCH "PERSON#1 is able to ACT#2"
 CREATE {}(1), {'type': 'relation', 'text': 'POSSESSES'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 can {ACT}#2"
+MATCH "PERSON#1 can ACT#2"
 CREATE {}(1), {'type': 'relation', 'text': 'POSSESSES'}(1,2), {}(2);
 
 
 # Rules for STUDIES_AT
 
-MATCH "{PERSON}#1 studied at {ORG}#2"
+MATCH "PERSON#1 studied at ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 was at the university of {GPE}#2"
+MATCH "PERSON#1 was at the university of GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
 
-MATCH "{PERSON}#1 received a degree:3 from the university of {GPE}#2"
+MATCH "PERSON#1 received a degree:3 from the university of GPE#2"
   WHERE (in (get 3 "word") [PhD,BSc,MEng,MSc,master,degree])
 CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);

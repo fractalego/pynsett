@@ -14,7 +14,7 @@ class VectorNodeMatcher(StringNodeMatcher):
 
     def _match(self, key, lhs, rhs):
         if key == 'entity':
-            return True
+            return self.metric.similarity(lhs, rhs) < self.threshold
 
         if key == 'compound':
             return True
@@ -26,7 +26,6 @@ class VectorNodeMatcher(StringNodeMatcher):
         if key == 'word':
             if lhs == '*' or rhs == '*':
                 return True
-            is_match = self.metric.similarity(lhs, rhs) < self.threshold
-            return is_match
+            return self.metric.similarity(lhs, rhs) < self.threshold
 
         return StringNodeMatcher._match(self, key, lhs, rhs)

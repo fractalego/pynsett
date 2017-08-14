@@ -2,7 +2,7 @@
 
 DEFINE PERSON AS {PERSON};
 DEFINE ORG AS {ORG};
-DEFINE GPE AS {ORG};
+DEFINE GPE AS {GPE};
 
 DEFINE ROLE AS [engineer, doctor, researcher];
 
@@ -53,13 +53,13 @@ MATCH "PERSON#1 works at GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
 MATCH "ORG#1 is in GPE#2"
-CREATE {}(1), 'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
+CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
 MATCH "ORG#1 is located in GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
 MATCH "ORG#1 is found in GPE#2"
-CREATE {}(1), 'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
+CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
 MATCH "ORG#1 has activity in GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
@@ -71,7 +71,7 @@ MATCH "PERSON#1 invests in ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'MAKES'}(1,2), {}(2);
 
 MATCH "PERSON#1 gives to ORG#2"
-CREATE {}(1), 'type': 'relation', 'text': 'MAKES'}(1,2), {}(2);
+CREATE {}(1), {'type': 'relation', 'text': 'MAKES'}(1,2), {}(2);
 
 
 # Rules for OBTAINED_FROM
@@ -97,10 +97,10 @@ MATCH "PERSON#1 has ARTIFACT#2"
 CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
 MATCH "PERSON#1 owns ARTIFACT#2"
-CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), (2);
+CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
 MATCH "PERSON#1 buys ARTIFACT#2"
-CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), (2);
+CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
 
 # Rules for POSSESSES
@@ -120,6 +120,6 @@ CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
 MATCH "PERSON#1 was at the university of GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
 
-MATCH "PERSON#1 received a degree:3 from the university of GPE#2"
+MATCH "PERSON#1 received a degree#3 from the university of GPE#2"
   WHERE (in (get 3 "word") [PhD,BSc,MEng,MSc,master,degree])
 CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);

@@ -9,6 +9,10 @@ class DrsRule:
         self.text += " RETURN __RESULT__;"
         self.metric = metric
 
+    def test(self):
+        g = Graph(directed=True)
+        self.apply(g)
+
     def apply(self, g):
         if not isinstance(g, Graph):
             raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")

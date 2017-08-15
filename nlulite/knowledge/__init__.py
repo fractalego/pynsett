@@ -1,4 +1,5 @@
 import re
+import sys
 import logging
 from nlulite.drt import Drs, DrsRule
 
@@ -79,8 +80,12 @@ class Knowledge:
         self._rules.append((rule, weight))
 
     def add_rules(self, text):
+        from ..auxiliary import LineFinder
+        line_finder = LineFinder(text)
+
         rules_lines = _get_list_of_rules_from_text(text)
         for rule_text in rules_lines:
+            original_rule_text = rule_text
             if not rule_text.strip():
                 continue
             for s in self._substitution_list:
@@ -91,7 +96,16 @@ class Knowledge:
                 self.metric = _substitute_list_into_metric(self._metric, substitution)
                 if not _looks_like_list(substitution[1]):
                     self._substitution_list.append(substitution)
-            self.add_rule(DrsRule(rule_text, self._metric))
+            try:
+                rule = DrsRule(rule_text, self._metric)
+                rule.test()
+                self.add_rule(rule)
+            except SyntaxError:
+                sys.stderr.write('Error in line ' + str(line_finder.get_line_number(original_rule_text)) + ':\n')
+                sys.stderr.write(original_rule_text + '\n')
+                sys.stderr.flush()
+            finally:
+                pass
 
     def ask_drs(self, drs):
         pass

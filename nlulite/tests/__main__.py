@@ -62,15 +62,15 @@ class Tests:
 
     def sub_isomorphism(self):
         self.__print_test_title('A subgraph is sub-isomorphic to the larger graph')
-        large_drs = Drs.create_from_natural_language('The ideas:1 of Jim:2 are silly')
-        small_drs = Drs.create_from_natural_language('ideas:3 of Jim:4')
+        large_drs = Drs.create_from_natural_language('The ideas#1 of Jim#2 are silly')
+        small_drs = Drs.create_from_natural_language('ideas#3 of Jim#4')
         lst = large_drs.visit(DrsMatcher(small_drs, metric))
         is_match = len(lst) > 0
         return is_match
 
     def single_clause_test(self):
         self.__print_test_title('A single clause is applied correcly')
-        data_drs = Drs.create_from_natural_language('Jim works at Google')
+        data_drs = Drs.create_from_natural_language('Jim works at Microsoft')
         rule = """
         MATCH "{PERSON}#1 works at {ORG}#2"
         CREATE {}(1), {"type": "WORKS_AT"}(1,2), {}(2)
@@ -87,7 +87,7 @@ class Tests:
     def test_relation_rules(self):
         self.__print_test_title('The relation rules are applied correctly')
 
-        data_drs = Drs.create_from_natural_language('Jim works at Google')
+        data_drs = Drs.create_from_natural_language('Jim works at Microsoft')
         knowledge = Knowledge(metric)
         knowledge.add_rules(open(os.path.join(_path, '../../rules/recruitment_relations.rules')).read())
         inference = ForwardInference(data_drs, knowledge)
@@ -110,6 +110,14 @@ class Tests:
         self.__print_test_title('The conditional is handled correctly')
         data_drs = Drs.create_from_natural_language('If I breathe I am alive')
         expected_drs = Drs.create_from_predicates_string('{}(a), {"type": "CONDITION"}(a,b), {}(b)')
+        lst = data_drs.visit(DrsMatcher(expected_drs, metric))
+        is_match = len(lst) > 0
+        return is_match
+
+    def test_entity_parsing(self):
+        self.__print_test_title('The entities are matched correctly')
+        data_drs = Drs.create_from_natural_language('{PERSON} is in {GPE}')
+        expected_drs = Drs.create_from_natural_language('John is in London')
         lst = data_drs.visit(DrsMatcher(expected_drs, metric))
         is_match = len(lst) > 0
         return is_match

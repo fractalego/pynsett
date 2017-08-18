@@ -5,6 +5,7 @@ from nlulite.knowledge import Knowledge
 from nlulite.inference import ForwardInference
 from nlulite.writer import RelationTripletsWriter
 from nlulite.metric import Metric
+from nlulite.discourse import Discourse
 
 
 _path = os.path.dirname(__file__)
@@ -34,7 +35,6 @@ def map_sentence_using_fuzzy_static_models_semantics(knowledge, large_drs):
 
 if __name__ == "__main__":
     import time
-    from nltk.tokenize import sent_tokenize
 
     print('Starting the Knowledge.')
     knowledge = Knowledge(Metric())
@@ -44,20 +44,16 @@ if __name__ == "__main__":
 
     # text = open('data/angel_text.txt').read()
     text = open(os.path.join(_path, '../../data/profile.txt')).read()
-    sentences_list = sent_tokenize(text)
+    discourse = Discourse(text)
     triplets = []
     start = time.time()
-    for sentence_index, sentence in enumerate(sentences_list):
-        sentence = sentence.replace('\n', '')
-        try:
-            drs = Drs.create_from_natural_language(sentence)
-            sentence_triplets = map_sentence_using_best_match(
-                knowledge, drs)
-            if sentence_triplets:
-                triplets += sentence_triplets
-        except:
-            pass
+    for _, drs in discourse:
+        sentence_triplets = map_sentence_using_best_match(
+            knowledge, drs)
+        if sentence_triplets:
+            triplets += sentence_triplets
+
     end = time.time()
-    print('total_time', (end - start), 'for', len(sentences_list), 'sentences')
+    print('total_time', (end - start), 'for', len(discourse), 'sentences')
     for triplet in triplets:
         print(triplet)

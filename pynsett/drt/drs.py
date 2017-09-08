@@ -1,7 +1,7 @@
 import os
 
 from igraph import Graph, plot
-from nlulite.nl import SpacyParser as Parser
+from pynsett.nl import SpacyParser as Parser
 from parvusdb import GraphDatabase, create_graph_from_string, convert_graph_to_string
 
 _path = os.path.dirname(__file__)

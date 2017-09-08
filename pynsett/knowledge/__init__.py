@@ -1,7 +1,7 @@
 import re
 import sys
 import logging
-from nlulite.drt import Drs, DrsRule
+from pynsett.drt import Drs, DrsRule
 
 logging.basicConfig()
 

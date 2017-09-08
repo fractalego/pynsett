@@ -1,10 +1,10 @@
 import os
 
-from nlulite.drt import Drs
-from nlulite.knowledge import Knowledge
-from nlulite.inference import ForwardInference
-from nlulite.writer import RelationTripletsWriter
-from nlulite.metric import Metric
+from pynsett.drt import Drs
+from pynsett.knowledge import Knowledge
+from pynsett.inference import ForwardInference
+from pynsett.writer import RelationTripletsWriter
+from pynsett.metric import Metric
 
 
 _path = os.path.dirname(__file__)

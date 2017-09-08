@@ -1,10 +1,10 @@
 import os
 
-from nlulite.drt import Drs
-from nlulite.knowledge import Knowledge
-from nlulite.inference import ForwardInference
-from nlulite.metric import Metric
-from nlulite.drt.drs_matcher import DrsMatcher
+from pynsett.drt import Drs
+from pynsett.knowledge import Knowledge
+from pynsett.inference import ForwardInference
+from pynsett.metric import Metric
+from pynsett.drt.drs_matcher import DrsMatcher
 
 
 class bcolors:

@@ -1,5 +1,6 @@
 from igraph import Graph
 from parvusdb import GraphDatabase
+from parvusdb.utils.code_container import DummyCodeContainerFactory
 from .node_matcher import VectorNodeMatcher
 
 
@@ -16,8 +17,10 @@ class DrsRule:
     def apply(self, g):
         if not isinstance(g, Graph):
             raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
-        db = GraphDatabase(g, node_matcher=VectorNodeMatcher(self.metric))
-        lst = db.query(str(self.text))
+        db = GraphDatabase(g,
+                           node_matcher=VectorNodeMatcher(self.metric),
+                           code_container_factory=DummyCodeContainerFactory())
+        lst = db.query(str(self.text), repeat_n_times=1)
         if lst and lst[0]['__RESULT__']:
             return True
         return False

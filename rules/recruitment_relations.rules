@@ -5,6 +5,7 @@ DEFINE ORG AS {ORG};
 DEFINE GPE AS {GPE};
 
 DEFINE ROLE AS [engineer, doctor, researcher];
+DEFINE ARTIFACT AS [artifact, guitar, cycle, bicycle, car, watch];
 
 
 MATCH "PERSON#1 works at ORG#2"

@@ -1,1 +1,2 @@
-Jane works at Google. Jane is an engineer.
+Jane works at Google. Jane is an engineer. Jane studied at the Columbia University. Jane invested in Microsoft in 2015.
+Jim works at Armani LTD. Jim is a designer. Jim studied at the Milan University. Jim has a bicycle.

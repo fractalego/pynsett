@@ -262,8 +262,3 @@ if __name__ == '__main__':
     g_str = db.query("""CREATE {'word': 'alberto', 'tag':'NNP'}(a), {'word': 'WRITES'}(a,b), {'word': 'documentation', 'tag':'NN'}(b) RETURN a
     """)
     print(g_str)
-
-    #db.query("""MATCH {'word': 'alberto', 'tag':'NNP'}(a), {'word': 'writes', 'tag'='VBZ'}(a,b), {'word': 'documentation', 'tag':'NN'}(b)
-	#    CREATE {'word': 'alberto', 'tag':'NNP'}(a), {'word': 'WRITES'}(a,b), {'word': 'documentation', 'tag':'NN'}(b)
-	#    REMOVE {'word': 'writes', 'tag':'VBZ'}(a,b);
-	# """)

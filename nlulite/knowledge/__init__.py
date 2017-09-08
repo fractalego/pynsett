@@ -96,6 +96,7 @@ class Knowledge:
                 self.metric = _substitute_list_into_metric(self._metric, substitution)
                 if not _looks_like_list(substitution[1]):
                     self._substitution_list.append(substitution)
+                continue
             try:
                 rule = DrsRule(rule_text, self._metric)
                 rule.test()

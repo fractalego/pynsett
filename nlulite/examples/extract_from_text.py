@@ -7,7 +7,6 @@ from nlulite.writer import RelationTripletsWriter
 from nlulite.metric import Metric
 from nlulite.discourse import Discourse
 
-
 _path = os.path.dirname(__file__)
 
 
@@ -30,7 +29,6 @@ def map_sentence_using_fuzzy_static_models_semantics(knowledge, large_drs):
     for item in result:
         triplets += item[0].visit(writer)
     return triplets
-
 
 
 if __name__ == "__main__":

@@ -1,7 +1,9 @@
 import re
 import sys
 import logging
+
 from pynsett.drt import Drs, DrsRule
+from pynsett.metric import Metric
 
 logging.basicConfig()
 
@@ -68,7 +70,7 @@ def _substitute_string_into_rule(rule_str, substitution):
 
 
 class Knowledge:
-    def __init__(self, metric):
+    def __init__(self, metric=Metric()):
         self._rules = []
         self._metric = metric
         self._substitution_list = []

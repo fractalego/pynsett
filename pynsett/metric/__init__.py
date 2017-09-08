@@ -4,17 +4,16 @@ import numpy as np
 
 from gensim.models import KeyedVectors
 
-_path = os.path.dirname(__file__)
-
-_filename = '../../data/glove.6B.50d.txt'
-_model = KeyedVectors.load_word2vec_format(os.path.join(_path, _filename))
-
 
 class Metric:
     _substitution_dict = {}
+    _path = os.path.dirname(__file__)
+
+    _filename = '../../data/glove.6B.50d.txt'
+    _model = KeyedVectors.load_word2vec_format(os.path.join(_path, _filename))
 
     def similarity(self, lhs, rhs):
-        if not lhs in self._substitution_dict:
+        if lhs not in self._substitution_dict:
             return np.linalg.norm(self.__get_vector(lhs) - self.__get_vector(rhs))
         lst = self._substitution_dict[lhs]
         distance_lst = [np.linalg.norm(self.__get_vector(item) - self.__get_vector(rhs)) for item in lst]
@@ -27,6 +26,6 @@ class Metric:
 
     def __get_vector(self, word):
         try:
-            return _model[word]
+            return self._model[word]
         except:
-            return _model['entity']
+            return self._model['entity']

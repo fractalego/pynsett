@@ -3,7 +3,8 @@ import spacy
 from ..auxiliary import tag_is_verb, tag_is_noun, tag_is_adjective
 from ..auxiliary import Collator
 
-parser = spacy.load('en_core_web_sm')
+#parser = spacy.en.English()
+parser = spacy.load('en')
 
 
 def simplify_tag(tag):
@@ -36,8 +37,8 @@ class SpacyParser:
         names, words = self.__get_names(words)
         entities, words = self.__get_entities(words)
 
-        edges, tags, types = self.__get_edges_tags_types_and_entities(names, words, entities)
-        g = self.__create_graph_from_elements(names, words, edges, tags, types, entities)
+        edges, tags, types, lemmas = self.__get_edges_tags_types_and_entities(names, words, entities)
+        g = self.__create_graph_from_elements(names, words, edges, tags, types, lemmas, entities)
         return g
 
     # Private
@@ -81,6 +82,7 @@ class SpacyParser:
         edges = []
         tags = []
         types = []
+        lemmas = []
         i = 0
         items_dict = dict()
         for item in parsed:
@@ -92,13 +94,14 @@ class SpacyParser:
                 edges.append((index, child_index))
             tags.append(simplify_tag(item.tag_))
             types.append(item.dep_)
+            lemmas.append(item.lemma_)
         for i, entity in enumerate(entities):
             token = parsed[i]
             if not entity:
                 entities[i] = token.ent_type_
-        return edges, tags, types
+        return edges, tags, types, lemmas
 
-    def __create_graph_from_elements(self, names, words, edges, tags, types, entities):
+    def __create_graph_from_elements(self, names, words, edges, tags, types, lemmas, entities):
         db = self.db
         for edge in edges:
             lhs_vertex = edge[0]
@@ -107,6 +110,8 @@ class SpacyParser:
             rhs_name = names[rhs_vertex]
             lhs_word = words[lhs_vertex]
             rhs_word = words[rhs_vertex]
+            lhs_lemma = lemmas[lhs_vertex]
+            rhs_lemma = lemmas[rhs_vertex]
             lhs_entity = entities[lhs_vertex]
             rhs_entity = entities[rhs_vertex]
             lhs_compound = lhs_word
@@ -119,14 +124,24 @@ class SpacyParser:
                 lhs_word = '*'
                 lhs_tag = '*'
                 lhs_compound = '*'
+                lhs_lemma = '*'
             if rhs_entity == rhs_word:
                 rhs_word = '*'
                 rhs_tag = '*'
-                lhs_compound = '*'
+                rhs_compound = '*'
+                rhs_lemma = '*'
 
-            lhs_dict = {'word': lhs_word, 'tag': lhs_tag, 'compound': lhs_compound, 'entity': lhs_entity}
+            lhs_dict = {'word': lhs_word,
+                        'tag': lhs_tag,
+                        'compound': lhs_compound,
+                        'entity': lhs_entity,
+                        'lemma': lhs_lemma}
             lhs_string = str(lhs_dict) + '(' + lhs_name + ')'
-            rhs_dict = {'word': rhs_word, 'tag': rhs_tag, 'compound': rhs_compound, 'entity': rhs_entity}
+            rhs_dict = {'word': rhs_word,
+                        'tag': rhs_tag,
+                        'compound': rhs_compound,
+                        'entity': rhs_entity,
+                        'lemma': rhs_lemma}
             rhs_string = str(rhs_dict) + '(' + rhs_name + ')'
 
             edge_dict = {'type': edge_type}

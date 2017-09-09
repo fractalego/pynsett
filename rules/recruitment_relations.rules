@@ -4,9 +4,9 @@ DEFINE PERSON AS {PERSON};
 DEFINE ORG AS {ORG};
 DEFINE GPE AS {GPE};
 
-DEFINE ROLE AS [engineer, doctor, researcher];
 DEFINE ARTIFACT AS [artifact, guitar, cycle, bicycle, car, watch];
-
+DEFINE ROLE AS [engineer, doctor, researcher];
+DEFINE UNIVERSITY as [university, academy, polytechnic];
 
 MATCH "PERSON#1 works at ORG#2"
 CREATE {}(1), {'type': 'relation', 'text': 'WORKS_AT'}(1,2), {}(2);
@@ -116,6 +116,9 @@ CREATE {}(1), {'type': 'relation', 'text': 'POSSESSES'}(1,2), {}(2);
 # Rules for STUDIES_AT
 
 MATCH "PERSON#1 studied at ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
+
+MATCH "PERSON#1 studied at UNIVERSITY#2"
 CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
 
 MATCH "PERSON#1 was at the university of GPE#2"

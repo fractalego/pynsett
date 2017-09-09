@@ -1,0 +1,3 @@
+include *.txt *.md
+include data/profile.txt
+include rules/*

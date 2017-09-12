@@ -89,7 +89,7 @@ class Tests:
 
         data_drs = Drs.create_from_natural_language('Jim works at Microsoft')
         knowledge = Knowledge(metric)
-        knowledge.add_rules(open(os.path.join(_path, '../../rules/recruitment_relations.rules')).read())
+        knowledge.add_rules(open(os.path.join(_path, '../rules/recruitment_relations.rules')).read())
         inference = ForwardInference(data_drs, knowledge)
         end_drs, _ = inference.compute()
         expected_drs = Drs.create_from_predicates_string('{}(1), {"text": "WORKS_AT"}(1,2), {}(2)')

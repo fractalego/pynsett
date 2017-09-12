@@ -8,7 +8,7 @@ class Metric:
     _substitution_dict = {}
     _path = os.path.dirname(__file__)
 
-    _filename = '../../data/glove.6B.50d.txt'
+    _filename = '../data/glove.6B.50d.txt'
     _model = KeyedVectors.load_word2vec_format(os.path.join(_path, _filename))
 
     def similarity(self, lhs, rhs):

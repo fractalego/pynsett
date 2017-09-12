@@ -10,9 +10,9 @@ if __name__ == "__main__":
     import time
 
     knowledge = Knowledge()
-    knowledge.add_rules(open(os.path.join(_path, '../../rules/recruitment_relations.rules')).read())
+    knowledge.add_rules(open(os.path.join(_path, '../rules/recruitment_relations.rules')).read())
 
-    text = open(os.path.join(_path, '../../data/profile.txt')).read()
+    text = open(os.path.join(_path, '../data/profile.txt')).read()
     discourse = Discourse(text)
 
     extractor = Extractor(discourse, knowledge)

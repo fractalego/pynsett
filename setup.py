@@ -1,7 +1,5 @@
 from setuptools import setup
 
-from pynsett.install import CustomInstaller
-
 setup(name='pynsett',
       version='0.0.1',
       description='A relation extractor',
@@ -34,7 +32,5 @@ setup(name='pynsett',
           'parvusdb==0.0.12',
           'hy',
       ],
-      cmdclass={
-          'install': CustomInstaller,
-      },
+      include_package_data=True,
       zip_safe=False)

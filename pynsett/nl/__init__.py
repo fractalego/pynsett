@@ -76,6 +76,11 @@ class SpacyParser:
             entities.append(entity)
         return entities, new_words
 
+    def __get_lemma_with_correct_capital_letters(self, lemma, word):
+        if lemma.lower() == word.lower():
+            return word
+        return lemma
+
     def __get_edges_tags_types_and_entities(self, names, words, entities):
         sentence = ' '.join(words)
         parsed = self.parser(sentence, 'utf8')
@@ -94,7 +99,7 @@ class SpacyParser:
                 edges.append((index, child_index))
             tags.append(simplify_tag(item.tag_))
             types.append(item.dep_)
-            lemmas.append(item.lemma_)
+            lemmas.append(self.__get_lemma_with_correct_capital_letters(item.lemma_, item.orth_))
         for i, entity in enumerate(entities):
             token = parsed[i]
             if not entity:

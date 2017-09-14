@@ -7,7 +7,7 @@ class VectorNodeMatcher(StringNodeMatcher):
     The word within each node is compared according to vector distance.
     """
 
-    _threshold = 5
+    _threshold = 1
 
     def __init__(self, metric):
         self._metric = metric

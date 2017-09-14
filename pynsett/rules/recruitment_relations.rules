@@ -94,13 +94,13 @@ CREATE {}(1), {'type': 'relation', 'text': 'OPERATES_IN'}(1,2), {}(2);
 
 # Rules for OWN
 
-MATCH "PERSON#1 has ARTIFACT#2"
+MATCH "PERSON#1 has an ARTIFACT#2"
 CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
-MATCH "PERSON#1 owns ARTIFACT#2"
+MATCH "PERSON#1 owns an ARTIFACT#2"
 CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
-MATCH "PERSON#1 buys ARTIFACT#2"
+MATCH "PERSON#1 buys an ARTIFACT#2"
 CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
 

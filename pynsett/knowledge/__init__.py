@@ -3,6 +3,7 @@ import sys
 import logging
 
 from pynsett.drt import Drs, DrsRule
+from pynsett.knowledge.drs_ner_cleaner import DrsNERCleaner
 from pynsett.metric import Metric
 
 logging.basicConfig()
@@ -18,7 +19,8 @@ def _get_list_of_rules_from_text(text):
     return lines
 
 
-def _substitute_text_with_graph(text):
+def _substitute_text_with_graph(text, substitution_triggers):
+    drs_cleaner = DrsNERCleaner(substitution_triggers)
     p = re.compile('MATCH.*\"(.*)\"')
     lst = p.findall(text)
     if not lst:
@@ -26,6 +28,7 @@ def _substitute_text_with_graph(text):
         lst = p.findall(text)
     for item in lst:
         drs = Drs.create_from_natural_language(item)
+        drs = drs.visit(drs_cleaner)
         text = text.replace('"' + item + '"', str(drs))
     return text
 
@@ -84,7 +87,7 @@ class Knowledge:
     def add_rules(self, text):
         from ..auxiliary import LineFinder
         line_finder = LineFinder(text)
-
+        substitution_triggers = []
         rules_lines = _get_list_of_rules_from_text(text)
         for rule_text in rules_lines:
             original_rule_text = rule_text
@@ -92,10 +95,11 @@ class Knowledge:
                 continue
             for s in self._substitution_list:
                 rule_text = _substitute_string_into_rule(rule_text, s)
-            rule_text = _substitute_text_with_graph(rule_text)
+            rule_text = _substitute_text_with_graph(rule_text, substitution_triggers)
             substitution = _get_substition_rule(rule_text)
             if substitution:
                 self.metric = _substitute_list_into_metric(self._metric, substitution)
+                substitution_triggers.append(substitution[0].strip())
                 if not _looks_like_list(substitution[1]):
                     self._substitution_list.append(substitution)
                 continue

@@ -42,11 +42,11 @@ def _create_graph_from_natural_language(sentence):
     db = parser.execute(sentence)
 
     n = 5
-    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../../rules/verbs.parvus')).read(), n)
-    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../../rules/names.parvus')).read(), n)
-    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../../rules/adjectives.parvus')).read(), n)
-    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../../rules/delete.parvus')).read(), n)
-    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../../rules/subordinates.parvus')).read(), n)
+    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/verbs.parvus')).read(), n)
+    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/names.parvus')).read(), n)
+    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/adjectives.parvus')).read(), n)
+    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/delete.parvus')).read(), n)
+    db = _repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/subordinates.parvus')).read(), n)
     return db.get_graph()
 
 

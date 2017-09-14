@@ -8,6 +8,10 @@ MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'CSUBJ'}(a,b), {}(b)
 DELETE r
 CREATE {}(a), {'type': 'AGENT'}(a,b), {}(b);
 
+MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'ACL'}(b,a), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'AGENT'}(a,b), {}(b);
+
 
 # Renaming the object into PATIENT
 MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'DOBJ'}(a,b), {}(b)

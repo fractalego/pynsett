@@ -11,7 +11,12 @@ DELETE r
 CREATE {}(a), {'type': 'of'}(a,b), {}(b)
 SET (assoc a "compound" (+ (get b "word") " " (get a "word")));
 
-
-MATCH {}(a), {'name': 'r', 'NUMMOD':'conj'}(a,b), {}(b)
+MATCH {}(a), {'name': 'r', 'type':'NUMMOD'}(a,b), {}(b)
 DELETE r
 CREATE {}(a), {'type': 'NUMBER'}(a,b), {}(b);
+
+
+# The english possessive is rewritten as an edge with type 'OWNS'
+MATCH {}(a), {'name': 'r1', 'type':'POSS'}(a,b), {}(b), {'name': 'r2', 'type':'CASE'}(b,c), {'tag':'POS'}(c)
+DELETE r, r2, c
+CREATE {}(b), {'type': 'OWNS'}(b,a), {}(a);

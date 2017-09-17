@@ -5,6 +5,7 @@ from pynsett.knowledge import Knowledge
 from pynsett.inference import ForwardInference
 from pynsett.metric import Metric
 from pynsett.drt.drs_matcher import DrsMatcher
+from pynsett.writer import RelationTripletsWriter
 
 
 class bcolors:
@@ -121,6 +122,20 @@ class Tests:
         lst = data_drs.visit(DrsMatcher(expected_drs, metric))
         is_match = len(lst) > 0
         return is_match
+
+    def test_OWN_rule(self):
+        self.__print_test_title('The English possesive is parsed correctly')
+
+        sentence = 'Jane\'s dog is red'
+        drs = Drs.create_from_natural_language(sentence)
+        knowledge = Knowledge()
+        knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
+        fi = ForwardInference(drs, knowledge)
+        drs_and_weight = fi.compute()
+        writer = RelationTripletsWriter()
+        lst = drs_and_weight[0].visit(writer)
+        expected_list = [('Jane', 'OWN', 'dog')]
+        return lst == expected_list
 
 
 if __name__ == "__main__":

@@ -8,8 +8,8 @@ MATCH {}(1), {'name': 'r', 'type': 'OWNS'}(1,2), {}(2)
 DELETE r
 CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
-#MATCH "PERSON#1 has an ARTIFACT#2"
-#CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
+MATCH "PERSON#1 has an ARTIFACT#2"
+CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
 #MATCH "PERSON#1 works as a ROLE#2"
 #CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);

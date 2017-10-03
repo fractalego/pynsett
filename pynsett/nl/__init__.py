@@ -104,6 +104,9 @@ class SpacyParser:
             token = parsed[i]
             if not entity:
                 entities[i] = token.ent_type_
+            if token.tag_ == 'PRP' and token.orth_.lower() != 'it':
+                entities[i] = 'PERSON'
+                lemmas[i] = token.orth_.lower()
         return edges, tags, types, lemmas
 
     def __create_graph_from_elements(self, names, words, edges, tags, types, lemmas, entities):

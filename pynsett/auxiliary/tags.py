@@ -11,7 +11,9 @@ def tag_is_adjective(tag):
 
 
 def tag_is_noun(tag):
-    return tag == "k" or tag == "viz" or tag == "rb" or tag == "n" or tag == "N" or tag == "j" or tag == "J" or tag == "NN" or tag == "NNS" or tag == "NNP" or tag == "NNPS" or tag == "JJ" or tag == "JJS" or tag == "PRP" or tag == "WP"
+    return tag == "k" or tag == "viz" or tag == "rb" or tag == "n" or tag == "N" or tag == "j" or tag == "J" \
+           or tag == "NN" or tag == "NNS" or tag == "NNP" or tag == "NNPS" or tag == "JJ" or tag == "JJS" \
+           or tag == "PRP" or tag == "WP" or tag == "PRP"
 
 
 def tag_is_only_noun(tag):

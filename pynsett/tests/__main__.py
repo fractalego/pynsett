@@ -137,6 +137,34 @@ class Tests:
         expected_list = [('Jane', 'OWN', 'dog')]
         return lst == expected_list
 
+    def test_possesive_pronouns(self):
+        self.__print_test_title('Possesive pronouns parsed correctly')
+
+        sentence = 'My dog is red'
+        drs = Drs.create_from_natural_language(sentence)
+        knowledge = Knowledge()
+        knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
+        fi = ForwardInference(drs, knowledge)
+        drs_and_weight = fi.compute()
+        writer = RelationTripletsWriter()
+        lst = drs_and_weight[0].visit(writer)
+        expected_list = [('me', 'OWN', 'dog')]
+        return lst == expected_list
+
+    def test_personal_pronouns(self):
+        self.__print_test_title('Personal pronouns parsed correctly')
+
+        sentence = 'I have a red dog'
+        drs = Drs.create_from_natural_language(sentence)
+        knowledge = Knowledge()
+        knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
+        fi = ForwardInference(drs, knowledge)
+        drs_and_weight = fi.compute()
+        writer = RelationTripletsWriter()
+        lst = drs_and_weight[0].visit(writer)
+        expected_list = [('I', 'OWN', 'dog')]
+        return lst == expected_list
+
 
 if __name__ == "__main__":
     tests = Tests()

@@ -20,3 +20,31 @@ CREATE {}(a), {'type': 'NUMBER'}(a,b), {}(b);
 MATCH {}(a), {'name': 'r1', 'type':'POSS'}(a,b), {}(b), {'name': 'r2', 'type':'CASE'}(b,c), {'tag':'POS'}(c)
 DELETE r, r2, c
 CREATE {}(b), {'type': 'OWNS'}(b,a), {}(a);
+
+
+# Process possive pronouns
+
+MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$'}(b)
+WHERE (in (get b "word") ["My", "my"])
+DELETE r, b
+CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'me', 'entity': 'person', 'compound': 'me', 'lemma': 'me'}(c);
+
+MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$'}(b)
+WHERE (in (get b "word") ["His", "his"])
+DELETE r, b
+CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'he', 'entity': 'person', 'compound': 'he', 'lemma': 'he'}(c);
+
+MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$'}(b)
+WHERE (in (get b "word") ["Her", "her"])
+DELETE r, b
+CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'she', 'entity': 'person', 'compound': 'she', 'lemma': 'she'}(c);
+
+MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$'}(b)
+WHERE (in (get b "word") ["Our", "our"])
+DELETE r, b
+CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'we', 'entity': 'person', 'compound': 'we', 'lemma': 'we'}(c);
+
+MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$'}(b)
+WHERE (in (get b "word") ["Their", "their"])
+DELETE r, b
+CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'they', 'entity': 'person', 'compound': 'they', 'lemma': 'they'}(c);

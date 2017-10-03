@@ -4,7 +4,7 @@ import logging
 
 from pynsett.drt import Drs, DrsRule
 from pynsett.knowledge.drs_ner_cleaner import DrsNERCleaner
-from pynsett.metric import Metric
+from pynsett.metric import MetricFactory
 
 logging.basicConfig()
 
@@ -73,7 +73,7 @@ def _substitute_string_into_rule(rule_str, substitution):
 
 
 class Knowledge:
-    def __init__(self, metric=Metric()):
+    def __init__(self, metric=MetricFactory.get_best_available_metric()):
         self._rules = []
         self._metric = metric
         self._substitution_list = []

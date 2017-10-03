@@ -3,7 +3,7 @@ import os
 from pynsett.drt import Drs
 from pynsett.knowledge import Knowledge
 from pynsett.inference import ForwardInference
-from pynsett.metric import Metric
+from pynsett.metric import MetricFactory
 from pynsett.drt.drs_matcher import DrsMatcher
 from pynsett.writer import RelationTripletsWriter
 
@@ -20,7 +20,7 @@ class bcolors:
 
 _path = os.path.dirname(__file__)
     
-metric = Metric()
+metric = MetricFactory.get_best_available_metric()
 
 class Tests:
     def __print_test_title(self, string):

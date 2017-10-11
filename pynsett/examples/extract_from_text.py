@@ -1,6 +1,5 @@
 import os
 
-from pynsett.knowledge import Knowledge
 from pynsett.discourse import Discourse
 from pynsett.extractor import Extractor
 
@@ -8,14 +7,12 @@ _path = os.path.dirname(__file__)
 
 if __name__ == "__main__":
     import time
-
-    knowledge = Knowledge()
-    knowledge.add_rules(open(os.path.join(_path, '../rules/recruitment_relations.rules')).read())
+    from pynsett.auxiliary.prior_knowedge import get_recruitment_knowledge
 
     text = open(os.path.join(_path, '../data/profile.txt')).read()
     discourse = Discourse(text)
 
-    extractor = Extractor(discourse, knowledge)
+    extractor = Extractor(discourse, get_recruitment_knowledge())
     start = time.time()
     triplets = extractor.extract()
     end = time.time()

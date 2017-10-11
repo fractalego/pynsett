@@ -66,15 +66,6 @@ MATCH "ORG#1 has activity in GPE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'IS_LOCATED_IN'}(1,2), {}(2);
 
 
-# Rules for MAKES
-
-MATCH "PERSON#1 invests in ORG#2"
-CREATE {}(1), {'type': 'relation', 'text': 'MAKES'}(1,2), {}(2);
-
-MATCH "PERSON#1 gives to ORG#2"
-CREATE {}(1), {'type': 'relation', 'text': 'MAKES'}(1,2), {}(2);
-
-
 # Rules for OBTAINED_FROM
 
 MATCH "degree#1 from ORG#2"

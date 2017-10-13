@@ -260,7 +260,23 @@ CREATE {}(1), {'type': 'relation', 'text': 'INVENTOR'}(2,1), {}(2);
 # Rules for DISCOVERED
 
 MATCH "PERSON#1 discovered ARTIFACT#2"
-CREATE {}(1), {'type': 'relation', 'text': 'INVENTOR'}(2,1), {}(2);
+CREATE {}(1), {'type': 'relation', 'text': 'DISCOVERED'}(2,1), {}(2);
 
 MATCH "PERSON#1 discovered FIELD#2"
-CREATE {}(1), {'type': 'relation', 'text': 'INVENTOR'}(2,1), {}(2);
+CREATE {}(1), {'type': 'relation', 'text': 'DISCOVERED'}(2,1), {}(2);
+
+
+# Rules for OWNS
+
+MATCH "PERSON#1 has an ARTIFACT#2"
+CREATE {}(1), {'type': 'relation', 'text': 'OWNS'}(1,2), {}(2);
+
+MATCH "PERSON#1 owns an ARTIFACT#2"
+CREATE {}(1), {'type': 'relation', 'text': 'OWNS'}(1,2), {}(2);
+
+MATCH "PERSON#1 buys an ARTIFACT#2"
+CREATE {}(1), {'type': 'relation', 'text': 'OWNS'}(1,2), {}(2);
+
+MATCH {}(1), {'type': 'OWNS'}(1,2), {}(2)
+DELETE r
+CREATE {}(1), {'type': 'relation', 'text': 'OWNS'}(1,2), {}(2);

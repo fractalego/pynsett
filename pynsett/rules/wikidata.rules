@@ -7,7 +7,11 @@ DEFINE GPE AS {GPE};
 DEFINE LOC AS {LOC};
 DEFINE TIME AS {TIME};
 
+DEFINE AFFILIATION as [conservative, progressive, centrist, tori, labour];
 DEFINE ARTIFACT AS [artifact, guitar, cycle, bicycle, car, watch];
+DEFINE AWARD AS [award, prize];
+DEFINE FIELD AS [field, medicine, theory];
+DEFINE NATIONALITY as [nationality, italian, english, american];
 DEFINE ROLE AS [engineer, doctor, researcher];
 DEFINE UNIVERSITY as [university, academy, polytechnic];
 
@@ -74,3 +78,189 @@ CREATE {}(1), {'type': 'relation', 'text': 'BIRTH_DAY'}(1,2), {}(2);
 MATCH "PERSON#1 was killed in TIME#2"
 CREATE {}(1), {'type': 'relation', 'text': 'BIRTH_DAY'}(1,2), {}(2);
 
+
+# Rules for EDUCATION
+
+MATCH "PERSON#1 studied at ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
+
+MATCH "PERSON#1 studied at UNIVERSITY#2"
+CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
+
+MATCH "PERSON#1 was at the university of GPE#2"
+CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
+
+MATCH "PERSON#1 received a degree#3 from the university of GPE#2"
+  WHERE (in (get 3 "word") [PhD,BSc,MEng,MSc,master,degree])
+CREATE {}(1), {'type': 'relation', 'text': 'STUDIED_AT'}(1,2), {}(2);
+
+
+# Rules for NATIONALITY
+
+MATCH "PERSON#1 is a NATIONALITY#2"
+CREATE {}(1), {'type': 'relation', 'text': 'NATIONALITY'}(1,2), {}(2);
+
+
+# Rules for EMPLOYER
+
+MATCH "PERSON#1 works at ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'EMPLOYER'}(2,1), {}(2);
+
+MATCH "PERSON#1 works for ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'EMPLOYER'}(2,1), {}(2);
+
+MATCH "PERSON#1 is employed by ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'EMPLOYER'}(2,1), {}(2);
+
+MATCH "PERSON#1 is hired by ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'EMPLOYER'}(2,1), {}(2);
+
+
+
+# Rules for DEATH_PLACE
+
+MATCH "PERSON#1 died in GPE#2"
+CREATE {}(1), {'type': 'relation', 'text': 'BIRTH_PLACE'}(1,2), {}(2);
+
+MATCH "PERSON#1 died at LOC#2"
+CREATE {}(1), {'type': 'relation', 'text': 'BIRTH_PLACE'}(1,2), {}(2);
+
+MATCH "PERSON#1 died in LOC#2"
+CREATE {}(1), {'type': 'relation', 'text': 'BIRTH_PLACE'}(1,2), {}(2);
+
+MATCH "PERSON#1 died at FAC#2"
+CREATE {}(1), {'type': 'relation', 'text': 'BIRTH_PLACE'}(1,2), {}(2);
+
+
+# Rules for AWARD
+
+MATCH "PERSON#1 won the AWARD#2"
+CREATE {}(1), {'type': 'relation', 'text': 'AWARD'}(1,2), {}(2);
+
+
+# Rules for FATHER
+
+MATCH "PERSON#1 is the father of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'FATHER'}(1,2), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's father"
+CREATE {}(1), {'type': 'relation', 'text': 'FATHER'}(1,2), {}(2);
+
+
+# Rules for BROTHER
+
+MATCH "PERSON#1 is the brother of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'BROTHER'}(1,2), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's brother"
+CREATE {}(1), {'type': 'relation', 'text': 'BROTHER'}(1,2), {}(2);
+
+
+# Rules for CHILD
+
+MATCH "PERSON#1 is the son of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'CHILD'}(1,2), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's son"
+CREATE {}(1), {'type': 'relation', 'text': 'CHILD'}(1,2), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's father"
+CREATE {}(1), {'type': 'relation', 'text': 'CHILD'}(2,1), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's mother"
+CREATE {}(1), {'type': 'relation', 'text': 'CHILD'}(2,1), {}(2);
+
+
+# Rules for WIFE
+
+MATCH "PERSON#1 is the wife of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'WIFE'}(1,2), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's wife"
+CREATE {}(1), {'type': 'relation', 'text': 'WIFE'}(1,2), {}(2);
+
+MATCH "PERSON#1 is the husband of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'WIFE'}(2,1), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's husband"
+CREATE {}(1), {'type': 'relation', 'text': 'WIFE'}(2,1), {}(2);
+
+
+# Rules for MOTHER
+
+MATCH "PERSON#1 is the mother of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'MOTHER'}(1,2), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's mother"
+CREATE {}(1), {'type': 'relation', 'text': 'MOTHER'}(1,2), {}(2);
+
+
+# Rules for POLITICAL_AFFILIATION
+
+MATCH "PERSON#1 is an AFFILIATION#2"
+CREATE {}(1), {'type': 'relation', 'text': 'POLITICAL_AFFILIATION'}(1,2), {}(2);
+
+
+# Rules for FRIEND
+
+MATCH "PERSON#1 is the friend of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'FRIEND'}(1,2), {}(2)
+CREATE {}(1), {'type': 'relation', 'text': 'FRIEND'}(2,1), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's friend"
+CREATE {}(1), {'type': 'relation', 'text': 'FRIEND'}(1,2), {}(2)
+CREATE {}(1), {'type': 'relation', 'text': 'FRIEND'}(2,1), {}(2);
+
+
+# Rules for FOUNDER
+
+MATCH "PERSON#1 is the founder of ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'FOUNDER'}(1,2), {}(2);
+
+MATCH "PERSON#1 is the co-founder of ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'FOUNDER'}(1,2), {}(2);
+
+MATCH "PERSON#1 founded ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'FOUNDER'}(1,2), {}(2);
+
+MATCH "PERSON#1 started ORG#2"
+CREATE {}(1), {'type': 'relation', 'text': 'FOUNDER'}(1,2), {}(2);
+
+
+# Rules for HUSBAND
+
+MATCH "PERSON#1 is the husband of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'HUSBAND'}(1,2), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's husband"
+CREATE {}(1), {'type': 'relation', 'text': 'HUSBAND'}(1,2), {}(2);
+
+MATCH "PERSON#1 is the wife of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'HUSBAND'}(2,1), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's wife"
+CREATE {}(1), {'type': 'relation', 'text': 'HUSBAND'}(2,1), {}(2);
+
+
+# Rules for SISTER
+
+MATCH "PERSON#1 is the sister of PERSON#2"
+CREATE {}(1), {'type': 'relation', 'text': 'SISTER'}(1,2), {}(2);
+
+MATCH "PERSON#1 is PERSON#2's sister"
+CREATE {}(1), {'type': 'relation', 'text': 'SISTER'}(1,2), {}(2);
+
+
+# Rules for INVENTOR
+
+MATCH "PERSON#1 invented ARTIFACT#2"
+CREATE {}(1), {'type': 'relation', 'text': 'INVENTOR'}(2,1), {}(2);
+
+
+# Rules for DISCOVERED
+
+MATCH "PERSON#1 discovered ARTIFACT#2"
+CREATE {}(1), {'type': 'relation', 'text': 'INVENTOR'}(2,1), {}(2);
+
+MATCH "PERSON#1 discovered FIELD#2"
+CREATE {}(1), {'type': 'relation', 'text': 'INVENTOR'}(2,1), {}(2);

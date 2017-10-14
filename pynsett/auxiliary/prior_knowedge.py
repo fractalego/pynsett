@@ -5,9 +5,9 @@ from pynsett.knowledge import Knowledge
 _path = os.path.dirname(__file__)
 
 
-def get_recruitment_knowledge():
+def get_generic_knowledge():
     knowledge = Knowledge()
-    knowledge.add_rules(open(os.path.join(_path, '../rules/recruitment_relations.rules')).read())
+    knowledge.add_rules(open(os.path.join(_path, '../rules/generic_relations.rules')).read())
     return knowledge
 
 

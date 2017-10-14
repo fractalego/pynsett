@@ -18,7 +18,7 @@ drs = Drs.create_from_natural_language(sentence)
 print(drs)
 knowledge = Knowledge()
 knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
-#knowledge.add_rules(open(os.path.join(_path, '../rules/recruitment_relations.rules')).read())
+#knowledge.add_rules(open(os.path.join(_path, '../rules/generic_relations.rules')).read())
 
 fi = ForwardInference(drs, knowledge)
 drs_and_weight = fi.compute()

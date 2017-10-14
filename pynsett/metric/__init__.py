@@ -41,14 +41,15 @@ class SpacyMetric(MetricBase):
         import spacy
 
         self._parser = spacy.load('en_core_web_sm')
+        self._vocab = self._parser.vocab
 
     # Private
 
     def __get_vector(self, word):
         try:
-            return self._parser(word)[0].vector
+            return self._vocab[word]
         except:
-            return self._parser('entity')[0].vector
+            return self._vocab[word]
 
 
 class MetricFactory:

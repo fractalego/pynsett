@@ -1,0 +1,2 @@
+1) The extractor returns multiple identical triples with parvusdb==0.0.14. Investigate.
+2) Use Cython?

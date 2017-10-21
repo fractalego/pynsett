@@ -25,7 +25,7 @@ def _repeat_db_rules_n_times(db, rules, n):
     import copy
     old_g = copy.deepcopy(db.get_graph())
     for i in range(n):
-        db.query(rules)
+        db.query(rules, repeat_n_times=1)
         g = db.get_graph()
         if old_g == g:
             break

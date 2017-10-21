@@ -2,7 +2,6 @@ import logging
 from nltk.tokenize import sent_tokenize
 from ..drt import Drs
 
-
 class Discourse:
     _logger = logging.getLogger(__name__)
 

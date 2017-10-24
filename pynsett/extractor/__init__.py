@@ -29,8 +29,9 @@ class Extractor:
     def __map_sentence_using_best_match(self, large_drs):
         data = large_drs
         inference = ForwardInference(data, self._knowledge)
-        result = inference.compute()
+        results = inference.compute()
         triplets = []
         writer = RelationTripletsWriter()
-        triplets += result[0].visit(writer)
+        for result in results:
+            triplets += result[0].visit(writer)
         return triplets

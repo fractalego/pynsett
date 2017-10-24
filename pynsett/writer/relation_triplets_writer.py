@@ -9,7 +9,8 @@ class RelationTripletsWriter(BaseWriter):
             raise TypeError("The writer needs an igraph.Graph as an argument")
 
         db = GraphDatabase(g)
-        lst = db.query("MATCH {}(a), {'type': 'relation', 'name': 'r'}(a,b), {}(b) RETURN a, b, r")
+        lst = db.query("MATCH {}(a), {'type': 'relation', 'name': 'r'}(a,b), {}(b) RETURN a, b, r",
+                       repeat_n_times=1)
         triplets = [(item['a']['compound'], item['r']['text'], item['b']['compound']) for item in lst]
         return triplets
 

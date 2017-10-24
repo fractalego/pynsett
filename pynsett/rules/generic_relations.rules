@@ -94,7 +94,7 @@ CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 MATCH "PERSON#1 buys an ARTIFACT#2"
 CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 
-MATCH {}(1), {'type': 'OWNS'}(1,2), {}(2)
+MATCH {}(1), {'type': 'OWNS', 'name': 'r'}(1,2), {}(2)
 DELETE r
 CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
 

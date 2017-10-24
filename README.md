@@ -76,8 +76,8 @@ MATCH "Jane#node is an engineer"
 CREATE {}(node);
 ```
 
-Here the symbol #1 `gives a name` to Jane. That name can be used when creating the node {}(1).
-The node inherits the properties from the word `Jane`. For example node['text'] is "Jane".
+Here the symbol #node _gives a name_ to Jane. That name can be used when creating the node {}(node).
+The node inherits the properties from the word 'Jane'. For example node['text'] is "Jane".
 
 A more generic rule uses the entity type (Jane is a PERSON)
 

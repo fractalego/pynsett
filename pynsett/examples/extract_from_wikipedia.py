@@ -9,11 +9,13 @@ if __name__ == "__main__":
     import time
     from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
 
-    text = open(os.path.join(_path, '../data/sample_wikipedia.txt')).read()
-    discourse = Discourse(text)
+    knowledge = get_wikidata_knowledge()
 
-    extractor = Extractor(discourse, get_wikidata_knowledge())
+    text = open(os.path.join(_path, '../data/sample_wikipedia.txt')).read()
+
     start = time.time()
+    discourse = Discourse(text)
+    extractor = Extractor(discourse, knowledge)
     triplets = extractor.extract()
     end = time.time()
 

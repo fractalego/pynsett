@@ -6,5 +6,5 @@ rdflib
 yappi
 gensim
 more_itertools
-parvusdb==0.0.14
+parvusdb==0.0.16
 hy

@@ -260,10 +260,10 @@ CREATE {}(1), {'type': 'relation', 'text': 'INVENTOR'}(2,1), {}(2);
 # Rules for DISCOVERED
 
 MATCH "PERSON#1 discovered ARTIFACT#2"
-CREATE {}(1), {'type': 'relation', 'text': 'DISCOVERED'}(2,1), {}(2);
+CREATE {}(1), {'type': 'relation', 'text': 'DISCOVERED'}(1,2), {}(2);
 
 MATCH "PERSON#1 discovered FIELD#2"
-CREATE {}(1), {'type': 'relation', 'text': 'DISCOVERED'}(2,1), {}(2);
+CREATE {}(1), {'type': 'relation', 'text': 'DISCOVERED'}(1,2), {}(2);
 
 
 # Rules for OWNS

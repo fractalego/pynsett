@@ -23,7 +23,6 @@ setup(name='pynsett',
                 ],
       install_requires=[
           'spacy==1.8.0',
-          'https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-1.2.0/en_core_web_sm-1.2.0.tar.gz',
           'python-igraph',
           'nltk==3.2.1',
           'rdflib',

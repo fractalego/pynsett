@@ -9,7 +9,12 @@ The basic version can be installed by typing
 pip3 install pynsett
 ```
 
-If you want to install the additional models, please type
+The system is now installed, however the parser requires an additional module. You will need to type
+```bash
+python3 -m spacy download en_core_web_sm
+```
+
+If you want a better synonym matching, please another additional models with the glove vectors
 ```bash
 python3 -m pynsett download
 ```

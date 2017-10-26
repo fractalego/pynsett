@@ -131,6 +131,8 @@ MATCH "PERSON#1 is a ROLE#2"
 CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);
 ```
 
+A working example of pynsett's rules is [this file](https://github.com/fractalego/pynsett/blob/master/pynsett/rules/wikidata.rules).
+
 
 Use the extraction rules
 ------------------------

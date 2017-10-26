@@ -22,7 +22,7 @@ class Extractor:
             sentence_triplets = self.__map_sentence_using_best_match(drs)
             if sentence_triplets:
                 triplets += sentence_triplets
-        return triplets
+        return sorted(list(set(triplets)), key=lambda x: x[1])
 
     # Private
 

@@ -37,7 +37,7 @@ from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
 
 
 if __name__ == "__main__":
-    text = open(os.path.join(_path, 'test.txt')).read()
+    text = open('test.txt').read()
     discourse = Discourse(text)
 
     extractor = Extractor(discourse, get_wikidata_knowledge())
@@ -137,11 +137,10 @@ Knowledge object:
 from pynsett.discourse import Discourse
 from pynsett.extractor import Extractor
 from pynsett.knowledge import Knowledge
-from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
 
 
 if __name__ == "__main__":
-    text = open(os.path.join(_path, 'test.txt')).read()
+    text = open('test.txt').read()
     discourse = Discourse(text)
 
     knowledge = Knowledge()
@@ -154,5 +153,45 @@ if __name__ == "__main__":
         print(triplet)
 ```
 
+Import the triplets into Neo4J
+------------------------------
+
+The triplets can be imported into a proper graph database. As an example, let us do it for Neo4j.  
+You would need to install the system onto your machine, as well as installing the python package 
+'py2neo'. After everything is set up, you can run the following script.
+
+```python
+from py2neo import Graph
+from pynsett.discourse import Discourse
+from pynsett.extractor import Extractor
+from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
+
+if __name__ == "__main__":
+    knowledge = get_wikidata_knowledge()
+
+    text = open('sample_wikipedia.txt').read()
+
+    discourse = Discourse(text)
+    extractor = Extractor(discourse, knowledge)
+    triplets = extractor.extract()
+
+    graph = Graph('http://localhost:7474/db/data/')
+    for triplet in triplets:
+        graph.run('MERGE (a {text: "%s"}) MERGE (b {text: "%s"}) CREATE (a)-[:%s]->(b)'
+                  % (triplet[0],
+                     triplet[2],
+                     triplet[1]))
+
+```
+
+This script works on an example page called 'sample_wikipedia.txt' that you will have to provide. The result 
+on the Neo4J browser should look like the next picture (Extracted from the Wikipedia page of Franz Hals the Elder):
+
+![Extracted triplets from the Wikipedia page of Franz Hals the Elder](images/franz_hans_the_elder.png)
 
 
+Known issues and shortcomings
+-----------------------------
+
+* The system is still a little bit slow (about 0.15 sec per sentence)
+* Anaphora is not done 

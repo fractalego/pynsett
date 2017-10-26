@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pynsett',
-      version='0.0.1',
+      version='0.0.2',
       description='A relation extractor',
       url='http://github.com/fractalego/pynsett',
       author='Alberto Cetoli',

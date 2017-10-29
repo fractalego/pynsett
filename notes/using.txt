@@ -1,0 +1,3 @@
+* Profiling:
+    pyprof2calltree -i profile.out -k
+    python3 -O -m cProfile -o profile.out pynsett/examples/extract_from_wikipedia.py

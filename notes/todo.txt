@@ -1,2 +1,5 @@
 1) The extractor returns multiple identical triples with parvusdb==0.0.14. Investigate.
 2) Use Cython?
+3) add_graph_to_namespace() in CodeContainer is the slowest. Maybe it can be called only once
+   instead of every node and edge comparison.
+4) ast_compile can be done during add_line() instead of _execute_code()

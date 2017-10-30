@@ -200,5 +200,5 @@ on the Neo4J browser should look like the next picture (Extracted from the Wikip
 Known issues and shortcomings
 -----------------------------
 
-* The system is still a little bit slow (about 0.15 sec per sentence)
+* The system is still a little bit slow (about 0.07 sec per sentence)
 * Anaphora is not done 

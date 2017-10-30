@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='pynsett',
-      version='0.0.2',
+      version='0.0.4',
       description='A relation extractor',
       url='http://github.com/fractalego/pynsett',
       author='Alberto Cetoli',
@@ -29,7 +29,7 @@ setup(name='pynsett',
           'yappi',
           'gensim',
           'more_itertools',
-          'parvusdb==0.0.16',
+          'parvusdb==0.0.18',
           'hy',
       ],
       include_package_data=True,

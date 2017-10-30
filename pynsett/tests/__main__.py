@@ -75,10 +75,14 @@ class Tests(unittest.TestCase):
         knowledge = Knowledge(metric)
         knowledge.add_rules(open(os.path.join(_path, '../rules/generic_relations.rules')).read())
         inference = ForwardInference(data_drs, knowledge)
-        end_drs, _ = inference.compute()
+        end_drs = inference.compute()
         expected_drs = Drs.create_from_predicates_string('{}(1), {"text": "WORKS_AT"}(1,2), {}(2)')
-        lst = end_drs.visit(DrsMatcher(expected_drs, metric))
-        is_match = len(lst) > 0
+        is_match = False
+        for drs in end_drs:
+            lst = drs[0].visit(DrsMatcher(expected_drs, metric))
+            if len(lst) > 0:
+                is_match = True
+                break
         self.assertTrue(is_match)
 
     def test_modal(self):
@@ -111,7 +115,7 @@ class Tests(unittest.TestCase):
         fi = ForwardInference(drs, knowledge)
         drs_and_weight = fi.compute()
         writer = RelationTripletsWriter()
-        lst = drs_and_weight[0].visit(writer)
+        lst = drs_and_weight[0][0].visit(writer)
         expected_list = [('Jane', 'OWN', 'dog')]
         self.assertEqual(lst, expected_list)
 
@@ -123,7 +127,7 @@ class Tests(unittest.TestCase):
         fi = ForwardInference(drs, knowledge)
         drs_and_weight = fi.compute()
         writer = RelationTripletsWriter()
-        lst = drs_and_weight[0].visit(writer)
+        lst = drs_and_weight[0][0].visit(writer)
         expected_list = [('me', 'OWN', 'dog')]
         self.assertEqual(lst, expected_list)
 
@@ -135,6 +139,6 @@ class Tests(unittest.TestCase):
         fi = ForwardInference(drs, knowledge)
         drs_and_weight = fi.compute()
         writer = RelationTripletsWriter()
-        lst = drs_and_weight[0].visit(writer)
+        lst = drs_and_weight[0][0].visit(writer)
         expected_list = [('I', 'OWN', 'dog')]
         self.assertEqual(lst, expected_list)

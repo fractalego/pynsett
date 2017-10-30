@@ -8,7 +8,7 @@ from pynsett.writer import RelationTripletsWriter
 
 _path = os.path.dirname(__file__)
 
-sentence = 'I have a bicycle'
+sentence = 'His dog was red'
 #sentence = 'My own dog is red'
 #sentence = 'Jane has a bicycle'
 #sentence = 'Jane is an engineer'
@@ -21,7 +21,8 @@ knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
 #knowledge.add_rules(open(os.path.join(_path, '../rules/generic_relations.rules')).read())
 
 fi = ForwardInference(drs, knowledge)
-drs_and_weight = fi.compute()
+drs_and_weights = fi.compute()
 
 writer = RelationTripletsWriter()
-print(drs_and_weight[0].visit(writer))
+for drs_and_weight in drs_and_weights:
+    print(drs_and_weight[0].visit(writer))

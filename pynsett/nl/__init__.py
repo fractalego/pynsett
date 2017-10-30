@@ -76,7 +76,9 @@ class SpacyParser:
             entities.append(entity)
         return entities, new_words
 
-    def __get_lemma_with_correct_capital_letters(self, lemma, word):
+    def __get_lemma_with_correct_capital_letters(self, lemma, word, tag):
+        if tag == 'PRP$':
+            return word.lower()
         if lemma.lower() == word.lower():
             return word
         return lemma
@@ -99,7 +101,7 @@ class SpacyParser:
                 edges.append((index, child_index))
             tags.append(simplify_tag(item.tag_))
             types.append(item.dep_)
-            lemmas.append(self.__get_lemma_with_correct_capital_letters(item.lemma_, item.orth_))
+            lemmas.append(self.__get_lemma_with_correct_capital_letters(item.lemma_, item.orth_, item.tag_))
         for i, entity in enumerate(entities):
             token = parsed[i]
             if not entity:

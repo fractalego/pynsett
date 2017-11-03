@@ -64,31 +64,17 @@ Let's assume we are writing a new file called "my_own_rules.rules".
 An example of a new set of rules can be the following:
 
 ```bash
-MATCH "Jane is an engineer"
-CREATE {'text': 'Relation found!'}(node_name);
+MATCH "Jane#1 is an engineer#2"
+CREATE (HAS_ROLE 1 2);
 ```
 
-This rule matches a specific sentence in a text ("Jane is an engineer") and creates a node;
-the node contains the text "Relation found!".
+Here the symbol #1 gives a label to 'Jane' and #2 gives a label to 'engineer'. 
+These labels can be used when creating the relation '(IS_A 1 2)'.
 
-The system is flexible: The verb conjugation does not matter
-("Jane will be an engineer" and "Jane was an engineer" match as well), synonyms
-are resolved automatically ("Jane is a developer" matches too).
-
-That rule is not very useful. Maybe a more useful one can extract the subject
+A more generic rule uses the entity types (Jane is a PERSON)
 ```bash
-MATCH "Jane#node is an engineer"
-CREATE {}(node);
-```
-
-Here the symbol #node _gives a name_ to Jane. That name can be used when creating the node {}(node).
-The node inherits the properties from the word 'Jane'. For example node['text'] is "Jane".
-
-A more generic rule uses the entity type (Jane is a PERSON)
-
-```bash
-MATCH "{PERSON}#node is an engineer"
-CREATE {}(node);
+MATCH "{PERSON}#1 is an engineer#2"
+CREATE (HAS_ROLE 1 2);
 ```
 
 This rule matches all the sentences where the subject is a person (compatibly with the internal
@@ -97,15 +83,6 @@ NER). The name of the person is associated to the node.
 There are 18 entity types that you can type within brackets:
 CARDINAL, DATE, EVENT, FAC, GPE, LANGUAGE, LAW, LOC, MONEY, NORP, ORDINAL,
 ORG, PERCENT, PERSON, PRODUCT, QUANTITY, TIME, WORK_OF_ART
-
-
-In the end, this is a relation extractor. Relations are created by connecting at least
-two elements in a sentence
-
-```bash
-MATCH "{PERSON}#1 is an engineer#2"
-CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);
-```
 
 There you go, a person is now connected with a role: Node 1 is whoever matches for node 1 and
 the profession is "engineer". The properties of the words are put into node 1 and 2.
@@ -117,7 +94,7 @@ Let us define a `word cloud` and call it "ROLE".
 DEFINE ROLE AS [engineer, architect, physicist, doctor];
 
 MATCH "{PERSON}#1 is a ROLE#2"
-CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);
+CREATE (HAS_ROLE 1 2);
 ```
 
 As a final touch let us make the text a little bit nicer to the eyes: Let's use PERSON instead
@@ -128,10 +105,10 @@ DEFINE PERSON AS {PERSON};
 DEFINE ROLE AS [engineer, architect, physicist, doctor];
 
 MATCH "PERSON#1 is a ROLE#2"
-CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);
+CREATE (HAS_ROLE 1 2);
 ```
 
-A working example of pynsett's rules is [this file](https://github.com/fractalego/pynsett/blob/master/pynsett/rules/wikidata.rules).
+A working example of pynsett's rules is in [this file](https://github.com/fractalego/pynsett/blob/master/pynsett/rules/wikidata.rules).
 
 
 Use the extraction rules

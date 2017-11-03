@@ -72,7 +72,7 @@ CREATE {}(a), {'type': 'OPEN_SUBORDINATE'}(a,b), {}(b);
 # The preposition node should become an edge
 MATCH {}(a), {'type': 'PREP', 'name': 'r1'}(a,b), {}(b), {'type': 'POBJ', 'name': 'r2'}(b,c), {}(c)
 CREATE {}(a), {'name': 'new_rel'}(a,c), {}(c)
-SET (assoc new_rel "type" (get b "word"))
+  SET (assoc new_rel "type" (get b "word"))
 DELETE b, r1, r2;
 
 

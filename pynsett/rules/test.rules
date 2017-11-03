@@ -6,17 +6,17 @@ DEFINE ARTIFACT AS [artifact, guitar, cycle, bicycle, car, watch];
 
 MATCH {}(1), {'name': 'r', 'type': 'OWNS'}(1,2), {}(2)
 DELETE r
-CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
+CREATE (OWN 1 2);
 
 MATCH "PERSON#1 has an ARTIFACT#2"
-CREATE {}(1), {'type': 'relation', 'text': 'OWN'}(1,2), {}(2);
+CREATE (OWN 1 2);
 
 #MATCH "PERSON#1 works as a ROLE#2"
-#CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);
+#CREATE (HAS_ROLE 1 2);
 
 #MATCH "PERSON#1 works for a ORG#2"
-#CREATE {}(1), {'type': 'relation', 'text': 'WORKS_FOR'}(1,2), {}(2);
+#CREATE (WORKS_FOR 1 2);
 
 #MATCH "PERSON#1 is a ROLE#2"
-#CREATE {}(1), {'type': 'relation', 'text': 'HAS_ROLE'}(1,2), {}(2);
+#CREATE (HAS_ROLE 1 2);
 

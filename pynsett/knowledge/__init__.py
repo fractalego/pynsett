@@ -6,7 +6,7 @@ from pynsett.drt import Drs, DrsRule
 from pynsett.knowledge.drs_ner_cleaner import DrsNERCleaner
 from pynsett.metric import MetricFactory
 
-logging.basicConfig()
+_logger = logging.getLogger(__name__)
 
 
 def _get_list_of_rules_from_text(text):
@@ -19,7 +19,7 @@ def _get_list_of_rules_from_text(text):
     return lines
 
 
-def _substitute_text_with_graph(text, substitution_triggers):
+def _substitute_text_in_match_statement_with_graph(text, substitution_triggers):
     drs_cleaner = DrsNERCleaner(substitution_triggers)
     p = re.compile('MATCH.*\"(.*)\"')
     lst = p.findall(text)
@@ -30,6 +30,23 @@ def _substitute_text_with_graph(text, substitution_triggers):
         drs = Drs.create_from_natural_language(item)
         drs = drs.visit(drs_cleaner)
         text = text.replace('"' + item + '"', str(drs))
+    return text
+
+
+def _substitute_relationship_code_in_create_statement_with_graph(text):
+    p = re.compile('CREATE.*\((.*)\)')
+    lst = p.findall(text)
+    for item in lst:
+        try:
+            elements = item.split()
+            relation_name = elements[0]
+            source = elements[1]
+            target = elements[2]
+            new_text = "{}(%s), {'type': 'relation', 'text': '%s'}(%s,%s), {}(%s)" \
+                       % (source, relation_name, source, target, target)
+            text = text.replace('(' + item + ')', new_text)
+        except:
+            _logger.warning('Text ' + text + " cannot parse to a relation")
     return text
 
 
@@ -95,7 +112,8 @@ class Knowledge:
                 continue
             for s in self._substitution_list:
                 rule_text = _substitute_string_into_rule(rule_text, s)
-            rule_text = _substitute_text_with_graph(rule_text, substitution_triggers)
+            rule_text = _substitute_text_in_match_statement_with_graph(rule_text, substitution_triggers)
+            rule_text = _substitute_relationship_code_in_create_statement_with_graph(rule_text)
             substitution = _get_substition_rule(rule_text)
             if substitution:
                 self.metric = _substitute_list_into_metric(self._metric, substitution)

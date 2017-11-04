@@ -278,3 +278,74 @@ CREATE (OWNS 1 2);
 MATCH {}(1), {'type': 'OWNS', 'name': 'r'}(1,2), {}(2)
 DELETE r
 CREATE (OWNS 1 2);
+
+
+## Rules for organizations
+
+# Rules for LOGO_IMAGE
+
+MATCH "ORG#1's logo#2"
+CREATE (LOGO_IMAGE 1 2);
+
+
+# Rules for HEADQUARTERS_LOCATION
+
+MATCH "ORG#1's headquarters are in LOC#2"
+CREATE (HEADQUARTERS_LOCATION 1 2)
+
+MATCH "ORG#1 is at LOC#2"
+CREATE (HEADQUARTERS_LOCATION 1 2)
+
+MATCH "ORG#1 is in GPE#2"
+CREATE (HEADQUARTERS_LOCATION 1 2)
+
+
+# Rules for INDUSTRY
+
+MATCH "ORG#1 is in the industry#2"
+CREATE (INDUSTRY 1 2)
+
+
+# Rules for PRODUCT
+
+MATCH "ORG#1 produces ARTIFACT#2"
+CREATE (PRODUCT 1 2)
+
+
+# Rules for INSTANCE_OF
+
+MATCH "ORG#1 is a business#2"
+CREATE (INSTANCE_OF 1 2)
+
+
+# Rules for INCEPTION
+
+MATCH "ORG#1 was founded in DATE#2"
+CREATE (INCEPTION 1 2)
+
+
+# Rules for DISSOLVED
+
+MATCH "ORG#1 was dissolved in DATE#2"
+CREATE (DISSOLVED 1 2)
+
+MATCH "ORG#1 stopped in DATE#2"
+CREATE (DISSOLVED 1 2)
+
+
+# Rules for FOUNDED_BY
+
+MATCH "ORG#1 was founded by PERSON#2"
+CREATE (FOUNDED_BY 1 2)
+
+MATCH "PERSON#1 started ORG#2"
+CREATE (FOUNDED_BY 2 1)
+
+
+# Rules for LOCATION_OF_FORMATION
+
+MATCH "PERSON founded ORG#1 in GPE#2"
+CREATE (LOCATION_OF_FORMATION 1 2)
+
+MATCH "PERSON started ORG#1 in GPE#2"
+CREATE (LOCATION_OF_FORMATION 1 2)

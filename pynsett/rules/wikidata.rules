@@ -3,6 +3,7 @@ DEFINE ORG AS {ORG};
 DEFINE FAC AS {FAC};
 DEFINE GPE AS {GPE};
 DEFINE LOC AS {LOC};
+DEFINE MONEY AS {MONEY};
 DEFINE TIME AS {TIME};
 
 DEFINE AFFILIATION as [conservative, progressive, centrist, tori, labour];
@@ -10,8 +11,10 @@ DEFINE ARTIFACT AS [artifact, guitar, cycle, bicycle, car, watch];
 DEFINE AWARD AS [award, prize];
 DEFINE DEGREE AS [PhD, BSc, MEng, MSc, master, degree];
 DEFINE FIELD AS [field, medicine, theory];
+DEFINE MASCOT as [animal, mammal, puppet];
 DEFINE NATIONALITY as [nationality, italian, english, american];
 DEFINE ROLE AS [engineer, doctor, researcher];
+DEFINE TEAM as [team, group, club]
 DEFINE UNIVERSITY as [university, academy, polytechnic];
 
 
@@ -349,3 +352,32 @@ CREATE (LOCATION_OF_FORMATION 1 2)
 
 MATCH "PERSON started ORG#1 in GPE#2"
 CREATE (LOCATION_OF_FORMATION 1 2)
+
+
+# Rules for LEAGUE
+
+MATCH "TEAM plays in the LEAGUE#2"
+CREATE (LEAGUE 1 2)
+
+
+# Rules for TEAM_CAPTAIN
+MATCH "PERSON#1 is the captain of the TEAM#2"
+CREATE (TEAM_CAPTAIN 1 2)
+
+
+# Rules for MASCOT
+MATCH "MASCOT#1 is the mascot of the TEAM#2"
+CREATE (MASCOT 1 2)
+
+
+# Rules for CEO
+MATCH "PERSON#1 is the CEO of ORG#2"
+CREATE (CEO 1 2)
+
+MATCH "PERSON#1 is ORG#2's CEO"
+CREATE (CEO 1 2)
+
+
+# Rules for TOTAL_REVENUE
+MATCH "ORG#1 has a revenue of MONEY#2"
+CREATE (TOTAL_REVENUE 1 2)

@@ -1,3 +1,8 @@
+import logging
+
+_logger = logging.getLogger(__name__)
+
+
 def find_weight_between(s, first, last):
     try:
         start = s.index(first) + len(first)
@@ -34,10 +39,13 @@ class UniqueNamesModifier:
             new_name = old_name + random_name
             v['name'] = new_name
             substitution_dict[old_name] = new_name
-        for v in g.vs:
-            referring_name = v['refers_to']
-            if referring_name:
-                v['refers_to'] = substitution_dict[referring_name]
+        try:
+            for v in g.vs:
+                referring_name = v['refers_to']
+                if referring_name:
+                    v['refers_to'] = substitution_dict[referring_name]
+        except Exception as e:
+            _logger.warning("Exception while substituting refers_to ID: " + str(e))
         for e in g.es:
             e['name'] += get_random_name()
 

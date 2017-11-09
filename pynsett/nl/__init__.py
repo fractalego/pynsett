@@ -23,6 +23,7 @@ class SpacyParser:
     _character_that_opens_entity_tag = '{'
     _character_that_closes_entity_tag = '}'
     _character_that_defines_unifier_string = '#'
+    _word_substitution = {'(' : 'LRB', ')' : 'RRB'}
 
     collator = Collator(names_to_collate_forward=[_character_that_opens_entity_tag],
                         names_to_collate_backward=[_character_that_closes_entity_tag])
@@ -48,6 +49,8 @@ class SpacyParser:
         tokens = self.parser.tokenizer(sentence)
         for _, item in enumerate(tokens):
             word = item.orth_
+            if word in self._word_substitution:
+                word = self._word_substitution[word]
             words.append(word)
         return words
 
@@ -79,7 +82,7 @@ class SpacyParser:
     def __get_lemma_with_correct_capital_letters(self, lemma, word, tag):
         if tag == 'PRP$':
             return word.lower()
-        if lemma.lower() == word.lower():
+        if lemma.lower() == word.lower() or word in self._word_substitution:
             return word
         return lemma
 
@@ -145,13 +148,15 @@ class SpacyParser:
                         'tag': lhs_tag,
                         'compound': lhs_compound,
                         'entity': lhs_entity,
-                        'lemma': lhs_lemma}
+                        'lemma': lhs_lemma,
+                        'refers_to': None}
             lhs_string = str(lhs_dict) + '(' + lhs_name + ')'
             rhs_dict = {'word': rhs_word,
                         'tag': rhs_tag,
                         'compound': rhs_compound,
                         'entity': rhs_entity,
-                        'lemma': rhs_lemma}
+                        'lemma': rhs_lemma,
+                        'refers_to': None}
             rhs_string = str(rhs_dict) + '(' + rhs_name + ')'
 
             edge_dict = {'type': edge_type}

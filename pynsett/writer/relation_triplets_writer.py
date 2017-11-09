@@ -1,9 +1,12 @@
+import logging
 from igraph import Graph
 from parvusdb import GraphDatabase
 from .base_writer import BaseWriter
 
 
 class RelationTripletsWriter(BaseWriter):
+    _logger = logging.getLogger(__name__)
+
     def apply(self, g):
         triplets = self.__get_relations_and_entities_from_graph(g)
         return triplets
@@ -24,7 +27,11 @@ class RelationTripletsWriter(BaseWriter):
         return triplets
 
     def __substitute_node_with_coreferent(self, node, g):
-        coreferent_name = node['refers_to']
-        if not coreferent_name:
+        try:
+            coreferent_name = node['refers_to']
+            if not coreferent_name:
+                return node
+            return g.vs.find(name=coreferent_name)
+        except Exception as e:
+            self._logger.warning("While fetching 'refers_to': " + str(e))
             return node
-        return g.vs.find(name=coreferent_name)

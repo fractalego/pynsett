@@ -19,13 +19,6 @@ sentence = 'John drove home where he has a cat.'
 drs = Drs.create_from_natural_language(sentence)
 print(drs)
 
-anaphora = SingleSentenceAnaphoraVisitor()
-lst = drs.visit(anaphora)
-print(lst)
-
-print('---')
-print(drs)
-
 knowledge = Knowledge()
 knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
 #knowledge.add_rules(open(os.path.join(_path, '../rules/generic_relations.rules')).read())

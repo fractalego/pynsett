@@ -9,7 +9,7 @@ from pynsett.writer import RelationTripletsWriter
 
 _path = os.path.dirname(__file__)
 
-sentence = 'John drove home and he arrived in time'
+sentence = 'John drove home where he has a cat.'
 #sentence = 'His dog was red'
 #sentence = 'My own dog is red'
 #sentence = 'Jane has a bicycle'

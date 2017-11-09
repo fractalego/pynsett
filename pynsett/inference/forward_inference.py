@@ -27,8 +27,17 @@ def eliminate_spaces(line):
 class UniqueNamesModifier:
     def apply(self, g):
         from ..auxiliary import get_random_name
+        substitution_dict = {}
         for v in g.vs:
-            v['name'] += get_random_name()
+            random_name = get_random_name()
+            old_name = v['name']
+            new_name = old_name + random_name
+            v['name'] = new_name
+            substitution_dict[old_name] = new_name
+        for v in g.vs:
+            referring_name = v['refers_to']
+            if referring_name:
+                v['refers_to'] = substitution_dict[referring_name]
         for e in g.es:
             e['name'] += get_random_name()
 

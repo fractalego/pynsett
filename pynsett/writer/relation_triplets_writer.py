@@ -4,16 +4,27 @@ from .base_writer import BaseWriter
 
 
 class RelationTripletsWriter(BaseWriter):
-    def _get_relations_and_entities_from_graph(self, g):
+    def apply(self, g):
+        triplets = self.__get_relations_and_entities_from_graph(g)
+        return triplets
+
+    # Private
+
+    def __get_relations_and_entities_from_graph(self, g):
         if not isinstance(g, Graph):
             raise TypeError("The writer needs an igraph.Graph as an argument")
 
         db = GraphDatabase(g)
         lst = db.query("MATCH {}(a), {'type': 'relation', 'name': 'r'}(a,b), {}(b) RETURN a, b, r",
                        repeat_n_times=1)
-        triplets = [(item['a']['compound'], item['r']['text'], item['b']['compound']) for item in lst]
+        triplets = [(self.__substitute_node_with_coreferent(item['a'], g)['compound'],
+                     item['r']['text'],
+                     self.__substitute_node_with_coreferent(item['b'], g)['compound'])
+                    for item in lst]
         return triplets
 
-    def apply(self, g):
-        triplets = self._get_relations_and_entities_from_graph(g)
-        return triplets
+    def __substitute_node_with_coreferent(self, node, g):
+        coreferent_name = node['refers_to']
+        if not coreferent_name:
+            return node
+        return g.vs.find(name=coreferent_name)

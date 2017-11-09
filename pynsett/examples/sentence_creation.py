@@ -1,5 +1,6 @@
 import os
 
+from pynsett.discourse.anaphora import SingleSentenceAnaphoraVisitor
 from pynsett.drt import Drs
 from pynsett.knowledge import Knowledge
 from pynsett.inference import ForwardInference
@@ -8,7 +9,8 @@ from pynsett.writer import RelationTripletsWriter
 
 _path = os.path.dirname(__file__)
 
-sentence = 'His dog was red'
+sentence = 'John drove home and he arrived in time'
+#sentence = 'His dog was red'
 #sentence = 'My own dog is red'
 #sentence = 'Jane has a bicycle'
 #sentence = 'Jane is an engineer'
@@ -16,6 +18,14 @@ sentence = 'His dog was red'
 #sentence = 'Jane works for Google'
 drs = Drs.create_from_natural_language(sentence)
 print(drs)
+
+anaphora = SingleSentenceAnaphoraVisitor()
+lst = drs.visit(anaphora)
+print(lst)
+
+print('---')
+print(drs)
+
 knowledge = Knowledge()
 knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
 #knowledge.add_rules(open(os.path.join(_path, '../rules/generic_relations.rules')).read())

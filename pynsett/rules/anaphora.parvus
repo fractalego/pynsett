@@ -1,7 +1,155 @@
 
 # Personal pronouns
 
+# Rules for 'he'
+
 # John drove home and he arrived in time
-MATCH {'tag': 'n'}(a), {'type': 'AGENT'}(a,b), {'tag': 'v'}(b), {}(b,c),
-      {'tag': 'v'}(c), {'type': 'AGENT'}(c,d), {'tag': 'PRP'}(d)
-  SET (= (get d "name") (get a "name"));
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {'type': 'AGENT'}(b,a),
+      {'tag': 'v'}(b),
+      {}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'AGENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'he'}(d)
+SET (assoc d "refer_to" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {'type': 'PATIENT'}(b,a),
+      {'tag': 'v'}(b),
+      {}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'AGENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'he'}(d)
+SET (assoc d "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {'type': 'AGENT'}(b,a),
+      {'tag': 'v'}(b),
+      {}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'PATIENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'he'}(d)
+SET (assoc d "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {'type': 'PATIENT'}(b,a),
+      {'tag': 'v'}(b),
+      {}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'PATIENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'he'}(d)
+SET (assoc d "name" (get a "name"));
+
+# Generic pronoun match
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {}(b,a),
+      {}(b),
+      {}(b,c),
+      {'tag': 'PRP', 'lemma': 'he'}(c)
+SET (assoc c "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {}(b,a),
+      {}(b),
+      {}(b,c),
+      {}(c),
+      {}(c,d),
+      {'tag': 'PRP', 'lemma': 'he'}(d)
+SET (assoc d "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {}(b,a),
+      {}(b),
+      {}(b,c),
+      {}(c),
+      {}(c,d),
+      {'tag': 'PRP', 'lemma': 'he'}(d)
+SET (assoc d "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {}(b,a),
+      {}(b),
+      {}(b,c),
+      {}(c),
+      {}(c,d),
+      {}(d),
+      {}(d,e),
+      {'tag': 'PRP', 'lemma': 'he'}(e)
+SET (assoc d "name" (get a "name"));
+
+# Rules for 'she'
+
+# Jane drove home and he arrived in time
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {'type': 'AGENT'}(b,a),
+      {'tag': 'v'}(b),
+      {}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'AGENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'she'}(d)
+SET (assoc d "refer_to" (get a "name"));
+
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {'type': 'PATIENT'}(b,a),
+      {'tag': 'v'}(b),
+      {}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'AGENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'she'}(d)
+SET (assoc d "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {'type': 'AGENT'}(b,a),
+      {'tag': 'v'}(b),
+      {}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'PATIENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'she'}(d)
+SET (assoc d "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {'type': 'PATIENT'}(b,a),
+      {'tag': 'v'}(b),
+      {}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'PATIENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'she'}(d)
+SET (assoc d "name" (get a "name"));
+
+# Generic pronoun match
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {}(b,a),
+      {}(b),
+      {}(b,c),
+      {'tag': 'PRP', 'lemma': 'she'}(c)
+SET (assoc c "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {}(b,a),
+      {}(b),
+      {}(b,c),
+      {}(c),
+      {}(c,d),
+      {'tag': 'PRP', 'lemma': 'she'}(d)
+SET (assoc d "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {}(b,a),
+      {}(b),
+      {}(b,c),
+      {}(c),
+      {}(c,d),
+      {'tag': 'PRP', 'lemma': 'she'}(d)
+SET (assoc d "name" (get a "name"));
+
+MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+      {}(b,a),
+      {}(b),
+      {}(b,c),
+      {}(c),
+      {}(c,d),
+      {}(d),
+      {}(d,e),
+      {'tag': 'PRP', 'lemma': 'she'}(e)
+SET (assoc d "name" (get a "name"));

@@ -1,10 +1,12 @@
+import os
 import spacy
 
 from ..auxiliary import tag_is_verb, tag_is_noun, tag_is_adjective
 from ..auxiliary import Collator
 
-#parser = spacy.en.English()
 parser = spacy.load('en')
+
+_path = os.path.dirname(__file__)
 
 
 def simplify_tag(tag):
@@ -23,7 +25,11 @@ class SpacyParser:
     _character_that_opens_entity_tag = '{'
     _character_that_closes_entity_tag = '}'
     _character_that_defines_unifier_string = '#'
-    _word_substitution = {'(' : 'LRB', ')' : 'RRB'}
+    _word_substitution = {'(': 'LRB', ')': 'RRB'}
+    _set_of_masculine_names = set(
+        [item.replace('\n', '') for item in open(os.path.join(_path, '../data/masculine_names.txt')).readlines()])
+    _set_of_feminine_names = set(
+        [item.replace('\n', '') for item in open(os.path.join(_path, '../data/feminine_names.txt')).readlines()])
 
     collator = Collator(names_to_collate_forward=[_character_that_opens_entity_tag],
                         names_to_collate_backward=[_character_that_closes_entity_tag])
@@ -114,6 +120,17 @@ class SpacyParser:
                 lemmas[i] = token.orth_.lower()
         return edges, tags, types, lemmas
 
+    def __get_gender_guess(self, compound, entity):
+        if entity != 'PERSON':
+            return None
+        names = compound.split()
+        for name in names:
+            if name in self._set_of_feminine_names:
+                return 'f'
+            if name in self._set_of_masculine_names:
+                return 'm'
+        return None
+
     def __create_graph_from_elements(self, names, words, edges, tags, types, lemmas, entities):
         db = self.db
         for edge in edges:
@@ -149,6 +166,7 @@ class SpacyParser:
                         'compound': lhs_compound,
                         'entity': lhs_entity,
                         'lemma': lhs_lemma,
+                        'gender_guess': self.__get_gender_guess(lhs_compound, lhs_entity),
                         'refers_to': None}
             lhs_string = str(lhs_dict) + '(' + lhs_name + ')'
             rhs_dict = {'word': rhs_word,
@@ -156,6 +174,7 @@ class SpacyParser:
                         'compound': rhs_compound,
                         'entity': rhs_entity,
                         'lemma': rhs_lemma,
+                        'gender_guess': self.__get_gender_guess(rhs_word, rhs_entity),
                         'refers_to': None}
             rhs_string = str(rhs_dict) + '(' + rhs_name + ')'
 

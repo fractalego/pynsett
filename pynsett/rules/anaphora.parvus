@@ -4,7 +4,7 @@
 # Rules for 'he'
 
 # John drove home and he arrived in time
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {'type': 'AGENT'}(b,a),
       {'tag': 'v'}(b),
       {}(b,c),
@@ -13,7 +13,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'he'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {'type': 'PATIENT'}(b,a),
       {'tag': 'v'}(b),
       {}(b,c),
@@ -22,7 +22,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'he'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {'type': 'AGENT'}(b,a),
       {'tag': 'v'}(b),
       {}(b,c),
@@ -31,7 +31,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'he'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {'type': 'PATIENT'}(b,a),
       {'tag': 'v'}(b),
       {}(b,c),
@@ -41,14 +41,14 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
 SET (assoc d "refers_to" (get a "name"));
 
 # Generic pronoun match
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {}(b,a),
       {}(b),
       {}(b,c),
       {'tag': 'PRP', 'lemma': 'he'}(c)
 SET (assoc c "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {}(b,a),
       {}(b),
       {}(b,c),
@@ -57,7 +57,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'he'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {}(b,a),
       {}(b),
       {}(b,c),
@@ -66,7 +66,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'he'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {}(b,a),
       {}(b),
       {}(b,c),
@@ -80,7 +80,7 @@ SET (assoc d "refers_to" (get a "name"));
 # Rules for 'she'
 
 # Jane drove home and he arrived in time
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'f'}(a),
       {'type': 'AGENT'}(b,a),
       {'tag': 'v'}(b),
       {}(b,c),
@@ -89,7 +89,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'she'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'f'}(a),
       {'type': 'PATIENT'}(b,a),
       {'tag': 'v'}(b),
       {}(b,c),
@@ -98,7 +98,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'she'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'f'}(a),
       {'type': 'AGENT'}(b,a),
       {'tag': 'v'}(b),
       {}(b,c),
@@ -107,7 +107,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'she'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'f'}(a),
       {'type': 'PATIENT'}(b,a),
       {'tag': 'v'}(b),
       {}(b,c),
@@ -117,7 +117,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
 SET (assoc d "refers_to" (get a "name"));
 
 # Generic pronoun match
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'f'}(a),
       {}(b,a),
       {}(b),
       {}(b,c),
@@ -133,7 +133,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'she'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'f'}(a),
       {}(b,a),
       {}(b),
       {}(b,c),
@@ -142,7 +142,7 @@ MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {'tag': 'PRP', 'lemma': 'she'}(d)
 SET (assoc d "refers_to" (get a "name"));
 
-MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'f'}(a),
       {}(b,a),
       {}(b),
       {}(b,c),

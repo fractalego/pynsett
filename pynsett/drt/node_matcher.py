@@ -13,6 +13,12 @@ class VectorNodeMatcher(StringNodeMatcher):
         self._metric = metric
 
     def _match(self, key, lhs, rhs):
+        if key == 'gender_guess':
+            return True
+
+        if key == 'refers_to':
+            return True
+
         if key == 'entity':
             return lhs == rhs
 

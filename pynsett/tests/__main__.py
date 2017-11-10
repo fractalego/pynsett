@@ -1,6 +1,7 @@
 import os
 import unittest
 
+from pynsett.discourse.anaphora import SingleSentenceAnaphoraVisitor
 from pynsett.drt import Drs
 from pynsett.knowledge import Knowledge
 from pynsett.inference import ForwardInference
@@ -11,6 +12,9 @@ from pynsett.writer import RelationTripletsWriter
 _path = os.path.dirname(__file__)
 
 metric = MetricFactory.get_best_available_metric()
+
+_knowledge = Knowledge()
+_knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
 
 
 class Tests(unittest.TestCase):
@@ -134,11 +138,21 @@ class Tests(unittest.TestCase):
     def test_personal_pronouns(self):
         sentence = 'I have a red dog'
         drs = Drs.create_from_natural_language(sentence)
-        knowledge = Knowledge()
-        knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
-        fi = ForwardInference(drs, knowledge)
+        fi = ForwardInference(drs, _knowledge)
         drs_and_weight = fi.compute()
         writer = RelationTripletsWriter()
         lst = drs_and_weight[0][0].visit(writer)
         expected_list = [('I', 'OWN', 'dog')]
+        self.assertEqual(lst, expected_list)
+
+    def test_pronoun_coreference(self):
+        sentence = 'John drove home where he has a cat.'
+        drs = Drs.create_from_natural_language(sentence)
+        anaphora = SingleSentenceAnaphoraVisitor()
+        drs.visit(anaphora)
+        fi = ForwardInference(drs, _knowledge)
+        drs_and_weight = fi.compute()
+        writer = RelationTripletsWriter()
+        lst = drs_and_weight[0][0].visit(writer)
+        expected_list = [('John', 'OWN', 'cat')]
         self.assertEqual(lst, expected_list)

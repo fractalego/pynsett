@@ -86,7 +86,7 @@ class SpacyParser:
         return entities, new_words
 
     def __get_lemma_with_correct_capital_letters(self, lemma, word, tag):
-        if tag == 'PRP$':
+        if tag == 'PRP$' or tag == 'PRP':
             return word.lower()
         if lemma.lower() == word.lower() or word in self._word_substitution:
             return word

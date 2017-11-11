@@ -7,7 +7,7 @@ class VectorNodeMatcher(StringNodeMatcher):
     The word within each node is compared according to vector distance.
     """
 
-    _threshold = 1
+    _threshold = 3
 
     def __init__(self, metric):
         self._metric = metric
@@ -20,6 +20,9 @@ class VectorNodeMatcher(StringNodeMatcher):
             return True
 
         if key == 'entity':
+            return lhs == rhs
+
+        if key == 'type':
             return lhs == rhs
 
         if key == 'compound':

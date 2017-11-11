@@ -29,7 +29,7 @@ class GloveMetric(MetricBase):
 
     # Private
 
-    def __get_vector(self, word):
+    def _get_vector(self, word):
         try:
             return self._model[word]
         except:
@@ -45,7 +45,7 @@ class SpacyMetric(MetricBase):
 
     # Private
 
-    def __get_vector(self, word):
+    def _get_vector(self, word):
         try:
             return self._vocab[word]
         except:

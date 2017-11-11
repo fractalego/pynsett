@@ -4,16 +4,18 @@ DEFINE FAC AS {FAC};
 DEFINE GPE AS {GPE};
 DEFINE LOC AS {LOC};
 DEFINE MONEY AS {MONEY};
+DEFINE DATE AS {DATE};
 DEFINE TIME AS {TIME};
 
 DEFINE AFFILIATION AS [conservative, progressive, centrist, tori, labour];
+DEFINE ANIMAL AS [animal, horse, cat, dog, mammal]
 DEFINE ARTIFACT AS [artifact, guitar, cycle, bicycle, car, watch];
 DEFINE AWARD AS [award, prize];
 DEFINE DEGREE AS [PhD, BSc, MEng, MSc, master, degree];
 DEFINE FIELD AS [field, medicine, theory];
 DEFINE MASCOT AS [animal, mammal, puppet];
 DEFINE NATIONALITY AS [nationality, italian, english, american];
-DEFINE ROLE AS [engineer, doctor, researcher];
+DEFINE ROLE AS [engineer, doctor, researcher, painter];
 DEFINE TEAM AS [team, group, club];
 DEFINE UNIVERSITY AS [university, academy, polytechnic];
 
@@ -24,6 +26,9 @@ MATCH "PERSON#1 works as a ROLE#2"
 CREATE (JOB_TITLE 1 2);
 
 MATCH "PERSON#1 is a ROLE#2"
+CREATE (JOB_TITLE 1 2);
+
+MATCH "PERSON#1 becomes a ROLE#2"
 CREATE (JOB_TITLE 1 2);
 
 
@@ -56,16 +61,19 @@ CREATE (BIRTH_PLACE 1 2);
 
 # Rules for BIRTH_DAY
 
-MATCH "PERSON#1 was born in TIME#2"
+MATCH "PERSON#1 was born in DATE#2"
 CREATE (BIRTH_DAY 1 2);
 
-MATCH "PERSON#1 was born during TIME#2"
-CREATE (BIRTH_DAT 1 2);
+MATCH "PERSON#1 was born during DATE#2"
+CREATE (BIRTH_DAY 1 2);
 
 
 # Rules for MEMBER_OF
 
 MATCH "PERSON#1 is a member of ORG#2"
+CREATE (MEMBER_OF 1 2);
+
+MATCH "PERSON#1 becomes a member of ORG#2"
 CREATE (MEMBER_OF 1 2);
 
 MATCH "PERSON#1 belongs to ORG#2"
@@ -74,10 +82,10 @@ CREATE (MEMBER_OF 1 2);
 
 # Rules for DEATH_DAY
 
-MATCH "PERSON#1 died in TIME#2"
+MATCH "PERSON#1 died in DATE#2"
 CREATE (DEATH_DAY 1 2);
 
-MATCH "PERSON#1 was killed in TIME#2"
+MATCH "PERSON#1 was killed in DATE#2"
 CREATE (DEATH_DAY 1 2);
 
 
@@ -277,6 +285,16 @@ CREATE (OWNS 1 2);
 
 MATCH "PERSON#1 buys an ARTIFACT#2"
 CREATE (OWNS 1 2);
+
+MATCH "PERSON#1 has an ANIMAL#2"
+CREATE (OWNS 1 2);
+
+MATCH "PERSON#1 owns an ANIMAL#2"
+CREATE (OWNS 1 2);
+
+MATCH "PERSON#1 buys an ANIMAL#2"
+CREATE (OWNS 1 2);
+
 
 MATCH {}(1), {'type': 'OWNS', 'name': 'r'}(1,2), {}(2)
 DELETE r

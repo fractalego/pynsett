@@ -156,3 +156,13 @@ class Tests(unittest.TestCase):
         lst = drs_and_weight[0][0].visit(writer)
         expected_list = [('John', 'OWN', 'cat')]
         self.assertEqual(lst, expected_list)
+
+    def test_birth_date(self):
+        sentence = 'Hans was born in 1582 or 1583 in Antwerp'
+        drs = Drs.create_from_natural_language(sentence)
+        fi = ForwardInference(drs, _knowledge)
+        drs_and_weight = fi.compute()
+        writer = RelationTripletsWriter()
+        lst = drs_and_weight[0][0].visit(writer)
+        expected_list = [('Hans', 'BIRTH_DAY', '1582')]
+        self.assertEqual(lst, expected_list)

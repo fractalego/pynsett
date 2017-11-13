@@ -48,6 +48,17 @@ MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {'tag': 'PRP', 'lemma': 'he'}(c)
 SET (assoc c "refers_to" (get a "name"));
 
+MATCH {'entity': 'PERSON', 'tag': 'n', 'gender_guess': 'm'}(v2),
+      {}(v3),
+      {}(v4),
+      {}(v6),
+      {}(v3,v4),
+      {}(v4,v6),
+      {}(c,v6),
+      {'type': 'AGENT'}(v3,v2),
+      {'tag': 'PRP', 'lemma': 'he'}(c)
+SET (assoc c "refers_to" (get v2 "name"));
+
 MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
       {}(b,a),
       {}(b),
@@ -123,6 +134,17 @@ MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'f'}(a),
       {}(b,c),
       {'tag': 'PRP', 'lemma': 'she'}(c)
 SET (assoc c "refers_to" (get a "name"));
+
+MATCH {'entity': 'PERSON', 'tag': 'n', 'gender_guess': 'f'}(v2),
+      {}(v3),
+      {}(v4),
+      {}(v6),
+      {}(v3,v4),
+      {}(v4,v6),
+      {}(c,v6),
+      {'type': 'AGENT'}(v3,v2),
+      {'tag': 'PRP', 'lemma': 'she'}(c)
+SET (assoc c "refers_to" (get v2 "name"));
 
 MATCH {'tag': 'n', 'entity': 'PERSON'}(a),
       {}(b,a),

@@ -15,6 +15,8 @@ class Discourse:
         self.sentences_list = sent_tokenize(text)
         for sentence_index, sentence in enumerate(self.sentences_list):
             try:
+                if sentence == '.':
+                    continue
                 drs = Drs.create_from_natural_language(sentence)
                 drs.visit(self._single_sentence_anaphora_visitor)
                 self.drs_list.append(drs)
@@ -24,6 +26,7 @@ class Discourse:
     # Private
     def __sanitize_text(self, text):
         text = text.replace('\n', '.\n')
+        text = text.replace('.[', '. [')
         return text
 
     # Iterator operations

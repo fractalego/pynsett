@@ -1,0 +1,14 @@
+
+# Personal pronouns
+
+# Rules for 'he'
+
+# John drove home and he arrived in time
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
+      {'type': 'AGENT'}(b,a),
+      {'tag': 'v'}(b),
+      {'type': 'FOLLOWING_SENTENCE'}(b,c),
+      {'tag': 'v'}(c),
+      {'type': 'AGENT'}(c,d),
+      {'tag': 'PRP', 'lemma': 'he'}(d)
+SET (assoc d "refers_to" (get a "name"));

@@ -1,6 +1,7 @@
 import os
 
 from pynsett.discourse.anaphora import SingleSentenceAnaphoraVisitor
+from pynsett.discourse.single_tokens_visitors import HeadTokenVisitor
 from pynsett.drt import Drs
 from pynsett.knowledge import Knowledge
 from pynsett.inference import ForwardInference
@@ -24,6 +25,10 @@ print(drs)
 
 anaphora = SingleSentenceAnaphoraVisitor()
 drs.visit(anaphora)
+
+head_token_visitor = HeadTokenVisitor(1)
+drs.visit(head_token_visitor)
+
 print('---')
 print(drs)
 

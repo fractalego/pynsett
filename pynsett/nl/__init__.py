@@ -44,8 +44,8 @@ class SpacyParser:
         names, words = self.__get_names(words)
         entities, words = self.__get_entities(words)
 
-        edges, tags, types, lemmas = self.__get_edges_tags_types_and_entities(names, words, entities)
-        g = self.__create_graph_from_elements(names, words, edges, tags, types, lemmas, entities)
+        edges, tags, types, lemmas, head_tokens = self.__get_edges_tags_types_and_entities(names, words, entities)
+        g = self.__create_graph_from_elements(names, words, edges, tags, types, lemmas, entities, head_tokens)
         return g
 
     # Private
@@ -99,13 +99,19 @@ class SpacyParser:
         tags = []
         types = []
         lemmas = []
+        head_tokens = []
         i = 0
         items_dict = dict()
         for item in parsed:
             items_dict[item.idx] = i
             i += 1
+        head_token_index = items_dict[self.__get_head_token_idx(parsed)]
         for item in parsed:
             index = items_dict[item.idx]
+            if index == head_token_index:
+                head_tokens.append(True)
+            else:
+                head_tokens.append(False)
             for child_index in [items_dict[l.idx] for l in item.children]:
                 edges.append((index, child_index))
             tags.append(simplify_tag(item.tag_))
@@ -118,7 +124,7 @@ class SpacyParser:
             if token.tag_ == 'PRP' and token.orth_.lower() != 'it':
                 entities[i] = 'PERSON'
                 lemmas[i] = token.orth_.lower()
-        return edges, tags, types, lemmas
+        return edges, tags, types, lemmas, head_tokens
 
     def __get_gender_guess(self, compound, entity):
         if entity != 'PERSON':
@@ -131,7 +137,13 @@ class SpacyParser:
                 return 'm'
         return None
 
-    def __create_graph_from_elements(self, names, words, edges, tags, types, lemmas, entities):
+    def __get_head_token_idx(self, tokens):
+        for token in tokens:
+            if token.dep_ == 'ROOT':
+                return token.idx
+        return -1
+
+    def __create_graph_from_elements(self, names, words, edges, tags, types, lemmas, entities, head_tokens):
         db = self.db
         for edge in edges:
             lhs_vertex = edge[0]
@@ -149,6 +161,8 @@ class SpacyParser:
             lhs_tag = tags[lhs_vertex]
             rhs_tag = tags[rhs_vertex]
             edge_type = types[rhs_vertex].upper()
+            lhs_head_token = head_tokens[lhs_vertex]
+            rhs_head_token = head_tokens[rhs_vertex]
 
             if lhs_entity == lhs_word:
                 lhs_word = '*'
@@ -167,6 +181,7 @@ class SpacyParser:
                         'entity': lhs_entity,
                         'lemma': lhs_lemma,
                         'gender_guess': self.__get_gender_guess(lhs_compound, lhs_entity),
+                        'is_head_token': lhs_head_token,
                         'refers_to': None}
             lhs_string = str(lhs_dict) + '(' + lhs_name + ')'
             rhs_dict = {'word': rhs_word,
@@ -175,6 +190,7 @@ class SpacyParser:
                         'entity': rhs_entity,
                         'lemma': rhs_lemma,
                         'gender_guess': self.__get_gender_guess(rhs_word, rhs_entity),
+                        'is_head_token': rhs_head_token,
                         'refers_to': None}
             rhs_string = str(rhs_dict) + '(' + rhs_name + ')'
 

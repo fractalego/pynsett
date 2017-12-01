@@ -19,6 +19,9 @@ class VectorNodeMatcher(StringNodeMatcher):
         if key == 'refers_to':
             return True
 
+        if key == 'is_head_token':
+            return True
+
         if key == 'entity':
             return lhs == rhs
 

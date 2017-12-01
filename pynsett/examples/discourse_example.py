@@ -18,5 +18,7 @@ triplets = extractor.extract()
 for triplet in triplets:
     print(triplet)
 
+print(discourse._discourse)
+
 #for drs in discourse._drs_list:
 #    print(drs)

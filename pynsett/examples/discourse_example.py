@@ -6,7 +6,7 @@ from pynsett.knowledge import Knowledge
 
 _path = os.path.dirname(__file__)
 
-text = "This is a test. This is another."
+text = "John is a carpenter. He has a house."
 
 knowledge = Knowledge()
 knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
@@ -20,5 +20,5 @@ for triplet in triplets:
 
 print(discourse._discourse)
 
-#for drs in discourse._drs_list:
-#    print(drs)
+for drs in discourse._drs_list:
+    print(drs)

@@ -2,7 +2,7 @@ import logging
 
 from nltk.tokenize import sent_tokenize
 
-from pynsett.discourse.anaphora import SingleSentenceAnaphoraVisitor
+from pynsett.discourse.anaphora import SingleSentenceAnaphoraVisitor, InterSentenceAnaphoraVisitor
 from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, SentenceJoinerVisitor
 from pynsett.discourse.single_tokens_visitors import HeadTokenVisitor
 from pynsett.inference.forward_inference import UniqueNamesModifier
@@ -34,6 +34,7 @@ class Discourse:
             self._discourse.visit(GraphJoinerVisitor(drs))
         for sentence_index in range(len(self._sentences_list) - 1):
             self._discourse.visit(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
+        self._discourse.visit(InterSentenceAnaphoraVisitor(len(self._sentences_list)))
 
     # Private
 

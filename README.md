@@ -34,8 +34,6 @@ Let's assume we want to extract wikidata relations from a file named 'test.txt'.
 An example code would be
 
 ```python
-import os
-
 from pynsett.discourse import Discourse
 from pynsett.extractor import Extractor
 from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge

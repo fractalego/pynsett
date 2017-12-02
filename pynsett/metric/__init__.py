@@ -47,9 +47,9 @@ class SpacyMetric(MetricBase):
 
     def _get_vector(self, word):
         try:
-            return self._vocab[word]
+            return self._vocab[word].vector
         except:
-            return self._vocab[word]
+            return self._vocab['entity'].vector
 
 
 class MetricFactory:

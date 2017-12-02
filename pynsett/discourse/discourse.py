@@ -50,3 +50,6 @@ class Discourse:
 
     def __len__(self):
         return len(self._sentences_list)
+
+    def get_discourse_drs(self):
+        return self._discourse

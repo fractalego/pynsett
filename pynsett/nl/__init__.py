@@ -181,7 +181,7 @@ class SpacyParser:
                         'entity': lhs_entity,
                         'lemma': lhs_lemma,
                         'gender_guess': self.__get_gender_guess(lhs_compound, lhs_entity),
-                        'is_head_token': lhs_head_token,
+                        #'is_head_token': lhs_head_token,
                         'refers_to': None}
             lhs_string = str(lhs_dict) + '(' + lhs_name + ')'
             rhs_dict = {'word': rhs_word,
@@ -190,7 +190,7 @@ class SpacyParser:
                         'entity': rhs_entity,
                         'lemma': rhs_lemma,
                         'gender_guess': self.__get_gender_guess(rhs_word, rhs_entity),
-                        'is_head_token': rhs_head_token,
+                        #'is_head_token': rhs_head_token,
                         'refers_to': None}
             rhs_string = str(rhs_dict) + '(' + rhs_name + ')'
 

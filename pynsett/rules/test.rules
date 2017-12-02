@@ -7,29 +7,29 @@ DEFINE ANIMAL AS [cat, dog, mammal]
 DEFINE NATIONALITY AS [nationality, italian, english, american];
 
 
-#MATCH "PERSON#1 was born in DATE#2"
-#CREATE (BIRTH_DAY 1 2);
+MATCH "PERSON#1 was born in DATE#2"
+CREATE (BIRTH_DAY 1 2);
 
-#MATCH "PERSON#1 is a NATIONALITY#2"
-#CREATE (NATIONALITY 1 2);
+MATCH "PERSON#1 is a NATIONALITY#2"
+CREATE (NATIONALITY 1 2);
 
-#MATCH {}(1), {'name': 'r', 'type': 'OWNS'}(1,2), {}(2)
-#DELETE r
-#CREATE (OWN 1 2);
+MATCH {}(1), {'name': 'r', 'type': 'OWNS'}(1,2), {}(2)
+DELETE r
+CREATE (OWN 1 2);
 
-#MATCH "PERSON#1 has an ARTIFACT#2"
-#CREATE (OWN 1 2);
+MATCH "PERSON#1 has an ARTIFACT#2"
+CREATE (OWN 1 2);
 
-#MATCH "PERSON#1 has an ANIMAL#2"
-#CREATE (OWN 1 2);
+MATCH "PERSON#1 has an ANIMAL#2"
+CREATE (OWN 1 2);
 
 
 MATCH "PERSON#1 works as a ROLE#2"
 CREATE (HAS_ROLE 1 2);
 
-#MATCH "PERSON#1 works for a ORG#2"
-#CREATE (WORKS_FOR 1 2);
+MATCH "PERSON#1 works for a ORG#2"
+CREATE (WORKS_FOR 1 2);
 
-#MATCH "PERSON#1 is a ROLE#2"
-#CREATE (HAS_ROLE 1 2);
+MATCH "PERSON#1 is a ROLE#2"
+CREATE (HAS_ROLE 1 2);
 

@@ -13,7 +13,7 @@ class Discourse:
     _logger = logging.getLogger(__name__)
     _single_sentence_anaphora_visitor = SingleSentenceAnaphoraVisitor()
     _unique = UniqueNamesModifier()
-    _discourse = Drs.create_from_predicates_string('{}(discourse)')
+    _discourse = Drs.create_empty()
     _drs_list = []
 
     def __init__(self, text):
@@ -29,6 +29,9 @@ class Discourse:
                 self._drs_list.append(drs)
             except Exception as e:
                 self._logger.warning('Exception caught in Discourse: ' + str(e))
+        if len(self._sentences_list) == 1:
+            self._discourse = self._drs_list[0]
+            return
         for drs in self._drs_list:
             drs.visit(self._unique)
             self._discourse.visit(GraphJoinerVisitor(drs))

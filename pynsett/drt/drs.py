@@ -41,6 +41,10 @@ class Drs:
     def create_from_predicates_string(string):
         return Drs(create_graph_from_string(string))
 
+    @staticmethod
+    def create_empty():
+        return Drs(Graph(directed=True))
+
     def plot(self):
         import copy
         g = copy.deepcopy(self._g)

@@ -1,8 +1,10 @@
 import os
 import unittest
 
+from pynsett.discourse import Discourse
 from pynsett.discourse.anaphora import SingleSentenceAnaphoraVisitor
 from pynsett.drt import Drs
+from pynsett.extractor import Extractor
 from pynsett.knowledge import Knowledge
 from pynsett.inference import ForwardInference
 from pynsett.metric import MetricFactory
@@ -166,3 +168,11 @@ class Tests(unittest.TestCase):
         lst = drs_and_weight[0][0].visit(writer)
         expected_list = [('Hans', 'BIRTH_DAY', '1582')]
         self.assertEqual(lst, expected_list)
+
+    def test_multi_sentence_anaphora(self):
+        text = "John is happy. He is a carpenter"
+        discourse = Discourse(text)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('John', 'HAS_ROLE', 'carpenter')]
+        self.assertEqual(triplets, expected_triplets)

@@ -28,11 +28,11 @@ class InterSentenceAnaphoraVisitor:
 
     def __init__(self, num_sentences):
         self._rules = open(os.path.join(_path, '../rules/inter_sentence_anaphora.parvus')).read()
-        self._times_to_repeat_rules = num_sentences
+        self._times_to_repeat_rules = num_sentences - 1
 
     def apply(self, g):
         if not isinstance(g, Graph):
             raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g)
-        repeat_db_rules_n_times(db, self._rules, self._times_to_repeat_rules)
-        return
+        lst = db.query(self._rules, repeat_n_times=self._times_to_repeat_rules)
+        return lst

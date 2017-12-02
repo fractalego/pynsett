@@ -6,7 +6,7 @@ from pynsett.knowledge import Knowledge
 
 _path = os.path.dirname(__file__)
 
-text = "Jane works for Google."
+text = "John is happy. He is a carpenter"
 
 knowledge = Knowledge()
 knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
@@ -17,5 +17,3 @@ triplets = extractor.extract()
 
 for triplet in triplets:
     print(triplet)
-
-print(discourse.get_discourse_drs())

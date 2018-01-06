@@ -169,10 +169,18 @@ class Tests(unittest.TestCase):
         expected_list = [('Hans', 'BIRTH_DAY', '1582')]
         self.assertEqual(lst, expected_list)
 
-    def test_multi_sentence_anaphora(self):
+    def test_multi_sentence_anaphora_masculine_names(self):
         text = "John is happy. He is a carpenter"
         discourse = Discourse(text)
         extractor = Extractor(discourse, _knowledge)
         triplets = extractor.extract()
         expected_triplets = [('John', 'HAS_ROLE', 'carpenter')]
+        self.assertEqual(triplets, expected_triplets)
+
+    def test_multi_sentence_anaphora_feminine_names(self):
+        text = "Jane is happy. She is a carpenter"
+        discourse = Discourse(text)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('Jane', 'HAS_ROLE', 'carpenter')]
         self.assertEqual(triplets, expected_triplets)

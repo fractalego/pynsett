@@ -176,4 +176,4 @@ Known issues and shortcomings
 -----------------------------
 
 * The system is still a little bit slow (about 0.07 sec per sentence)
-* Anaphora is not done 
+* Anaphora needs to be improved

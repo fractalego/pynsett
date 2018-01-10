@@ -2,7 +2,7 @@
 # Deleting the articles
 
 MATCH {'tag': 'DT'}(a), {'name': 'r', 'type':'DET'}(b,a), {}(b)
-  WHERE (in (get a "word") ["a", "an", "the", "A", "An", "The"])
+  WHERE (in (get a "word") ["a" "an" "the" "A" "An" "The"])
 DELETE a, r;
 
 

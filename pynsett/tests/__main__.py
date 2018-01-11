@@ -184,3 +184,13 @@ class Tests(unittest.TestCase):
         triplets = extractor.extract()
         expected_triplets = [('Jane', 'HAS_ROLE', 'carpenter')]
         self.assertEqual(triplets, expected_triplets)
+
+    def test_compund_nouns_gender_guess(self):
+        text = "Jane Smith is an engineer"
+        drs = Drs.create_from_natural_language(text)
+        expected_drs = Drs.create_from_predicates_string(
+            "{'compound': 'Jane Smith', 'gender_guess': 'f'}(a)")
+        lst = drs.visit(DrsMatcher(expected_drs, metric))
+        is_match = len(lst) > 1
+        self.assertTrue(is_match)
+

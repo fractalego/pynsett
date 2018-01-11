@@ -9,7 +9,8 @@ CREATE {}(a), {'type': 'CONJUNCTION'}(a,b), {}(b);
 MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'COMPOUND'}(a,b), {'tag': 'n'}(b)
 DELETE r
 CREATE {}(a), {'type': 'of'}(a,b), {}(b)
-SET (assoc a "compound" (+ (get b "word") " " (get a "word")));
+SET (assoc a "compound" (+ (get b "word") " " (get a "word")))
+SET (assoc a "gender_guess" (get b "gender_guess"));
 
 MATCH {}(a), {'name': 'r', 'type':'NUMMOD'}(a,b), {}(b)
 DELETE r

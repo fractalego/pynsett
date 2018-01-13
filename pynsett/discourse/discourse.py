@@ -44,6 +44,9 @@ class Discourse:
     def __sanitize_text(self, text):
         text = text.replace('\n', '.\n')
         text = text.replace('.[', '. [')
+        text = text.replace('...', '.')
+        text = text.replace('..', '.')
+        text = text.replace('\n.', '\n')
         return text
 
     # Iterator operations

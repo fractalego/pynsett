@@ -23,6 +23,16 @@ MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
 SET (assoc d "refers_to" (get a "name"));
 
 
+MATCH {'tag': 'n', 'entity': 'PERSON', 'gender_guess': 'm'}(a),
+      {}(a,b),
+      {}(b),
+      {'type': 'NEXT_SENTENCE'}(b,c),
+      {}(c),
+      {}(d,c),
+      {'tag': 'PRP', 'lemma': 'he'}(d)
+SET (assoc d "refers_to" (get a "name"));
+
+
 # Rules for 'she'
 
 # John drove home and he arrived in time

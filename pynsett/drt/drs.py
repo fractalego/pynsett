@@ -13,7 +13,8 @@ def _create_graph_from_natural_language(sentence):
     g = Graph(directed=True)
     db = GraphDatabase(g)
     parser = Parser(db)
-    db = parser.execute(sentence)
+    parsed_dict = parser.execute(sentence)
+    db = parsed_dict['graph']
 
     n = 5
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/verbs.parvus')).read(), n)
@@ -21,21 +22,28 @@ def _create_graph_from_natural_language(sentence):
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/adjectives.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/delete.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/subordinates.parvus')).read(), n)
-    return db.get_graph()
-
+    return {'graph': db.get_graph(),
+            'name_word_pairs': parsed_dict['name_word_pairs'],
+            }
 
 class Drs:
-    def __init__(self, g):
+
+    def __init__(self, g, name_word_pairs=None):
         if not isinstance(g, Graph):
             raise TypeError("Drs needs an igraph.Graph as an argument")
         self._g = g
+        if name_word_pairs:
+            self._name_word_pairs = name_word_pairs
+        else:
+            self._name_word_pairs = [(v['name'], v['word']) for v in self._g.vs]
 
     def __str__(self):
         return convert_graph_to_string(self._g)
 
     @staticmethod
     def create_from_natural_language(sentence):
-        return Drs(_create_graph_from_natural_language(sentence))
+        parsed_dict = _create_graph_from_natural_language(sentence)
+        return Drs(parsed_dict['graph'], parsed_dict['name_word_pairs'])
 
     @staticmethod
     def create_from_predicates_string(string):
@@ -53,7 +61,8 @@ class Drs:
         plot(g)
 
     def copy(self):
-        return Drs(self._g.as_directed())
+        return Drs(g=self._g.as_directed(),
+                   name_word_pairs=list(self._name_word_pairs))
 
     def visit(self, function):
         return function.apply(self._g)

@@ -46,7 +46,10 @@ class SpacyParser:
 
         edges, tags, types, lemmas, head_tokens = self.__get_edges_tags_types_and_entities(names, words, entities)
         g = self.__create_graph_from_elements(names, words, edges, tags, types, lemmas, entities, head_tokens)
-        return g
+
+        return {'graph': g,
+                'name_word_pairs': ((n, w) for n, w in zip(names, words)),
+                }
 
     # Private
 

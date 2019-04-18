@@ -8,3 +8,4 @@ gensim
 more_itertools
 parvusdb==0.0.22
 hy
+nose

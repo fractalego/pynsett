@@ -48,7 +48,7 @@ class SpacyParser:
         g = self.__create_graph_from_elements(names, words, edges, tags, types, lemmas, entities, head_tokens)
 
         return {'graph': g,
-                'name_word_pairs': ((n, w) for n, w in zip(names, words)),
+                'name_word_pairs': [(n, w) for n, w in zip(names, words)],
                 }
 
     # Private

@@ -4,3 +4,7 @@
    instead of every node and edge comparison.
 4) ast_compile can be done during add_line() instead of _execute_code()
 5) Use en_core_web_md by default: the NER is not good enough for en_core_web_sm
+
+6) IN PARVUSDB use hy==0.13.0
+7) Link automatically en_core... to en
+8) pip install paramiko?

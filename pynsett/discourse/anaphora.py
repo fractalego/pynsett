@@ -53,30 +53,28 @@ class AllenCoreferenceVisitor:
 
 
 class AllenCoreferenceVisitorsFactory:
-    def __init__(self, name_word_pairs):
+    def __init__(self, word_nodes):
         self._predictor = Predictor.from_path(os.path.join(_path, '../data/coref-model-2018.02.05.tar.gz'))
-        self._coreference_dict = self.__create_coreference_dict(name_word_pairs)
+        self._coreference_dict = self.__create_coreference_dict(word_nodes)
 
     def create(self, sentence_index):
         return AllenCoreferenceVisitor(sentence_index, self._coreference_dict)
 
     # Private
 
-    def __create_coreference_dict(self, name_word_pairs):
+    def __create_coreference_dict(self, word_nodes):
         coreference_dict = {}
 
-        words = [w for _, w in name_word_pairs]
-        keys = [n for n, _ in name_word_pairs]
+        words = [item['word'] for item in word_nodes]
         clusters = self.__predict(words)
-        for cluster in clusters:
-            cluster_words = ['_'.join(words[s:e + 1]) for s, e in cluster]
+        for index, cluster in enumerate(clusters):
+            cluster_words = ['_'.join(words[s:e + 1]) + '_' + str(index) for s, e in cluster]
             for start, end in cluster:
                 if start != end:
                     continue
-                coreference_dict[keys[start]] = cluster_words
+                coreference_dict[word_nodes[start]['name']] = cluster_words
 
         return coreference_dict
 
     def __predict(self, words):
         return self._predictor.predict_tokenized(words)['clusters']
-

@@ -18,18 +18,21 @@ class Extractor:
         :return: A list of the extracted triplets
         '''
         triplets = []
-        discouse_triplets = self.__map_sentence_using_best_match(self._discourse.get_discourse_drs())
+        discouse_triplets = self.__map_all_sentences_using_best_match(self._discourse.drs_list)
         if discouse_triplets:
             triplets += discouse_triplets
         return sorted(list(set(triplets)), key=lambda x: x[1])
 
     # Private
+    def __map_all_sentences_using_best_match(self, drs_list):
+        triplets = []
+        for drs in drs_list:
+            triplets += self.__map_sentence_using_best_match(drs)
+        return [item for sublist in triplets for item in sublist]
 
     def __map_sentence_using_best_match(self, data):
         inference = ForwardInference(data, self._knowledge)
         results = inference.compute()
-        triplets = []
         writer = RelationTripletsWriter()
-        for result in results:
-            triplets += result[0].visit(writer)
+        triplets = [result[0].visit(writer) for result in results]
         return triplets

@@ -151,7 +151,7 @@ class PynsettUnitTests(unittest.TestCase):
         discourse = Discourse(sentence)
         extractor = Extractor(discourse, _knowledge)
         triplets = extractor.extract()
-        expected_triplets = [('John|he', 'OWN', 'cat')]
+        expected_triplets = [('John_0|he_0', 'OWN', 'cat')]
         self.assertEqual(triplets, expected_triplets)
 
     def test_birth_date(self):
@@ -169,7 +169,7 @@ class PynsettUnitTests(unittest.TestCase):
         discourse = Discourse(text)
         extractor = Extractor(discourse, _knowledge)
         triplets = extractor.extract()
-        expected_triplets = [('John|He', 'HAS_ROLE', 'carpenter')]
+        expected_triplets = [('John_0|He_0', 'HAS_ROLE', 'carpenter')]
         self.assertEqual(triplets, expected_triplets)
 
     def test_multi_sentence_anaphora_feminine_names(self):
@@ -177,7 +177,7 @@ class PynsettUnitTests(unittest.TestCase):
         discourse = Discourse(text)
         extractor = Extractor(discourse, _knowledge)
         triplets = extractor.extract()
-        expected_triplets = [('Jane|She', 'HAS_ROLE', 'carpenter')]
+        expected_triplets = [('Jane_0|She_0', 'HAS_ROLE', 'carpenter')]
         self.assertEqual(triplets, expected_triplets)
 
     def test_compound_nouns_gender_guess(self):
@@ -188,6 +188,15 @@ class PynsettUnitTests(unittest.TestCase):
         lst = drs.visit(DrsMatcher(expected_drs, metric))
         is_match = len(lst) > 1
         self.assertTrue(is_match)
+
+    def test_multiple_people_same_rule(self):
+        text = "John is ginger. He is a carpenter. test. Jane is blond. She is a carpenter. "
+        discourse = Discourse(text)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('John_0|He_0', 'HAS_ROLE', 'carpenter'),
+                             ('Jane_1|She_1', 'HAS_ROLE', 'carpenter')]
+        self.assertTrue(triplets, expected_triplets)
 
 
 if __name__ == '__main__':

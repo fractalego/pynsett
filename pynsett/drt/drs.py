@@ -25,21 +25,21 @@ def _create_graph_from_natural_language(sentence):
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/delete.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/subordinates.parvus')).read(), n)
     return {'graph': db.get_graph(),
-            'name_word_pairs': parsed_dict['name_word_pairs'],
+            'word_nodes': parsed_dict['word_nodes'],
             }
 
 
 class Drs:
 
-    def __init__(self, g, name_word_pairs=None):
+    def __init__(self, g, word_nodes=None):
         if not isinstance(g, Graph):
             raise TypeError("Drs needs an igraph.Graph as an argument")
         self._g = g
-        if name_word_pairs:
-            self._name_word_pairs = name_word_pairs
+        if word_nodes:
+            self._word_nodes = word_nodes
         elif self._g.vs:
             try:
-                self._name_word_pairs = [(v['name'], v['word']) for v in self._g.vs]
+                self._word_nodes = [(v['name'], v['word']) for v in self._g.vs]
             except KeyError as e:
                 _logger.warning(str(e))
 
@@ -47,13 +47,13 @@ class Drs:
         return convert_graph_to_string(self._g)
 
     @property
-    def name_word_pairs(self):
-        return self._name_word_pairs
+    def word_nodes(self):
+        return self._word_nodes
 
     @staticmethod
     def create_from_natural_language(sentence):
         parsed_dict = _create_graph_from_natural_language(sentence)
-        return Drs(parsed_dict['graph'], parsed_dict['name_word_pairs'])
+        return Drs(parsed_dict['graph'], parsed_dict['word_nodes'])
 
     @staticmethod
     def create_from_predicates_string(string):

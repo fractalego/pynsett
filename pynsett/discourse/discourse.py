@@ -18,24 +18,28 @@ class Discourse:
 
         text = self.__sanitize_text(text)
         self._sentences_list = sent_tokenize(text)
-        name_word_pairs = []
+        word_nodes = []
         for sentence_index, sentence in enumerate(self._sentences_list):
             try:
                 if sentence == '.':
                     continue
                 drs = Drs.create_from_natural_language(sentence)
-                name_word_pairs += [(str(sentence_index) + n, w) for n, w in drs.name_word_pairs]
+                word_nodes += assign_proper_index_to_nodes_names(drs.word_nodes, sentence_index)
                 drs.visit(HeadTokenVisitor(sentence_index))
                 drs.visit(SentenceNamesModifier(sentence_index))
                 self._drs_list.append(drs)
             except Exception as e:
                 self._logger.warning('Exception caught in Discourse: ' + str(e))
 
-        coreference_visitor_factory = AllenCoreferenceVisitorsFactory(name_word_pairs)
+        coreference_visitor_factory = AllenCoreferenceVisitorsFactory(word_nodes)
         for i, drs in enumerate(self._drs_list):
             drs.visit(coreference_visitor_factory.create(i))
 
         self.__create_discourse_graph()
+
+    @property
+    def drs_list(self):
+        return self._drs_list
 
     # Private
     def __create_discourse_graph(self):
@@ -65,3 +69,9 @@ class Discourse:
 
     def get_discourse_drs(self):
         return self._discourse
+
+
+def assign_proper_index_to_nodes_names(nodes, index):
+    for item in nodes:
+        item['name'] = str(index) + item['name']
+    return nodes

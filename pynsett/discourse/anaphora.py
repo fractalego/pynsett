@@ -68,8 +68,14 @@ class AllenCoreferenceVisitorsFactory:
         words = [item['word'] for item in word_nodes]
         clusters = self.__predict(words)
         for index, cluster in enumerate(clusters):
-            cluster_words = ['_'.join(words[s:e + 1]) + '_' + str(index) for s, e in cluster]
+            cluster_words = ['_'.join(words[s:e + 1]) + '_' + str(index) for s, e in cluster
+                             if word_nodes[s]['tag'] not in ['PRP', 'PRP$']]
             for start, end in cluster:
+                if word_nodes[end]['head_token']:
+                    start = end
+                elif word_nodes[start]['head_token']:
+                    end = start
+
                 if start != end:
                     continue
                 coreference_dict[word_nodes[start]['name']] = cluster_words

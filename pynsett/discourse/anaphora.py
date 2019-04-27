@@ -71,9 +71,9 @@ class AllenCoreferenceVisitorsFactory:
             cluster_words = ['_'.join(words[s:e + 1]) + '_' + str(index) for s, e in cluster
                              if word_nodes[s]['tag'] not in ['PRP', 'PRP$']]
             for start, end in cluster:
-                if word_nodes[end]['head_token']:
+                if word_nodes[end]['entity'] != '':
                     start = end
-                elif word_nodes[start]['head_token']:
+                elif word_nodes[start]['entity'] != '':
                     end = start
 
                 if start != end:

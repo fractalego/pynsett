@@ -9,16 +9,17 @@ parser = spacy.load('en')
 _path = os.path.dirname(__file__)
 
 
-def create_word_nodes(names, words, edges, tags, types, lemmas, head_tokens):
+def create_word_nodes(names, words, edges, tags, types, lemmas, head_tokens, entities):
     return [{'name': name,
              'word': word,
              'edge': edge,
              'tag': tag,
              'type': type,
              'lemma': lemma,
+             'entity': entity,
              'head_token': head_token}
-            for name, word, edge, tag, type, lemma, head_token
-            in zip(names, words, edges, tags, types, lemmas, head_tokens)]
+            for name, word, edge, tag, type, lemma, entity, head_token
+            in zip(names, words, edges, tags, types, lemmas, entities, head_tokens)]
 
 
 def simplify_tag(tag):
@@ -60,7 +61,7 @@ class SpacyParser:
         g = self.__create_graph_from_elements(names, words, edges, tags, types, lemmas, entities, head_tokens)
 
         return {'graph': g,
-                'word_nodes': create_word_nodes(names, words, edges, tags, types, lemmas, head_tokens),
+                'word_nodes': create_word_nodes(names, words, edges, tags, types, lemmas, head_tokens, entities),
                 }
 
     # Private

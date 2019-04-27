@@ -38,3 +38,26 @@ class SentenceJoinerVisitor:
         db = GraphDatabase(g)
         lst = db.query(self._rules, repeat_n_times=1)
         return lst
+
+
+class CoreferenceJoinerVisitor:
+    __logger = logging.getLogger(__name__)
+
+
+    def __init__(self):
+        self._rules = """
+        MATCH {'refers_to': %s}(a), {'refers_to': %s}(b)
+        CREATE {}(a), {'type': 'REFERS_TO'}(a,b), {}(b);
+        """
+
+
+    def apply(self, g):
+        parsed_before = []
+        db = GraphDatabase(g)
+        for v in g.vs:
+            refers_to = str(v['refers_to'])
+            if refers_to and refers_to not in parsed_before:
+                db.query(self._rules % (refers_to, refers_to), repeat_n_times=1)
+                parsed_before.append(refers_to)
+
+        return True

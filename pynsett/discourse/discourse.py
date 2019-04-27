@@ -4,7 +4,7 @@ from nltk.tokenize import sent_tokenize
 
 from pynsett.auxiliary.names_modifier import SentenceNamesModifier
 from pynsett.discourse.anaphora import AllenCoreferenceVisitorsFactory
-from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, SentenceJoinerVisitor
+from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, SentenceJoinerVisitor, CoreferenceJoinerVisitor
 from pynsett.discourse.single_tokens_visitors import HeadTokenVisitor
 from ..drt import Drs
 
@@ -41,6 +41,7 @@ class Discourse:
     def drs_list(self):
         return self._drs_list
 
+
     # Private
     def __create_discourse_graph(self):
         if len(self._sentences_list) == 1:
@@ -48,8 +49,9 @@ class Discourse:
             return
         for drs in self._drs_list:
             self._discourse.visit(GraphJoinerVisitor(drs))
-        for sentence_index in range(len(self._sentences_list) - 1):
-            self._discourse.visit(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
+        #for sentence_index in range(len(self._sentences_list) - 1):
+            #self._discourse.visit(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
+        self._discourse.visit(CoreferenceJoinerVisitor())
 
     def __sanitize_text(self, text):
         text = text.replace('\n', '.\n')

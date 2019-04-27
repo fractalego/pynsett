@@ -12,6 +12,9 @@ knowledge = Knowledge()
 knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
 
 discourse = Discourse(text)
+discourse._discourse.plot()
+
+
 extractor = Extractor(discourse, knowledge)
 triplets = extractor.extract()
 

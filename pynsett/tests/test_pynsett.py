@@ -198,6 +198,14 @@ class PynsettUnitTests(unittest.TestCase):
                              ('Jane_1', 'HAS_ROLE', 'carpenter')]
         self.assertTrue(triplets, expected_triplets)
 
+    def test_coreference_is_joined_in_graph(self):
+        text = "John is ginger. He is a carpenter. test. Jane is blond. She is a carpenter. "
+        discourse = Discourse(text)
+        expected_drs = Drs.create_from_predicates_string(
+            "{}(a), {}(b), {'type': 'REFERS_TO'}(a,b)")
+        lst = discourse._discourse.visit(DrsMatcher(expected_drs, metric))
+        is_match = len(lst) > 1
+        self.assertTrue(is_match)
 
 if __name__ == '__main__':
     unittest.main()

@@ -20,18 +20,14 @@ class RelationTripletsWriter(BaseWriter):
         db = GraphDatabase(g)
         lst = db.query("MATCH {}(a), {'type': 'relation', 'name': 'r'}(a,b), {}(b) RETURN a, b, r",
                        repeat_n_times=1)
-        triplets = [(self.__substitute_node_with_coreferent(item['a'], g)['compound'],
+        triplets = [(self.__get_correct_name(item['a'], g),
                      item['r']['text'],
-                     self.__substitute_node_with_coreferent(item['b'], g)['compound'])
+                     self.__get_correct_name(item['b'], g))
                     for item in lst]
         return triplets
 
-    def __substitute_node_with_coreferent(self, node, g):
-        try:
-            coreferent_name = node['refers_to']
-            if not coreferent_name:
-                return node
-            return g.vs.find(name=coreferent_name)
-        except Exception as e:
-            self._logger.warning("While fetching 'refers_to': " + str(e))
-            return node
+    def __get_correct_name(self, node, g):
+        coreferent_name = node['refers_to']
+        if not coreferent_name:
+            return node['compound']
+        return '|'.join(coreferent_name)

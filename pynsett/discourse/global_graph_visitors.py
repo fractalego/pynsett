@@ -38,3 +38,32 @@ class SentenceJoinerVisitor:
         db = GraphDatabase(g)
         lst = db.query(self._rules, repeat_n_times=1)
         return lst
+
+
+class CoreferenceJoinerVisitor:
+    __logger = logging.getLogger(__name__)
+
+
+    def __init__(self):
+        self._rules = """
+        MATCH {'refers_to': %s}(a), {'refers_to': %s}(b)
+        CREATE {}(a), {'type': 'REFERS_TO'}(a,b), {}(b)
+        CREATE {}(a), {'type': 'REFERS_TO'}(b,a), {}(b);
+        """
+
+
+    def apply(self, g):
+        #from igraph import plot
+        #g.vs['label'] = g.vs['refers_to']
+        #g.es['label'] = g.es['type']
+        #plot(g)
+
+        parsed_before = []
+        db = GraphDatabase(g)
+        for v in g.vs:
+            refers_to = v['refers_to']
+            if refers_to and refers_to not in parsed_before:
+                db.query(self._rules % (str(refers_to), str(refers_to)), repeat_n_times=1)
+                parsed_before.append(refers_to)
+
+        return True

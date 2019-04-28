@@ -18,9 +18,11 @@ _path = os.path.dirname(__file__)
 #sentence = 'His dog was red'
 #sentence = 'My own dog is red'
 #sentence = 'Jane has a bicycle'
-sentence = 'Jane Smith is an engineer'
+#sentence = 'Jane Smith is an engineer'
 #sentence = 'Jane works as an engineer'
 #sentence = 'Jane works for Google'
+sentence = "John was born in 1582 or 1583 in Antwerp"
+
 drs = Drs.create_from_natural_language(sentence)
 print(drs)
 

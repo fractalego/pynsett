@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from parvusdb.utils.node_matcher import StringNodeMatcher
 
 

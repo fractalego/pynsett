@@ -9,6 +9,18 @@ parser = spacy.load('en')
 _path = os.path.dirname(__file__)
 
 
+def create_word_nodes(names, words, tags, types, lemmas, head_tokens, entities):
+    return [{'name': name,
+             'word': word,
+             'tag': tag,
+             'type': type,
+             'lemma': lemma,
+             'entity': entity,
+             'head_token': head_token}
+            for name, word, tag, type, lemma, entity, head_token
+            in zip(names, words, tags, types, lemmas, entities, head_tokens)]
+
+
 def simplify_tag(tag):
     if tag == 'PRP' or tag == 'PRP$':
         return tag
@@ -46,7 +58,10 @@ class SpacyParser:
 
         edges, tags, types, lemmas, head_tokens = self.__get_edges_tags_types_and_entities(names, words, entities)
         g = self.__create_graph_from_elements(names, words, edges, tags, types, lemmas, entities, head_tokens)
-        return g
+
+        return {'graph': g,
+                'word_nodes': create_word_nodes(names, words, tags, types, lemmas, head_tokens, entities),
+                }
 
     # Private
 

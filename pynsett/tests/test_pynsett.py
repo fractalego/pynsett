@@ -2,7 +2,6 @@ import os
 import unittest
 
 from pynsett.discourse import Discourse
-from pynsett.discourse.anaphora import SingleSentenceAnaphoraVisitor
 from pynsett.drt import Drs
 from pynsett.extractor import Extractor
 from pynsett.knowledge import Knowledge
@@ -19,8 +18,8 @@ _knowledge = Knowledge()
 _knowledge.add_rules(open(os.path.join(_path, '../rules/test.rules')).read())
 
 
-class Tests(unittest.TestCase):
-    def copula_test(self):
+class PynsettUnitTests(unittest.TestCase):
+    def test_copula(self):
         drs = Drs.create_from_natural_language('this is a test')
         expected_drs = Drs.create_from_predicates_string(
             "{'word': 'is', 'compound': 'is', 'tag': 'v', 'entity': ''}(v1), {'word': 'this', 'compound': 'this', 'tag': 'DT', 'entity': ''}(v0), {'word': 'test', 'compound': 'test', 'tag': 'n', 'entity': ''}(v3), {'type': 'AGENT'}(v1,v0), {'type': 'ATTR'}(v1,v3)")
@@ -149,24 +148,20 @@ class Tests(unittest.TestCase):
 
     def test_pronoun_coreference(self):
         sentence = 'John drove home where he has a cat.'
-        drs = Drs.create_from_natural_language(sentence)
-        anaphora = SingleSentenceAnaphoraVisitor()
-        drs.visit(anaphora)
-        fi = ForwardInference(drs, _knowledge)
-        drs_and_weight = fi.compute()
-        writer = RelationTripletsWriter()
-        lst = drs_and_weight[0][0].visit(writer)
-        expected_list = [('John', 'OWN', 'cat')]
-        self.assertEqual(lst, expected_list)
+        discourse = Discourse(sentence)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('John_0', 'OWN', 'cat')]
+        self.assertEqual(triplets, expected_triplets)
 
     def test_birth_date(self):
-        sentence = 'Hans was born in 1582 or 1583 in Antwerp'
+        sentence = 'John was born in 1582 or 1583 in Antwerp'
         drs = Drs.create_from_natural_language(sentence)
         fi = ForwardInference(drs, _knowledge)
         drs_and_weight = fi.compute()
         writer = RelationTripletsWriter()
         lst = drs_and_weight[0][0].visit(writer)
-        expected_list = [('Hans', 'BIRTH_DAY', '1582')]
+        expected_list = [('John', 'BIRTH_DAY', '1582')]
         self.assertEqual(lst, expected_list)
 
     def test_multi_sentence_anaphora_masculine_names(self):
@@ -174,7 +169,7 @@ class Tests(unittest.TestCase):
         discourse = Discourse(text)
         extractor = Extractor(discourse, _knowledge)
         triplets = extractor.extract()
-        expected_triplets = [('John', 'HAS_ROLE', 'carpenter')]
+        expected_triplets = [('John_0', 'HAS_ROLE', 'carpenter')]
         self.assertEqual(triplets, expected_triplets)
 
     def test_multi_sentence_anaphora_feminine_names(self):
@@ -182,10 +177,10 @@ class Tests(unittest.TestCase):
         discourse = Discourse(text)
         extractor = Extractor(discourse, _knowledge)
         triplets = extractor.extract()
-        expected_triplets = [('Jane', 'HAS_ROLE', 'carpenter')]
+        expected_triplets = [('Jane_0', 'HAS_ROLE', 'carpenter')]
         self.assertEqual(triplets, expected_triplets)
 
-    def test_compund_nouns_gender_guess(self):
+    def test_compound_nouns_gender_guess(self):
         text = "Jane Smith is an engineer"
         drs = Drs.create_from_natural_language(text)
         expected_drs = Drs.create_from_predicates_string(
@@ -194,3 +189,34 @@ class Tests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
+    def test_multiple_people_same_rule(self):
+        text = "John is ginger. He is a carpenter. test. Jane is blond. She is a carpenter. "
+        discourse = Discourse(text)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('John_0', 'HAS_ROLE', 'carpenter'),
+                             ('Jane_1', 'HAS_ROLE', 'carpenter')]
+        self.assertTrue(triplets, expected_triplets)
+
+    def test_coreference_is_joined_in_graph(self):
+        text = "John is ginger. He is a carpenter. test. Jane is blond. She is a carpenter. "
+        discourse = Discourse(text)
+        expected_drs = Drs.create_from_predicates_string(
+            "{}(a), {}(b), {'type': 'REFERS_TO'}(a,b)")
+        lst = discourse._discourse.visit(DrsMatcher(expected_drs, metric))
+        is_match = len(lst) > 1
+        self.assertTrue(is_match)
+
+    def test_multiple_matcing(self):
+        text = "John Smith is blond. He is a carpenter. There is no reason to panic. Sarah Doe is ginger. She is a carpenter."
+        discourse = Discourse(text)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('John_Smith_0', 'HAS_BLOND_ROLE', 'carpenter'),
+                             ('Sarah_Doe_1', 'HAS_GINGER_ROLE', 'carpenter'),
+                             ('John_0', 'HAS_ROLE', 'carpenter'),
+                             ('Jane_1', 'HAS_ROLE', 'carpenter')]
+        self.assertTrue(triplets, expected_triplets)
+
+        if __name__ == '__main__':
+            unittest.main()

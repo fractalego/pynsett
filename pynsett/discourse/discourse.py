@@ -2,44 +2,63 @@ import logging
 
 from nltk.tokenize import sent_tokenize
 
-from pynsett.discourse.anaphora import SingleSentenceAnaphoraVisitor, InterSentenceAnaphoraVisitor
-from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, SentenceJoinerVisitor
+from pynsett.auxiliary.names_modifier import SentenceNamesModifier, assign_proper_index_to_nodes_names
+from pynsett.discourse.anaphora import AllenCoreferenceVisitorsFactory
+from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, SentenceJoinerVisitor, CoreferenceJoinerVisitor
 from pynsett.discourse.single_tokens_visitors import HeadTokenVisitor
-from pynsett.inference.forward_inference import UniqueNamesModifier
 from ..drt import Drs
 
 
 class Discourse:
     _logger = logging.getLogger(__name__)
-    _single_sentence_anaphora_visitor = SingleSentenceAnaphoraVisitor()
-    _unique = UniqueNamesModifier()
-    _discourse = Drs.create_empty()
-    _drs_list = []
 
     def __init__(self, text):
+        self._discourse = Drs.create_empty()
+        self._drs_list = []
+
         text = self.__sanitize_text(text)
         self._sentences_list = sent_tokenize(text)
+        word_nodes = []
         for sentence_index, sentence in enumerate(self._sentences_list):
             try:
                 if sentence == '.':
                     continue
                 drs = Drs.create_from_natural_language(sentence)
-                drs.visit(self._single_sentence_anaphora_visitor)
+                word_nodes += assign_proper_index_to_nodes_names(drs.word_nodes, sentence_index)
                 drs.visit(HeadTokenVisitor(sentence_index))
+                drs.visit(SentenceNamesModifier(sentence_index))
                 self._drs_list.append(drs)
             except Exception as e:
                 self._logger.warning('Exception caught in Discourse: ' + str(e))
+
+        coreference_visitor_factory = AllenCoreferenceVisitorsFactory(word_nodes)
+        for i, drs in enumerate(self._drs_list):
+            drs.visit(coreference_visitor_factory.create())
+
+        self.__create_discourse_graph()
+
+    @property
+    def drs_list(self):
+        return self._drs_list
+
+    @property
+    def connected_components(self):
+        from igraph import WEAK
+
+        g_list = self._discourse._g.clusters(mode=WEAK).subgraphs()
+        return [Drs(g) for g in g_list]
+
+    # Private
+
+    def __create_discourse_graph(self):
         if len(self._sentences_list) == 1:
             self._discourse = self._drs_list[0]
             return
         for drs in self._drs_list:
-            drs.visit(self._unique)
             self._discourse.visit(GraphJoinerVisitor(drs))
-        for sentence_index in range(len(self._sentences_list) - 1):
-            self._discourse.visit(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
-        self._discourse.visit(InterSentenceAnaphoraVisitor(len(self._sentences_list)))
-
-    # Private
+        # for sentence_index in range(len(self._sentences_list) - 1):
+        # self._discourse.visit(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
+        self._discourse.visit(CoreferenceJoinerVisitor())
 
     def __sanitize_text(self, text):
         text = text.replace('\n', '.\n')
@@ -59,3 +78,4 @@ class Discourse:
 
     def get_discourse_drs(self):
         return self._discourse
+

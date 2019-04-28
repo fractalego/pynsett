@@ -207,5 +207,6 @@ class PynsettUnitTests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
+
 if __name__ == '__main__':
     unittest.main()

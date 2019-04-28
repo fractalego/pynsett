@@ -41,16 +41,23 @@ class Discourse:
     def drs_list(self):
         return self._drs_list
 
+    @property
+    def connected_components(self):
+        from igraph import WEAK
+
+        g_list = self._discourse._g.clusters(mode=WEAK).subgraphs()
+        return [Drs(g) for g in g_list]
 
     # Private
+
     def __create_discourse_graph(self):
         if len(self._sentences_list) == 1:
             self._discourse = self._drs_list[0]
             return
         for drs in self._drs_list:
             self._discourse.visit(GraphJoinerVisitor(drs))
-        #for sentence_index in range(len(self._sentences_list) - 1):
-            #self._discourse.visit(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
+        # for sentence_index in range(len(self._sentences_list) - 1):
+        # self._discourse.visit(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
         self._discourse.visit(CoreferenceJoinerVisitor())
 
     def __sanitize_text(self, text):

@@ -18,7 +18,7 @@ class Extractor:
         :return: A list of the extracted triplets
         '''
         triplets = []
-        discouse_triplets = self.__map_all_sentences_using_best_match(self._discourse.drs_list)
+        discouse_triplets = self.__map_all_sentences_using_best_match(self._discourse.connected_components)
         if discouse_triplets:
             triplets += discouse_triplets
         return sorted(list(set(triplets)), key=lambda x: x[1])

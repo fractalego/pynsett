@@ -2,7 +2,7 @@ import logging
 
 from nltk.tokenize import sent_tokenize
 
-from pynsett.auxiliary.names_modifier import SentenceNamesModifier
+from pynsett.auxiliary.names_modifier import SentenceNamesModifier, assign_proper_index_to_nodes_names
 from pynsett.discourse.anaphora import AllenCoreferenceVisitorsFactory
 from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, SentenceJoinerVisitor, CoreferenceJoinerVisitor
 from pynsett.discourse.single_tokens_visitors import HeadTokenVisitor
@@ -33,7 +33,7 @@ class Discourse:
 
         coreference_visitor_factory = AllenCoreferenceVisitorsFactory(word_nodes)
         for i, drs in enumerate(self._drs_list):
-            drs.visit(coreference_visitor_factory.create(i))
+            drs.visit(coreference_visitor_factory.create())
 
         self.__create_discourse_graph()
 
@@ -79,8 +79,3 @@ class Discourse:
     def get_discourse_drs(self):
         return self._discourse
 
-
-def assign_proper_index_to_nodes_names(nodes, index):
-    for item in nodes:
-        item['name'] = str(index) + item['name']
-    return nodes

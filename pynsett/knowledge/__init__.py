@@ -2,6 +2,7 @@ import re
 import sys
 import logging
 
+from pynsett.discourse import Discourse
 from pynsett.drt import Drs, DrsRule
 from pynsett.knowledge.drs_ner_cleaner import DrsNERCleaner
 from pynsett.metric import MetricFactory
@@ -27,7 +28,11 @@ def _substitute_text_in_match_statement_with_graph(text, substitution_triggers):
         p = re.compile('MATCH.*\'(.*)\'')
         lst = p.findall(text)
     for item in lst:
-        drs = Drs.create_from_natural_language(item)
+        try:
+            drs = Discourse(item).connected_components[0]
+        except IndexError:
+            _logger.warning('Cannot use Discourse on %s' % item[:200])
+            drs = Drs.create_from_natural_language(item)
         drs = drs.visit(drs_cleaner)
         text = text.replace('"' + item + '"', str(drs))
     return text

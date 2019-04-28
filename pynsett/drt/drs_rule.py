@@ -1,8 +1,8 @@
 from igraph import Graph
 from parvusdb import GraphDatabase
 from parvusdb.utils.code_container import DummyCodeContainerFactory
-from .node_matcher import VectorNodeMatcher
 
+from .node_matcher import VectorNodeMatcher
 
 class DrsRule:
     def __init__(self, text, metric):
@@ -15,6 +15,7 @@ class DrsRule:
         self.apply(g)
 
     def apply(self, g):
+        from pynsett.drt import Drs
         if not isinstance(g, Graph):
             raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g,

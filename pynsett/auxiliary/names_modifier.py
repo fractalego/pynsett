@@ -8,7 +8,17 @@ class SentenceNamesModifier:
         self._sentence_index = sentence_index
 
     def apply(self, g):
-        for v in g.vs:
-            old_name = v['name']
-            new_name = str(self._sentence_index) + old_name
-            v['name'] = new_name
+        assign_proper_index_to_nodes_names(g.vs, self._sentence_index)
+
+
+def assign_proper_index_to_nodes_names(nodes, index):
+    for item in nodes:
+        if _needs_to_be_made_unique(item['name']):
+            item['name'] = str(index) + item['name']
+    return nodes
+
+
+def _needs_to_be_made_unique(name):
+    if name[0] == 'v':
+        return True
+    return False

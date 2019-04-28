@@ -6,6 +6,7 @@ from parvusdb import GraphDatabase
 from allennlp.predictors.predictor import Predictor
 
 _path = os.path.dirname(__file__)
+_logger = logging.getLogger(__file__)
 
 
 class SingleSentenceAnaphoraVisitor:
@@ -38,8 +39,7 @@ class InterSentenceAnaphoraVisitor:
 
 
 class AllenCoreferenceVisitor:
-    def __init__(self, sentence_index, coreference_dict):
-        self._sentence_index = sentence_index
+    def __init__(self, coreference_dict):
         self._coreference_dict = coreference_dict
 
     def apply(self, g):
@@ -57,8 +57,8 @@ class AllenCoreferenceVisitorsFactory:
         self._predictor = Predictor.from_path(os.path.join(_path, '../data/coref-model-2018.02.05.tar.gz'))
         self._coreference_dict = self.__create_coreference_dict(word_nodes)
 
-    def create(self, sentence_index):
-        return AllenCoreferenceVisitor(sentence_index, self._coreference_dict)
+    def create(self):
+        return AllenCoreferenceVisitor(self._coreference_dict)
 
     # Private
 
@@ -66,7 +66,13 @@ class AllenCoreferenceVisitorsFactory:
         coreference_dict = {}
 
         words = [item['word'] for item in word_nodes]
-        clusters = self.__predict(words)
+        try:
+            clusters = self.__predict(words)
+        except RuntimeError as e:
+            _logger.warning('Cannot perform anaphora on %s because %s' % (' '.join(words)[:200]
+                                                                          , str(e)))
+            return {}
+
         for index, cluster in enumerate(clusters):
             cluster_words = ['_'.join(words[s:e + 1]) + '_' + str(index) for s, e in cluster
                              if word_nodes[s]['tag'] not in ['PRP', 'PRP$']]
@@ -78,7 +84,7 @@ class AllenCoreferenceVisitorsFactory:
 
                 if start != end:
                     continue
-                coreference_dict[word_nodes[start]['name']] = cluster_words
+                coreference_dict[word_nodes[start]['name']] = list(set(cluster_words))
 
         return coreference_dict
 

@@ -207,6 +207,16 @@ class PynsettUnitTests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
+    def test_multiple_matcing(self):
+        text = "John Smith is blond. He is a carpenter. There is no reason to panic. Sarah Doe is ginger. She is a carpenter."
+        discourse = Discourse(text)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('John_Smith_0', 'HAS_BLOND_ROLE', 'carpenter'),
+                             ('Sarah_Doe_1', 'HAS_GINGER_ROLE', 'carpenter'),
+                             ('John_0', 'HAS_ROLE', 'carpenter'),
+                             ('Jane_1', 'HAS_ROLE', 'carpenter')]
+        self.assertTrue(triplets, expected_triplets)
 
-if __name__ == '__main__':
-    unittest.main()
+        if __name__ == '__main__':
+            unittest.main()

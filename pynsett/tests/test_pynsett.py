@@ -236,6 +236,15 @@ class PynsettUnitTests(unittest.TestCase):
                              ('Jane_1', 'HAS_ROLE', 'carpenter')]
         self.assertTrue(triplets, expected_triplets)
 
+    def test_asimov_wiki(self):
+        text = open(os.path.join(_path, '../data/wiki_asimov.txt')).read()
+        discourse = Discourse(text)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('Isaac_Asimov_0|Asimov_0', 'JOB_TITLE', 'writer'),
+                             ('Isaac_Asimov_0|Asimov_0', 'OWNS', 'works')]
+        self.assertTrue(triplets, expected_triplets)
+
 
 if __name__ == '__main__':
     unittest.main()

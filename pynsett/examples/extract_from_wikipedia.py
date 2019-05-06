@@ -15,6 +15,7 @@ if __name__ == "__main__":
 
     start = time.time()
     discourse = Discourse(text)
+    discourse._discourse.plot()
     extractor = Extractor(discourse, knowledge)
     triplets = extractor.extract()
     end = time.time()

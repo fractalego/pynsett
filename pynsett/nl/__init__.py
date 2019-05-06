@@ -72,6 +72,8 @@ class SpacyParser:
             word = item.orth_
             if word in self._word_substitution:
                 word = self._word_substitution[word]
+            if not word:
+                word = '.'
             words.append(word)
         return words
 
@@ -93,6 +95,8 @@ class SpacyParser:
         entities = []
         for word in words:
             entity = ''
+            if not word:
+                word = '.'
             if word[0] == self._character_that_opens_entity_tag and word[-1] == self._character_that_closes_entity_tag:
                 word = word[1:-1]
                 entity = word

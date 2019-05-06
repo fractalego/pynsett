@@ -43,22 +43,23 @@ class SentenceJoinerVisitor:
 class CoreferenceJoinerVisitor:
     __logger = logging.getLogger(__name__)
 
-
     def __init__(self):
         self._rules = """
-        MATCH {'refers_to': %s}(a), {'refers_to': %s}(b)
+        MATCH {'refers_to': %s, 'name': '%s'}(a), {'refers_to': %s}(b)
+        WHERE (not (in (get b "name") %s))
         CREATE {}(a), {'type': 'REFERS_TO'}(a,b), {}(b)
         CREATE {}(a), {'type': 'REFERS_TO'}(b,a), {}(b);
         """
 
-
     def visit(self, g):
-        parsed_before = []
+        prior_names = []
         db = GraphDatabase(g)
         for v in g.vs:
             refers_to = v['refers_to']
-            if refers_to and refers_to not in parsed_before:
-                db.query(self._rules % (str(refers_to), str(refers_to)), repeat_n_times=1)
-                parsed_before.append(refers_to)
+            if refers_to:
+                prior_names_string = '[' + ' '.join(['"' + item + '"' for item in prior_names]) + ']'
+                db.query(self._rules % (str(refers_to), v['name'], str(refers_to), prior_names_string),
+                         repeat_n_times=1)
+                prior_names.append(v['name'])
 
         return True

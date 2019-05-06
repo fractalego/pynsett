@@ -24,24 +24,42 @@ DELETE r, r2, c
 CREATE {}(b), {'type': 'OWNS'}(b,a), {}(a);
 
 
-# Process possive pronouns
+# Process possessive pronouns
 
 MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$', 'lemma': 'my'}(b)
-DELETE r, b
-CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'me', 'entity': 'person', 'compound': 'me', 'lemma': 'me'}(c);
+DELETE r
+SET (assoc b "lemma" "me")
+SET (assoc b "word" "me")
+SET (assoc b "compound" "me")
+CREATE {}(a), {'type': 'OWNS'}(b,a), {}(b);
 
 MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$', 'lemma': 'his'}(b)
-DELETE r, b
-CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'he', 'entity': 'person', 'compound': 'he', 'lemma': 'he'}(c);
+DELETE r
+SET (assoc b "lemma" "he")
+SET (assoc b "word" "he")
+SET (assoc b "compound" "he")
+CREATE {}(a), {'type': 'OWNS'}(b,a), {}(b);
 
 MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$', 'lemma': 'her'}(b)
-DELETE r, b
-CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'she', 'entity': 'person', 'compound': 'she', 'lemma': 'she'}(c);
+DELETE r
+SET (assoc b "lemma" "she")
+SET (assoc b "word" "she")
+SET (assoc b "compound" "she")
+CREATE {}(a), {'type': 'OWNS'}(b,a), {}(b);
 
 MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$', 'lemma': 'our'}(b)
-DELETE r, b
-CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'we', 'entity': 'person', 'compound': 'we', 'lemma': 'we'}(c);
+DELETE r
+SET (assoc b "lemma" "we")
+SET (assoc b "word" "we")
+SET (assoc b "compound" "we")
+CREATE {}(a), {'type': 'OWNS'}(b,a), {}(b);
 
 MATCH {}(a), {'name': 'r', 'type': 'POSS'}(a,b), {'tag': 'PRP$', 'lemma': 'their'}(b)
-DELETE r, b
-CREATE {}(a), {'type': 'OWNS'}(c,a), {'tag': 'PRP', 'word': 'they', 'entity': 'person', 'compound': 'they', 'lemma': 'they'}(c);
+DELETE r
+SET (assoc b "lemma" "they")
+SET (assoc b "word" "they")
+SET (assoc b "compound" "they")
+CREATE {}(a), {'type': 'OWNS'}(b,a), {}(b);
+
+
+# Names with 'or' or 'and'

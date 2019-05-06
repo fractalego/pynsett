@@ -9,3 +9,5 @@
 7) Link automatically en_core... to en
 8) pip install paramiko?
 9) Make it work on Neo4j with global graph
+10) Paragraphs need to be small for anaphora to be decent. Create a Paragraph parser?
+11) Some names ("hans", "antwerp") do to do coreference correctly.

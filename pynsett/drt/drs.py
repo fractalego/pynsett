@@ -73,5 +73,5 @@ class Drs:
     def copy(self):
         return Drs(g=self._g.as_directed())
 
-    def visit(self, function):
-        return function.apply(self._g)
+    def apply(self, function):
+        return function.visit(self._g)

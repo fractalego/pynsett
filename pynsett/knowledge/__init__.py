@@ -33,7 +33,7 @@ def _substitute_text_in_match_statement_with_graph(text, substitution_triggers):
         except IndexError:
             _logger.warning('Cannot use Discourse on %s' % item[:200])
             drs = Drs.create_from_natural_language(item)
-        drs = drs.visit(drs_cleaner)
+        drs = drs.apply(drs_cleaner)
         text = text.replace('"' + item + '"', str(drs))
     return text
 

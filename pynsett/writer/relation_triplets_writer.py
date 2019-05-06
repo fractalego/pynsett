@@ -7,7 +7,7 @@ from .base_writer import BaseWriter
 class RelationTripletsWriter(BaseWriter):
     _logger = logging.getLogger(__name__)
 
-    def apply(self, g):
+    def visit(self, g):
         triplets = self.__get_relations_and_entities_from_graph(g)
         return triplets
 

@@ -30,7 +30,7 @@ def eliminate_spaces(line):
 
 
 class UniqueNamesModifier:
-    def apply(self, g):
+    def visit(self, g):
         from ..auxiliary import get_random_name
         for v in g.vs:
             random_name = get_random_name()
@@ -56,8 +56,8 @@ class ForwardInference(BaseForwardInference):
 
     def __apply_clause_to_drs(self, rule, data):
         drs = data.copy()
-        drs.visit(self._unique)
-        is_match = drs.visit(rule)
+        drs.apply(self._unique)
+        is_match = drs.apply(rule)
         distance = 1
         if not is_match:
             distance = 0

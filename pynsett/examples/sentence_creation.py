@@ -27,10 +27,10 @@ drs = Drs.create_from_natural_language(sentence)
 print(drs)
 
 anaphora = SingleSentenceAnaphoraVisitor()
-drs.visit(anaphora)
+drs.apply(anaphora)
 
 head_token_visitor = HeadTokenVisitor(1)
-drs.visit(head_token_visitor)
+drs.apply(head_token_visitor)
 
 print('---')
 print(drs)
@@ -44,4 +44,4 @@ drs_and_weights = fi.compute()
 
 writer = RelationTripletsWriter()
 for drs_and_weight in drs_and_weights:
-    print(drs_and_weight[0].visit(writer))
+    print(drs_and_weight[0].apply(writer))

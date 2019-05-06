@@ -197,7 +197,8 @@ class SpacyParser:
                         'lemma': lhs_lemma,
                         'gender_guess': self.__get_gender_guess(lhs_compound, lhs_entity),
                         'is_head_token': lhs_head_token,
-                        'refers_to': None}
+                        'refers_to': None,
+                        'negated': 'false'}
             lhs_string = str(lhs_dict) + '(' + lhs_name + ')'
             rhs_dict = {'word': rhs_word,
                         'tag': rhs_tag,
@@ -206,7 +207,8 @@ class SpacyParser:
                         'lemma': rhs_lemma,
                         'gender_guess': self.__get_gender_guess(rhs_word, rhs_entity),
                         'is_head_token': rhs_head_token,
-                        'refers_to': None}
+                        'refers_to': None,
+                        'negated': 'false'}
             rhs_string = str(rhs_dict) + '(' + rhs_name + ')'
 
             edge_dict = {'type': edge_type}

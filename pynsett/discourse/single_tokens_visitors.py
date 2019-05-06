@@ -16,9 +16,9 @@ class HeadTokenVisitor:
         SET (assoc a "is_head_token" "%s");
         """ % str(sentence_number)
 
-    def apply(self, g):
+    def visit(self, g):
         if not isinstance(g, Graph):
-            raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
+            raise TypeError("DrsRule.visit_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g)
         lst = db.query(self._rules, repeat_n_times=1)
         return lst

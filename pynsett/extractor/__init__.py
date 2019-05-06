@@ -34,5 +34,5 @@ class Extractor:
         inference = ForwardInference(data, self._knowledge)
         results = inference.compute()
         writer = RelationTripletsWriter()
-        triplets = [result[0].visit(writer) for result in results]
+        triplets = [result[0].apply(writer) for result in results]
         return triplets

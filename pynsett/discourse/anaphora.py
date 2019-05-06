@@ -15,9 +15,9 @@ class SingleSentenceAnaphoraVisitor:
     def __init__(self):
         self._rules = open(os.path.join(_path, '../rules/intra_sentence_anaphora.parvus')).read()
 
-    def apply(self, g):
+    def visit(self, g):
         if not isinstance(g, Graph):
-            raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
+            raise TypeError("DrsRule.visit_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g)
         lst = db.query(self._rules, repeat_n_times=1)
         return lst
@@ -30,9 +30,9 @@ class InterSentenceAnaphoraVisitor:
         self._rules = open(os.path.join(_path, '../rules/inter_sentence_anaphora.parvus')).read()
         self._times_to_repeat_rules = num_sentences - 1
 
-    def apply(self, g):
+    def visit(self, g):
         if not isinstance(g, Graph):
-            raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
+            raise TypeError("DrsRule.visit_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g)
         lst = db.query(self._rules, repeat_n_times=self._times_to_repeat_rules)
         return lst
@@ -42,9 +42,9 @@ class AllenCoreferenceVisitor:
     def __init__(self, coreference_dict):
         self._coreference_dict = coreference_dict
 
-    def apply(self, g):
+    def visit(self, g):
         if not isinstance(g, Graph):
-            raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
+            raise TypeError("DrsRule.visit_to_graph() needs an igraph.Graph as an argument")
 
         for v in g.vs:
             key = v['name']

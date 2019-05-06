@@ -25,15 +25,15 @@ class Discourse:
                     continue
                 drs = Drs.create_from_natural_language(sentence)
                 word_nodes += assign_proper_index_to_nodes_names(drs.word_nodes, sentence_index)
-                drs.visit(HeadTokenVisitor(sentence_index))
-                drs.visit(SentenceNamesModifier(sentence_index))
+                drs.apply(HeadTokenVisitor(sentence_index))
+                drs.apply(SentenceNamesModifier(sentence_index))
                 self._drs_list.append(drs)
             except Exception as e:
                 self._logger.warning('Exception caught in Discourse: ' + str(e))
 
         coreference_visitor_factory = AllenCoreferenceVisitorsFactory(word_nodes)
         for i, drs in enumerate(self._drs_list):
-            drs.visit(coreference_visitor_factory.create())
+            drs.apply(coreference_visitor_factory.create())
 
         self.__create_discourse_graph()
 
@@ -55,10 +55,10 @@ class Discourse:
             self._discourse = self._drs_list[0]
             return
         for drs in self._drs_list:
-            self._discourse.visit(GraphJoinerVisitor(drs))
+            self._discourse.apply(GraphJoinerVisitor(drs))
         # for sentence_index in range(len(self._sentences_list) - 1):
-        # self._discourse.visit(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
-        self._discourse.visit(CoreferenceJoinerVisitor())
+        # self._discourse.apply(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
+        self._discourse.apply(CoreferenceJoinerVisitor())
 
     def __sanitize_text(self, text):
         text = text.replace('\n', '.\n')

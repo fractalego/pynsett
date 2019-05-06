@@ -12,12 +12,11 @@ class DrsRule:
 
     def test(self):
         g = Graph(directed=True)
-        self.apply(g)
+        self.visit(g)
 
-    def apply(self, g):
-        from pynsett.drt import Drs
+    def visit(self, g):
         if not isinstance(g, Graph):
-            raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
+            raise TypeError("DrsRule.visit_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g,
                            node_matcher=VectorNodeMatcher(self.metric),
                            code_container_factory=DummyCodeContainerFactory())

@@ -15,9 +15,9 @@ class GraphJoinerVisitor:
         CREATE %s;
         """ % str(drs)
 
-    def apply(self, g):
+    def visit(self, g):
         if not isinstance(g, Graph):
-            raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
+            raise TypeError("DrsRule.visit_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g)
         lst = db.query(self._rules, repeat_n_times=1)
         return lst
@@ -32,9 +32,9 @@ class SentenceJoinerVisitor:
         CREATE {}(a), {'type': 'NEXT_SENTENCE'}(a,b), {}(b);
         """ % (str(from_sentence), str(to_sentence))
 
-    def apply(self, g):
+    def visit(self, g):
         if not isinstance(g, Graph):
-            raise TypeError("DrsRule.apply_to_graph() needs an igraph.Graph as an argument")
+            raise TypeError("DrsRule.visit_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g)
         lst = db.query(self._rules, repeat_n_times=1)
         return lst
@@ -52,12 +52,7 @@ class CoreferenceJoinerVisitor:
         """
 
 
-    def apply(self, g):
-        #from igraph import plot
-        #g.vs['label'] = g.vs['refers_to']
-        #g.es['label'] = g.es['type']
-        #plot(g)
-
+    def visit(self, g):
         parsed_before = []
         db = GraphDatabase(g)
         for v in g.vs:

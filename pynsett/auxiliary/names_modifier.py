@@ -7,7 +7,7 @@ class SentenceNamesModifier:
     def __init__(self, sentence_index):
         self._sentence_index = sentence_index
 
-    def apply(self, g):
+    def visit(self, g):
         assign_proper_index_to_nodes_names(g.vs, self._sentence_index)
 
 

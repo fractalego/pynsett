@@ -24,6 +24,9 @@ class VectorNodeMatcher(StringNodeMatcher):
         if key == 'is_head_token':
             return True
 
+        if key == 'negated':
+            return lhs == rhs
+
         if key == 'entity':
             return lhs == rhs
 

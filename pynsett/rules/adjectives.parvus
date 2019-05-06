@@ -9,20 +9,20 @@ CREATE {}(a), {'type': 'ADJECTIVE'}(a,b), {}(b);
 # Process adverbs
 
 MATCH {}(a), {'name': 'r', 'type': 'ADVMOD'}(a,b), {'word': 'not'}(b)
-DELETE r
-CREATE {}(a), {'type': 'NEGATION'}(a,b), {}(b);
+DELETE r, b
+SET (assoc a "negated" "true");
 
 MATCH {}(a), {'name': 'r', 'type': 'ADVMOD'}(a,b), {'word': 'n\'t'}(b)
-DELETE r
-CREATE {}(a), {'type': 'NEGATION'}(a,b), {}(b);
+DELETE r, b
+SET (assoc a "negated" "true");
 
 MATCH {}(a), {'name': 'r', 'type': 'NEG'}(a,b), {'word': 'not'}(b)
-DELETE r
-CREATE {}(a), {'type': 'NEGATION'}(a,b), {}(b);
+DELETE r, b
+SET (assoc a "negated" "true");
 
 MATCH {}(a), {'name': 'r', 'type': 'NEG'}(a,b), {'word': 'n\'t'}(b)
-DELETE r
-CREATE {}(a), {'type': 'NEGATION'}(a,b), {}(b);
+DELETE r, b
+SET (assoc a "negated" "true");
 
 MATCH {}(a), {'name': 'r', 'type': 'ADVMOD'}(a,b), {}(b)
 DELETE r

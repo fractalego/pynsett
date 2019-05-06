@@ -27,7 +27,21 @@ class PynsettUnitTests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
-    def passive_test(self):
+    def test_negation(self):
+        drs = Drs.create_from_natural_language('John Smith is not blond')
+        expected_drs = Drs.create_from_natural_language('John Smith is blond')
+        lst = drs.visit(DrsMatcher(expected_drs, metric))
+        is_match = len(lst) == 0
+        self.assertTrue(is_match)
+
+    def test_negation_matches(self):
+        drs = Drs.create_from_natural_language('John Smith is not blond')
+        expected_drs = Drs.create_from_natural_language('John Smith is not blond')
+        lst = drs.visit(DrsMatcher(expected_drs, metric))
+        is_not_match = len(lst) > 0
+        self.assertTrue(is_not_match)
+
+    def test_passive(self):
         drs = Drs.create_from_natural_language('the rabbit is eaten by me')
         expected_drs = Drs.create_from_predicates_string(
             "{'entity': '', 'compound': 'rabbit', 'word': 'rabbit', 'tag': 'n'}(v1), {'entity': '', 'compound': 'eaten', 'word': 'eaten', 'tag': 'v'}(v3), {'entity': '', 'compound': 'me', 'word': 'me', 'tag': 'PRP'}(v5), {'type': 'PATIENT'}(v3,v1), {'type': 'AGENT'}(v3,v5)")
@@ -35,7 +49,7 @@ class PynsettUnitTests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
-    def creation_from_drt(self):
+    def test_creation_from_drt(self):
         drs = Drs.create_from_predicates_string(
             "{'word': 'is', 'compound': 'is', 'tag': 'v', 'entity': ''}(v1), {'word': 'this', 'compound': 'this', 'tag': 'DT', 'entity': ''}(v0), {'word': 'test', 'compound': 'test', 'tag': 'n', 'entity': ''}(v3), {'type': 'AGENT'}(v1,v0), {'type': 'ATTR'}(v1,v3)")
         expected_drs = Drs.create_from_predicates_string(
@@ -44,7 +58,7 @@ class PynsettUnitTests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
-    def creation_from_drt_with_preposition(self):
+    def test_creation_from_drt_with_preposition(self):
         drs = Drs.create_from_predicates_string(
             "{'word': 'ideas', 'entity': '', 'tag': 'n', 'compound': 'ideas'}(v0), {'word': 'Jim', 'entity': '', 'tag': 'n', 'compound': 'Jim'}(v2), {'type': 'of'}(v0,v2)")
         expected_drs = Drs.create_from_predicates_string(
@@ -53,14 +67,14 @@ class PynsettUnitTests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
-    def sub_isomorphism(self):
+    def test_sub_isomorphism(self):
         large_drs = Drs.create_from_natural_language('The ideas#1 of Jim#2 are silly')
         small_drs = Drs.create_from_natural_language('ideas#3 of Jim#4')
         lst = large_drs.visit(DrsMatcher(small_drs, metric))
         is_match = len(lst) > 0
         self.assertTrue(is_match)
 
-    def single_clause_test(self):
+    def test_single_clause(self):
         data_drs = Drs.create_from_natural_language('Jim works at Microsoft')
         rule = """
         MATCH "{PERSON}#1 works at {ORG}#2"
@@ -69,10 +83,14 @@ class PynsettUnitTests(unittest.TestCase):
         knowledge = Knowledge(metric)
         knowledge.add_rules(rule)
         inference = ForwardInference(data_drs, knowledge)
-        end_drs, _ = inference.compute()
+        end_drs = inference.compute()
         expected_drs = Drs.create_from_predicates_string('{}(1), {"type": "WORKS_AT"}(1,2), {}(2)')
-        lst = end_drs.visit(DrsMatcher(expected_drs, metric))
-        is_match = len(lst) > 0
+        is_match = False
+        for drs in end_drs:
+            lst = drs[0].visit(DrsMatcher(expected_drs, metric))
+            if len(lst) > 0:
+                is_match = True
+                break
         self.assertTrue(is_match)
 
     def test_relation_rules(self):
@@ -218,5 +236,6 @@ class PynsettUnitTests(unittest.TestCase):
                              ('Jane_1', 'HAS_ROLE', 'carpenter')]
         self.assertTrue(triplets, expected_triplets)
 
-        if __name__ == '__main__':
-            unittest.main()
+
+if __name__ == '__main__':
+    unittest.main()

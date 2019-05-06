@@ -51,7 +51,7 @@ class Discourse:
     # Private
 
     def __create_discourse_graph(self):
-        if len(self._sentences_list) == 1:
+        if len(self._drs_list) == 1:
             self._discourse = self._drs_list[0]
             return
         for drs in self._drs_list:

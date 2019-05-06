@@ -66,6 +66,8 @@ class AllenCoreferenceVisitorsFactory:
         coreference_dict = {}
 
         words = [item['word'] for item in word_nodes]
+        if not words:
+            return {}
         try:
             clusters = self.__predict(words)
         except RuntimeError as e:

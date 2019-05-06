@@ -66,7 +66,7 @@ class ForwardInference(BaseForwardInference):
     def compute(self):
         '''
         Applies all the rules to a drs
-        :return: all the variants of the drs after a rule match as a pair (<NEW_DRS, <WEIGHT>)
+        :return: all the variants of the drs after a rule match as a pair (<NEW_DRS>, <WEIGHT>)
         '''
 
         data = self.data

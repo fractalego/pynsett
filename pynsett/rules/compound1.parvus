@@ -1,0 +1,21 @@
+MATCH {'tag': 'n'}(a), {'name': 'r1', 'type':'COMPOUND'}(a,b), {'tag': 'n'}(b),
+      {'name': 'r2', 'type':'COMPOUND'}(b,c), {'tag': 'n'}(c)
+WHERE (!= (get c "entity") "")
+SET (assoc a "compound" (+ (get c "word") "_" (get b "word") "_" (get a "word")))
+SET (assoc a "gender_guess" (get c "gender_guess"))
+DELETE r1, r2, b;
+
+
+MATCH {'tag': 'n'}(a), {'name': 'r1', 'type':'COMPOUND'}(a,b), {'tag': 'n'}(b),
+      {'name': 'r2', 'type':'COMPOUND'}(a,c), {'tag': 'n'}(c)
+WHERE (!= (get c "entity") "")
+SET (assoc a "compound" (+ (get b "word") "_" (get c "word") "_" (get a "word")))
+SET (assoc a "gender_guess" (get c "gender_guess"))
+DELETE r1, r2, b, c;
+
+
+MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'COMPOUND'}(a,b), {'tag': 'n'}(b)
+WHERE (!= (get a "entity") "")
+SET (assoc a "compound" (+ (get b "word") "_" (get a "word")))
+SET (assoc a "gender_guess" (get b "gender_guess"))
+DELETE r, b;

@@ -21,6 +21,8 @@ def _create_graph_from_natural_language(sentence):
     n = 5
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/verbs.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/names.parvus')).read(), n)
+    db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/compound1.parvus')).read(), n)
+    db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/compound2.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/adjectives.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/delete.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/subordinates.parvus')).read(), n)
@@ -66,9 +68,9 @@ class Drs:
     def plot(self):
         import copy
         g = copy.deepcopy(self._g)
-        g.vs['label'] = g.vs['compound']
+        g.vs['label'] = [v['compound'] + ': ' + v['entity'] for v in g.vs]
         g.es['label'] = g.es['type']
-        plot(g)
+        plot(g, bbox=(0, 0, 1200, 1200))
 
     def copy(self):
         return Drs(g=self._g.as_directed())

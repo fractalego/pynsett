@@ -245,6 +245,12 @@ class PynsettUnitTests(unittest.TestCase):
                              ('Isaac_Asimov_0|Asimov_0', 'OWNS', 'works')]
         self.assertTrue(triplets, expected_triplets)
 
+        expected_drs = Drs.create_from_predicates_string(
+            "{}(a), {'word': 'Boston_University'}(b), {'type': 'at'}(a,b)")
+        lst = discourse._discourse.apply(DrsMatcher(expected_drs, metric))
+        is_match = len(lst) > 1
+        self.assertTrue(is_match)
+
 
 if __name__ == '__main__':
     unittest.main()

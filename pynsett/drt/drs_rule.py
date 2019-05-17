@@ -19,8 +19,8 @@ class DrsRule:
             raise TypeError("DrsRule.visit_to_graph() needs an igraph.Graph as an argument")
         db = GraphDatabase(g,
                            node_matcher=VectorNodeMatcher(self.metric),
-                           code_container_factory=DummyCodeContainerFactory())
-        lst = db.query(str(self.text), repeat_n_times=1)
+                           code_container_factory=DummyCodeContainerFactory)
+        lst = db.query(str(self.text), repeat_n_times=5)
         if lst and lst[0]['__RESULT__']:
             return True
         return False

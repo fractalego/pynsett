@@ -1,5 +1,7 @@
 import logging
+
 from igraph import Graph
+from more_itertools import unique_everseen
 from parvusdb import GraphDatabase
 from .base_writer import BaseWriter
 
@@ -18,13 +20,12 @@ class RelationTripletsWriter(BaseWriter):
             raise TypeError("The writer needs an igraph.Graph as an argument")
 
         db = GraphDatabase(g)
-        lst = db.query("MATCH {}(a), {'type': 'relation', 'name': 'r'}(a,b), {}(b) RETURN a, b, r",
-                       repeat_n_times=1)
+        lst = db.query("MATCH {}(a), {'type': 'relation', 'name': 'r'}(a,b), {}(b) RETURN a, b, r", repeat_n_times=5)
         triplets = [(self.__get_correct_name(item['a'], g),
                      item['r']['text'],
                      self.__get_correct_name(item['b'], g))
                     for item in lst]
-        return triplets
+        return list(unique_everseen(triplets, key=tuple))
 
     def __get_correct_name(self, node, g):
         coreferent_name = node['refers_to']

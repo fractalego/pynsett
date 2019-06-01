@@ -242,8 +242,15 @@ class PynsettUnitTests(unittest.TestCase):
         extractor = Extractor(discourse, _knowledge)
         triplets = extractor.extract()
         expected_triplets = [('Isaac_Asimov_0|Asimov_0', 'JOB_TITLE', 'writer'),
-                             ('Isaac_Asimov_0|Asimov_0', 'OWNS', 'works')]
+                             ('Isaac_Asimov_0|Asimov_0', 'OWNS', 'works'),
+                             ('Isaac_Asimov_0|Asimov_0', 'OWNS', 'books')]
         self.assertTrue(triplets, expected_triplets)
+
+        expected_drs = Drs.create_from_predicates_string(
+            "{}(a), {'word': 'Boston_University'}(b), {'type': 'at'}(a,b)")
+        lst = discourse._discourse.apply(DrsMatcher(expected_drs, metric))
+        is_match = len(lst) > 1
+        self.assertTrue(is_match)
 
 
 if __name__ == '__main__':

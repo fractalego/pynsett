@@ -39,6 +39,7 @@ def _substitute_text_in_match_statement_with_graph(text, substitution_triggers):
 
 
 def _substitute_relationship_code_in_create_statement_with_graph(text):
+    matching_variables = []
     p = re.compile('CREATE.*\((.*)\)')
     lst = p.findall(text)
     for item in lst:
@@ -47,12 +48,13 @@ def _substitute_relationship_code_in_create_statement_with_graph(text):
             relation_name = elements[0]
             source = elements[1]
             target = elements[2]
+            matching_variables += [source, target]
             new_text = "{}(%s), {'type': 'relation', 'text': '%s'}(%s,%s), {}(%s)" \
                        % (source, relation_name, source, target, target)
             text = text.replace('(' + item + ')', new_text)
         except:
             _logger.warning('Text ' + text + " cannot parse to a relation")
-    return text
+    return text, matching_variables
 
 
 def _get_substition_rule(line):
@@ -118,7 +120,7 @@ class Knowledge:
             for s in self._substitution_list:
                 rule_text = _substitute_string_into_rule(rule_text, s)
             rule_text = _substitute_text_in_match_statement_with_graph(rule_text, substitution_triggers)
-            rule_text = _substitute_relationship_code_in_create_statement_with_graph(rule_text)
+            rule_text, matching_variables = _substitute_relationship_code_in_create_statement_with_graph(rule_text)
             substitution = _get_substition_rule(rule_text)
             if substitution:
                 self.metric = _substitute_list_into_metric(self._metric, substitution)
@@ -127,7 +129,7 @@ class Knowledge:
                     self._substitution_list.append(substitution)
                 continue
             try:
-                rule = DrsRule(rule_text, self._metric)
+                rule = DrsRule(rule_text, self._metric, matching_variables)
                 rule.test()
                 self.add_rule(rule)
             except SyntaxError:

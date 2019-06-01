@@ -64,9 +64,14 @@ MATCH {}(a), {'name': 'r', 'type':'ADVCL'}(a,b), {}(b)
 DELETE r
 CREATE {}(a), {'type': 'ADVOCATIVE_CLAUSE'}(a,b), {}(b);
 
+MATCH {}(a), {'name': 'r', 'type':'RELCL'}(a,b), {}(b)
+DELETE r
+CREATE {}(a), {'type': 'RELATIVE_CLAUSE'}(a,b), {}(b);
+
 MATCH {'tag': 'v'}(a), {'name': 'r', 'type':'ACL'}(a,b), {}(b)
 DELETE r
 CREATE {}(a), {'type': 'OPEN_SUBORDINATE'}(a,b), {}(b);
+
 
 
 # The preposition node should become an edge

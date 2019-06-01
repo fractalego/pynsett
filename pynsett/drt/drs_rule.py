@@ -5,9 +5,9 @@ from parvusdb.utils.code_container import DummyCodeContainerFactory
 from .node_matcher import VectorNodeMatcher
 
 class DrsRule:
-    def __init__(self, text, metric):
+    def __init__(self, text, metric, matching_variables):
         self.text = text
-        self.text += " RETURN __RESULT__;"
+        self.text += " RETURN %s;" % ','.join(matching_variables)
         self.metric = metric
 
     def test(self):
@@ -20,8 +20,8 @@ class DrsRule:
         db = GraphDatabase(g,
                            node_matcher=VectorNodeMatcher(self.metric),
                            code_container_factory=DummyCodeContainerFactory())
-        lst = db.query(str(self.text), repeat_n_times=1)
-        if lst and lst[0]['__RESULT__']:
+        lst = db.query(str(self.text), repeat_n_times=5)
+        if lst:
             return True
         return False
 

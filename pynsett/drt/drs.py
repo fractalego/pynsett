@@ -31,8 +31,17 @@ def _create_graph_from_natural_language(sentence):
             }
 
 
-class Drs:
+def _get_union_of_graphs(graph_list):
+    g = Graph(directed=True)
+    db = GraphDatabase(g)
+    query = ""
+    for g in graph_list:
+        query += f" CREATE {convert_graph_to_string(g)}"
+    db.query(query)
+    return db.get_graph()
 
+
+class Drs:
     def __init__(self, g, word_nodes=None):
         if not isinstance(g, Graph):
             raise TypeError("Drs needs an igraph.Graph as an argument")
@@ -51,6 +60,10 @@ class Drs:
     @property
     def word_nodes(self):
         return self._word_nodes
+
+    @staticmethod
+    def create_union_from_list_of_drs(drs_list):
+        return Drs(_get_union_of_graphs([drs._g for drs in drs_list]))
 
     @staticmethod
     def create_from_natural_language(sentence):

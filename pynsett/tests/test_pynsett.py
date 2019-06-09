@@ -252,6 +252,25 @@ class PynsettUnitTests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
+    def test_two_paragraphs(self):
+        text = open(os.path.join(_path, '../data/wiki_asimov_two_paragraphs.txt')).read()
+        discourse = Discourse(text)
+        extractor = Extractor(discourse, _knowledge)
+        triplets = extractor.extract()
+        expected_triplets = [('Isaac_Asimov_0|Asimov_0', 'JOB_TITLE', 'writer'),
+                             ('he', 'OWNS', 'lifetime'),
+                             ('he', 'OWNS', 'stories'),
+                             ('Isaac_Asimov_0|Asimov_0', 'OWNS', 'books'),
+                             ('he', 'OWNS', 'series'),
+                             ('Isaac_Asimov_0|Asimov_0', 'OWNS', 'works')]
+        self.assertTrue(triplets, expected_triplets)
+
+        expected_drs = Drs.create_from_predicates_string(
+            "{}(a), {'word': 'Boston_University'}(b), {'type': 'at'}(a,b)")
+        lst = discourse._discourse.apply(DrsMatcher(expected_drs, metric))
+        is_match = len(lst) > 1
+        self.assertTrue(is_match)
+
 
 if __name__ == '__main__':
     unittest.main()

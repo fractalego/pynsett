@@ -40,7 +40,7 @@ class SpacyMetric(MetricBase):
     def __init__(self):
         import spacy
 
-        self._parser = spacy.load('en')
+        self._parser = spacy.load('en_core_web_lg')
         self._vocab = self._parser.vocab
 
     # Private

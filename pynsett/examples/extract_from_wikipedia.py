@@ -13,7 +13,6 @@ if __name__ == "__main__":
 
     text = open(os.path.join(_path, '../data/wiki_asimov_two_paragraphs.txt')).read()
 
-    text = "John is a writer."
     start = time.time()
     discourse = Discourse(text)
     discourse._discourse.plot()

@@ -4,7 +4,7 @@ import spacy
 from ..auxiliary import tag_is_verb, tag_is_noun, tag_is_adjective
 from ..auxiliary import Collator
 
-parser = spacy.load('en')
+parser = spacy.load('en_core_web_lg')
 
 _path = os.path.dirname(__file__)
 

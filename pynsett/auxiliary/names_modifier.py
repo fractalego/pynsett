@@ -3,6 +3,17 @@ import logging
 _logger = logging.getLogger(__file__)
 
 
+class DiscourseNamesModifier:
+    def __init__(self, index):
+        self._index = index
+
+    def visit(self, g):
+        for item in g.vs:
+            item['name'] = str(self._index) + item['name']
+        for item in g.es:
+            item['name'] = str(self._index) + item['name']
+
+
 class SentenceNamesModifier:
     def __init__(self, sentence_index):
         self._sentence_index = sentence_index

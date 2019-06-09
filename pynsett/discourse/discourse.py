@@ -2,7 +2,8 @@ import logging
 
 from nltk.tokenize import sent_tokenize
 
-from pynsett.auxiliary.names_modifier import SentenceNamesModifier, assign_proper_index_to_nodes_names
+from pynsett.auxiliary.names_modifier import SentenceNamesModifier, assign_proper_index_to_nodes_names, \
+    DiscourseNamesModifier
 from pynsett.discourse.anaphora import AllenCoreferenceVisitorsFactory
 from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, CoreferenceJoinerVisitor
 from pynsett.discourse.paragraphs import SimpleParagraphTokenizer
@@ -73,10 +74,12 @@ class Paragraph(DiscourseBase):
 
 class Discourse(DiscourseBase):
     def __init__(self, text):
-        self.paragraphs = self.__divide_into_paragraphs(self.__sanitize_text(text))
-        self._sentences_list = self.__aggregate_sentence_list_from_paragrahs(self.paragraphs)
-        self._drs_list = self.__aggregate_drs_list_from_paragrahs(self.paragraphs)
-        self._discourse = self.__aggregate_discourse_from_paragrahs(self.paragraphs)
+        paragraphs = self.__divide_into_paragraphs(self.__sanitize_text(text))
+        if len(paragraphs) > 1:
+            [paragraph._discourse.apply(DiscourseNamesModifier(i)) for i, paragraph in enumerate(paragraphs)]
+        self._sentences_list = self.__aggregate_sentence_list_from_paragrahs(paragraphs)
+        self._drs_list = self.__aggregate_drs_list_from_paragrahs(paragraphs)
+        self._discourse = self.__aggregate_discourse_from_paragrahs(paragraphs)
 
     def __aggregate_discourse_from_paragrahs(self, paragraphs):
         return Drs.create_union_from_list_of_drs([paragraph.get_discourse_drs() for paragraph in paragraphs])

@@ -4,19 +4,77 @@ from nltk.tokenize import sent_tokenize
 
 from pynsett.auxiliary.names_modifier import SentenceNamesModifier, assign_proper_index_to_nodes_names
 from pynsett.discourse.anaphora import AllenCoreferenceVisitorsFactory
-from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, SentenceJoinerVisitor, CoreferenceJoinerVisitor
+from pynsett.discourse.global_graph_visitors import GraphJoinerVisitor, CoreferenceJoinerVisitor
+from pynsett.discourse.paragraphs import SimpleParagraphTokenizer
 from pynsett.discourse.single_tokens_visitors import HeadTokenVisitor
 from ..drt import Drs
 
+_logger = logging.getLogger(__name__)
+
 
 class Discourse:
-    _logger = logging.getLogger(__name__)
+    def __init__(self, text):
+        self.paragraphs = self.__divide_into_paragraphs(self.__sanitize_text(text))
+        self._sentences_list = self.__aggregate_sentence_list_from_paragrahs(self.paragraphs)
+        self._drs_list = self.__aggregate_drs_list_from_paragrahs(self.paragraphs)
+        self._discourse = self.__aggregate_discourse_from_paragrahs(self.paragraphs)
 
+    def __aggregate_discourse_from_paragrahs(self, paragraphs):
+        return Drs.create_union_from_list_of_drs([paragraph.get_discourse_drs() for paragraph in paragraphs])
+
+    def __aggregate_sentence_list_from_paragrahs(self, paragraphs):
+        sentence_list = []
+        for paragraph in paragraphs:
+            sentence_list += paragraph._sentences_list
+        return sentence_list
+
+    def __aggregate_drs_list_from_paragrahs(self, paragraphs):
+        drs_list = []
+        for paragraph in paragraphs:
+            drs_list += paragraph.drs_list
+        return drs_list
+
+    def __divide_into_paragraphs(self, text):
+        paragraphs_texts = SimpleParagraphTokenizer().get_paragraphs(text)
+        paragraphs = []
+        for text in paragraphs_texts:
+            paragraphs.append(Paragraph(text))
+        return paragraphs
+
+    def __sanitize_text(self, text):
+        text = text.replace('\n', '.\n')
+        text = text.replace('.[', '. [')
+        text = text.replace('...', '.')
+        text = text.replace('..', '.')
+        text = text.replace('\n.', '\n')
+        return text
+
+    @property
+    def drs_list(self):
+        return self._drs_list
+
+    @property
+    def connected_components(self):
+        from igraph import WEAK
+
+        g_list = self._discourse._g.clusters(mode=WEAK).subgraphs()
+        return [Drs(g) for g in g_list]
+
+    def __getitem__(self, item):
+        return self._sentences_list[item], self._drs_list[item]
+
+    def __len__(self):
+        return len(self._sentences_list)
+
+    def get_discourse_drs(self):
+        return self._discourse
+
+
+class Paragraph:
     def __init__(self, text):
         self._discourse = Drs.create_empty()
         self._drs_list = []
 
-        text = self.__sanitize_text(text)
         self._sentences_list = sent_tokenize(text)
         word_nodes = []
         for sentence_index, sentence in enumerate(self._sentences_list):
@@ -48,27 +106,13 @@ class Discourse:
         g_list = self._discourse._g.clusters(mode=WEAK).subgraphs()
         return [Drs(g) for g in g_list]
 
-    # Private
-
     def __create_discourse_graph(self):
         if len(self._drs_list) == 1:
             self._discourse = self._drs_list[0]
             return
         for drs in self._drs_list:
             self._discourse.apply(GraphJoinerVisitor(drs))
-        # for sentence_index in range(len(self._sentences_list) - 1):
-        # self._discourse.apply(SentenceJoinerVisitor(sentence_index, sentence_index + 1))
         self._discourse.apply(CoreferenceJoinerVisitor())
-
-    def __sanitize_text(self, text):
-        text = text.replace('\n', '.\n')
-        text = text.replace('.[', '. [')
-        text = text.replace('...', '.')
-        text = text.replace('..', '.')
-        text = text.replace('\n.', '\n')
-        return text
-
-    # Iterator operations
 
     def __getitem__(self, item):
         return self._sentences_list[item], self._drs_list[item]
@@ -78,4 +122,3 @@ class Discourse:
 
     def get_discourse_drs(self):
         return self._discourse
-

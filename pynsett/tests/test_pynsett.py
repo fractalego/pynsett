@@ -272,12 +272,16 @@ class PynsettUnitTests(unittest.TestCase):
         is_match = len(lst) > 1
         self.assertTrue(is_match)
 
-    def test_triplets(self):
+    def test_drt_graph(self):
         sentence = 'John is tall'
         drs = Drs.create_from_natural_language(sentence)
         writer = DRTTripletsWriter()
         triplets = drs.apply(writer)
-        expected_triplets = [('is', 'AGENT', 'John'), ('is', 'ADJECTIVE', 'tall')]
+        expected_triplets = {'edges': [{'from': 'v1', 'label': 'AGENT', 'to': 'v0'},
+                                       {'from': 'v1', 'label': 'ADJECTIVE', 'to': 'v2'}],
+                             'nodes': [{'id': 'v1', 'label': 'is'},
+                                       {'id': 'v0', 'label': 'John'},
+                                       {'id': 'v2', 'label': 'tall'}]}
         self.assertEqual(triplets, expected_triplets)
 
 

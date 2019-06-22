@@ -16,11 +16,21 @@ class DRTTripletsWriter(BaseWriter):
         if not isinstance(g, Graph):
             raise TypeError("The writer needs an igraph.Graph as an argument")
 
-        triplets = []
+        data = {'nodes': [], 'edges': []}
         for edge in g.es:
-            from_node = g.vs[edge.tuple[0]]['word']
-            to_node = g.vs[edge.tuple[1]]['word']
-            relation = edge['type']
-            triplets.append((from_node, relation, to_node))
+            from_node = g.vs[edge.tuple[0]]
+            to_node = g.vs[edge.tuple[1]]
+            relation = edge
+            data['nodes'].append({'id': from_node['name'], 'label': self.__get_correct_name(from_node)})
+            data['nodes'].append({'id': to_node['name'], 'label': self.__get_correct_name(to_node)})
+            data['edges'].append({'from': from_node['name'], 'to': to_node['name'], 'label': relation['type']})
 
-        return list(unique_everseen(triplets, key=tuple))
+        data['nodes'] = list(unique_everseen(data['nodes'], key=dict))
+        data['edges'] = list(unique_everseen(data['edges'], key=dict))
+        return data
+
+    def __get_correct_name(self, node):
+        coreferent_name = node['refers_to']
+        if not coreferent_name:
+            return node['compound']
+        return '|'.join(coreferent_name)

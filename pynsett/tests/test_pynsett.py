@@ -9,6 +9,7 @@ from pynsett.inference import ForwardInference
 from pynsett.metric import MetricFactory
 from pynsett.drt.drs_matcher import DrsMatcher
 from pynsett.writer import RelationTripletsWriter
+from pynsett.writer.drt_triplets_writer import DRTTripletsWriter
 
 _path = os.path.dirname(__file__)
 
@@ -270,6 +271,14 @@ class PynsettUnitTests(unittest.TestCase):
         lst = discourse._discourse.apply(DrsMatcher(expected_drs, metric))
         is_match = len(lst) > 1
         self.assertTrue(is_match)
+
+    def test_triplets(self):
+        sentence = 'John is tall'
+        drs = Drs.create_from_natural_language(sentence)
+        writer = DRTTripletsWriter()
+        triplets = drs.apply(writer)
+        expected_triplets = [('is', 'AGENT', 'John'), ('is', 'ADJECTIVE', 'tall')]
+        self.assertEqual(triplets, expected_triplets)
 
 
 if __name__ == '__main__':

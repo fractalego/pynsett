@@ -3,24 +3,23 @@
   margin: 0 auto;
 }
 
-.container {
-  display: flex;
-  flex-wrap: wrap;
+.left_column {
+  float: left;
+  width: 450px;
 }
 
-.card {
-  margin: 1rem;
-  border: 1px solid gray;
+.main_column {
+  float: left;
+  width: 60%;
 }
 
-@media screen and (min-width: 600px) {
-  .card {
-    flex: 1 1 calc(50% - 2rem);
-  }
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
-@media screen and (min-width: 900px) {
-  .card {
-    flex: 1 1 calc(33% - 2rem);
-  }
+textarea#query {
+  width: 400px;
+  height: 500px;
 }

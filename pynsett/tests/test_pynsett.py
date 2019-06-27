@@ -277,8 +277,8 @@ class PynsettUnitTests(unittest.TestCase):
         drs = Drs.create_from_natural_language(sentence)
         writer = DRTTripletsWriter()
         triplets = drs.apply(writer)
-        expected_triplets = {'edges': [{'from': 'v1', 'label': 'AGENT', 'to': 'v0'},
-                                       {'from': 'v1', 'label': 'ADJECTIVE', 'to': 'v2'}],
+        expected_triplets = {'edges': [{'arrows': 'to', 'from': 'v1', 'label': 'AGENT', 'to': 'v0'},
+                                       {'arrows': 'to', 'from': 'v1', 'label': 'ADJECTIVE', 'to': 'v2'}],
                              'nodes': [{'id': 'v1', 'label': 'is'},
                                        {'id': 'v0', 'label': 'John'},
                                        {'id': 'v2', 'label': 'tall'}]}

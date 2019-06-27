@@ -23,7 +23,8 @@ class DRTTripletsWriter(BaseWriter):
             relation = edge
             data['nodes'].append({'id': from_node['name'], 'label': self.__get_correct_name(from_node)})
             data['nodes'].append({'id': to_node['name'], 'label': self.__get_correct_name(to_node)})
-            data['edges'].append({'from': from_node['name'], 'to': to_node['name'], 'label': relation['type']})
+            data['edges'].append({'from': from_node['name'], 'to': to_node['name'], 'label': relation['type'],
+                                  'arrows': 'to'})
 
         data['nodes'] = list(unique_everseen(data['nodes'], key=dict))
         data['edges'] = list(unique_everseen(data['edges'], key=dict))

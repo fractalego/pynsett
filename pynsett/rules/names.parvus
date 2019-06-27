@@ -5,9 +5,6 @@ MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'CONJ'}(a,b), {}(b)
 DELETE r
 CREATE {}(a), {'type': 'CONJUNCTION'}(a,b), {}(b);
 
-
-
-
 MATCH {}(a), {'name': 'r', 'type':'NUMMOD'}(a,b), {}(b)
 DELETE r
 CREATE {}(a), {'type': 'NUMBER'}(a,b), {}(b);
@@ -55,6 +52,3 @@ SET (assoc b "lemma" "they")
 SET (assoc b "word" "they")
 SET (assoc b "compound" "they")
 CREATE {}(a), {'type': 'OWNS'}(b,a), {}(b);
-
-
-# Names with 'or' or 'and'

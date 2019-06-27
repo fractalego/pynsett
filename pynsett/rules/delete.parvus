@@ -40,3 +40,12 @@ DELETE a, r;
 
 MATCH {'tag': '.'}(a), {'name': 'r'}(b,a), {}(b)
 DELETE a, r;
+
+MATCH {}(a), {'name': 'r', 'type': 'PUNCT'}(b,a), {}(b)
+DELETE a, r;
+
+
+# Deleting lonely conjunctions
+
+MATCH {}(a), {'name': 'r', 'type': 'CC'}(b,a), {}(b)
+DELETE a, r;

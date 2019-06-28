@@ -27,3 +27,19 @@ SET (assoc a "negated" "true");
 MATCH {}(a), {'name': 'r', 'type': 'ADVMOD'}(a,b), {}(b)
 DELETE r
 CREATE {}(a), {'type': 'ADVERB'}(a,b), {}(b);
+
+MATCH {}(d), {'name': 'r0', 'type': 'RELATIVE_CLAUSE'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'ADVERB'}(a,b), {}(b),
+             {'name': 'r2'}(a,c), {}(c)
+DELETE r1
+SET (assoc r0 "type" (get b "word"))
+SET (assoc r0 "name" (get b "name"))
+DELETE b;
+
+MATCH {}(d), {'name': 'r0', 'type': 'RELATIVE_CLAUSE'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'ADVMOD'}(a,b), {}(b),
+             {'name': 'r2'}(a,c), {}(c)
+DELETE r1
+SET (assoc r0 "type" (get b "word"))
+SET (assoc r0 "name" (get b "name"))
+DELETE b;

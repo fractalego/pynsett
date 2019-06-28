@@ -18,14 +18,18 @@ def _create_graph_from_natural_language(sentence):
     parsed_dict = parser.execute(sentence)
     db = parsed_dict['graph']
 
-    n = 5
+    n = 50
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/verbs.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/names.parvus')).read(), n)
+    db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/various.parvus')).read(), n)
+    db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/prepositions.parvus')).read(), n)
+    db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/punctuation.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/compound1.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/compound2.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/adjectives.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/delete.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/subordinates.parvus')).read(), n)
+    db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/recursive.parvus')).read(), n)
     return {'graph': db.get_graph(),
             'word_nodes': parsed_dict['word_nodes'],
             }

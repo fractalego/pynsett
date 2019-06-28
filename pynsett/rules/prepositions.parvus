@@ -1,0 +1,26 @@
+# Prepositions
+
+
+MATCH {}(a), {'name': 'r1', 'type': 'PREP'}(a,b), {'word': 'in'}(b),
+             {'name': 'r2', 'type': 'POBJ'}(b,c), {}(c)
+DELETE r1, r2
+CREATE {}(a), {'name': 'r3', 'type': 'in'}(a,c), {}(c)
+SET (assoc r3 "name" (get b "name"))
+DELETE b;
+
+MATCH {}(a), {'name': 'r1', 'type': 'PREP'}(a,b), {}(b),
+             {'name': 'r2', 'type': 'POBJ'}(b,c), {}(c)
+DELETE r1, r2
+CREATE {}(a), {'name': 'r3'}(a,c), {}(c)
+SET (assoc r3 "type" (get b "word"))
+SET (assoc r3 "name" (get b "name"))
+DELETE b;
+
+
+MATCH {}(a), {'name': 'r1', 'type': 'PREP'}(a,b), {}(b),
+             {'name': 'r2', 'type': 'AMOD'}(b,c), {}(c)
+DELETE r1, r2
+CREATE {}(a), {'name': 'r3'}(a,c), {}(c)
+SET (assoc r3 "type" (get b "word"))
+SET (assoc r3 "name" (get b "name"))
+DELETE b;

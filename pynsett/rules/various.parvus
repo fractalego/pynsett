@@ -1,0 +1,77 @@
+# Names with 'or' or 'and'
+
+MATCH {'tag': 'v'}(d), {'name': 'r0', 'type': 'ATTR'}(d,a), {}(a),
+                       {'name': 'r1', 'type': 'CC'}(a,b), {}(b),
+                       {'name': 'r2', 'type': 'CONJUNCTION'}(a,c), {}(c)
+DELETE r0, r1, r2
+CREATE {}(d), {'name': 'r3', 'type': 'ATTR'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'ATTR'}(d,c), {}(c)
+CREATE {}(a), {'name': 'r5'}(a,c), {}(c)
+SET (assoc r5 "type" (get b "word"))
+SET (assoc r5 "name" (get b "name"))
+DELETE b;
+
+MATCH {'tag': 'v'}(d), {'name': 'r0', 'type': 'PATIENT'}(d,a), {}(a),
+                       {'name': 'r1', 'type': 'CC'}(a,b), {}(b),
+                       {'name': 'r2', 'type': 'CONJUNCTION'}(a,c), {}(c)
+DELETE r0, r1, r2
+CREATE {}(d), {'name': 'r3', 'type': 'PATIENT'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'PATIENT'}(d,c), {}(c)
+CREATE {}(a), {'name': 'r5'}(a,c), {}(c)
+SET (assoc r5 "type" (get b "word"))
+SET (assoc r5 "name" (get b "name"))
+DELETE b;
+
+MATCH {'tag': 'v'}(d), {'name': 'r0', 'type': 'AGENT'}(d,a), {}(a),
+                       {'name': 'r1', 'type': 'CC'}(a,b), {}(b),
+                       {'name': 'r2', 'type': 'CONJUNCTION'}(a,c), {}(c)
+DELETE r0, r1, r2
+CREATE {}(d), {'name': 'r3', 'type': 'AGENT'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'AGENT'}(d,c), {}(c)
+CREATE {}(a), {'name': 'r5'}(a,c), {}(c)
+SET (assoc r5 "type" (get b "word"))
+SET (assoc r5 "name" (get b "name"))
+DELETE b;
+
+
+MATCH {}(a), {'name': 'r1', 'type': 'CC'}(a,b), {}(b),
+             {'name': 'r2', 'type': 'CONJUNCTION'}(a,c), {}(c)
+DELETE r1, r2
+CREATE {}(a), {'name': 'r3'}(a,c), {}(c)
+SET (assoc r3 "type" (get b "word"))
+SET (assoc r3 "name" (get b "name"))
+DELETE b;
+
+MATCH {}(a), {'name': 'r1', 'type': 'CC'}(a,b), {}(b),
+             {'name': 'r2', 'type': 'CONJ'}(a,c), {}(c)
+DELETE r1, r2
+CREATE {}(a), {'name': 'r3'}(a,c), {}(c)
+SET (assoc r3 "type" (get b "word"))
+SET (assoc r3 "name" (get b "name"))
+DELETE b;
+
+MATCH {}(a), {'name': 'r1', 'type': 'PUNCT'}(a,b), {}(b),
+             {'name': 'r2', 'type': 'CONJUNCTION'}(a,c), {}(c)
+DELETE r1, r2
+CREATE {}(a), {'name': 'r3', 'type': 'and'}(a,c), {}(c)
+SET (assoc r3 "name" (get b "name"))
+DELETE b;
+
+
+MATCH {}(a), {'name': 'r1', 'type': 'PUNCT'}(a,b), {}(b),
+             {'name': 'r2', 'type': 'CONJ'}(a,c), {}(c)
+DELETE r1, r2
+CREATE {}(a), {'name': 'r3', 'type': 'and'}(a,c), {}(c)
+SET (assoc r3 "name" (get b "name"))
+DELETE b;
+
+
+# Determiners
+
+MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'DET'}(a,b), {}(b)
+WHERE (in (get b "word") ["the" "a" "an"])
+DELETE r, b;
+
+
+MATCH {}(a), {'name': 'r', 'type':'PREDET'}(a,b), {}(b)
+SET (assoc r "type" "DET");

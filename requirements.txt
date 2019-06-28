@@ -7,3 +7,5 @@ parvusdb==0.0.26
 hy==0.13.0
 nose==1.3.7
 allennlp==0.8.3
+flask==1.0.2
+flask-cors

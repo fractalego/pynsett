@@ -47,6 +47,7 @@ class CoreferenceJoinerVisitor:
         self._rules = """
         MATCH {'refers_to': %s, 'name': '%s'}(a), {'refers_to': %s}(b)
         WHERE (not (in (get b "name") %s))
+        WHERE (eq (get a "entity") (get b "entity"))
         CREATE {}(a), {'type': 'REFERS_TO'}(a,b), {}(b)
         CREATE {}(a), {'type': 'REFERS_TO'}(b,a), {}(b);
         """

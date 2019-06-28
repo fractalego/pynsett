@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Pynsett</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css"/>
+    <link href="https://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet"/>
+    <link href="static/style.css" rel="stylesheet"/>
+    <style type="text/css">
+    #graph {
+      width: 1200px;
+      height: 1000px;
+    }
+
+    </style>
+</head>
+
+
+<body>
+<div class="row">
+    <div class="left_column">
+        <textarea id="query"></textarea>
+        <button type="button" onclick="draw_drt()">Parse</button>
+    </div>
+    <div class="main_column">
+        <div id="graph"></div>
+    </div>
+</div>
+
+</body>
+<script src="static/scripts.js"></script>
+<script src="static/drt.js"></script>
+</html>

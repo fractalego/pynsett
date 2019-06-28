@@ -1,0 +1,25 @@
+#root {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.left_column {
+  float: left;
+  width: 450px;
+}
+
+.main_column {
+  float: left;
+  width: 60%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+textarea#query {
+  width: 400px;
+  height: 500px;
+}

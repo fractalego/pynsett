@@ -37,6 +37,8 @@ class DiscourseBase:
     def get_discourse_drs(self):
         return self._discourse
 
+    def apply(self, function):
+        return self._discourse.apply(function)
 
 class Paragraph(DiscourseBase):
     def __init__(self, text):

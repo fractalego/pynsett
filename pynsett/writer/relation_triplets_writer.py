@@ -13,8 +13,6 @@ class RelationTripletsWriter(BaseWriter):
         triplets = self.__get_relations_and_entities_from_graph(g)
         return triplets
 
-    # Private
-
     def __get_relations_and_entities_from_graph(self, g):
         if not isinstance(g, Graph):
             raise TypeError("The writer needs an igraph.Graph as an argument")

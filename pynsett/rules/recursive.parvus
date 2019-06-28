@@ -1,0 +1,85 @@
+# and rules
+
+MATCH {}(d), {'name': 'r0', 'type': 'as'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'and'}(a,b), {}(b),
+             {'name': 'r2', 'type': 'and'}(b,c), {}(c)
+DELETE r0, r1, r2
+CREATE {}(d), {'name': 'o3', 'type': 'as'}(d,a), {}(a)
+CREATE {}(d), {'name': 'o4', 'type': 'as'}(d,b), {}(b)
+CREATE {}(d), {'name': 'o5', 'type': 'as'}(d,c), {}(c)
+DELETE b;
+
+MATCH {}(d), {'name': 'r0', 'type': 'as'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'and'}(a,b), {}(b)
+DELETE r0, r1
+CREATE {}(d), {'name': 'r3', 'type': 'as'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'as'}(d,b), {}(b)
+DELETE b;
+
+
+MATCH {}(d), {'name': 'r0', 'type': 'ADJECTIVE'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'and'}(a,b), {}(b)
+DELETE r0, r1
+CREATE {}(d), {'name': 'r3', 'type': 'ADJECTIVE'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'ADJECTIVE'}(d,b), {}(b)
+DELETE b;
+
+
+MATCH {}(d), {'name': 'r0', 'type': 'ATTR'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'and'}(a,b), {}(b)
+DELETE r0, r1
+CREATE {}(d), {'name': 'r3', 'type': 'ATTR'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'ATTR'}(d,b), {}(b)
+DELETE b;
+
+
+MATCH {}(d), {'name': 'r0', 'type': 'to'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'and'}(a,b), {}(b)
+DELETE r0, r1
+CREATE {}(d), {'name': 'r3', 'type': 'to'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'to'}(d,b), {}(b)
+DELETE b;
+
+
+# or rules
+
+MATCH {}(d), {'name': 'r0', 'type': 'as'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'or'}(a,b), {}(b),
+             {'name': 'r2', 'type': 'or'}(b,c), {}(c)
+DELETE r0, r1, r2
+CREATE {}(d), {'name': 'o3', 'type': 'as'}(d,a), {}(a)
+CREATE {}(d), {'name': 'o4', 'type': 'as'}(d,b), {}(b)
+CREATE {}(d), {'name': 'o5', 'type': 'as'}(d,c), {}(c)
+DELETE b;
+
+MATCH {}(d), {'name': 'r0', 'type': 'as'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'or'}(a,b), {}(b)
+DELETE r0, r1
+CREATE {}(d), {'name': 'r3', 'type': 'as'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'as'}(d,b), {}(b)
+DELETE b;
+
+
+MATCH {}(d), {'name': 'r0', 'type': 'ADJECTIVE'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'or'}(a,b), {}(b)
+DELETE r0, r1
+CREATE {}(d), {'name': 'r3', 'type': 'ADJECTIVE'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'ADJECTIVE'}(d,b), {}(b)
+DELETE b;
+
+MATCH {}(d), {'name': 'r0', 'type': 'ATTR'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'or'}(a,b), {}(b)
+DELETE r0, r1
+CREATE {}(d), {'name': 'r3', 'type': 'ATTR'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'ATTR'}(d,b), {}(b)
+DELETE b;
+
+
+MATCH {}(d), {'name': 'r0', 'type': 'to'}(d,a), {}(a),
+             {'name': 'r1', 'type': 'or'}(a,b), {}(b)
+DELETE r0, r1
+CREATE {}(d), {'name': 'r3', 'type': 'to'}(d,a), {}(a)
+CREATE {}(d), {'name': 'r4', 'type': 'to'}(d,b), {}(b)
+DELETE b;
+
+

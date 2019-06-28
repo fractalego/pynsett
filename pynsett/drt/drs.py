@@ -18,7 +18,7 @@ def _create_graph_from_natural_language(sentence):
     parsed_dict = parser.execute(sentence)
     db = parsed_dict['graph']
 
-    n = 50
+    n = 10
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/verbs.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/names.parvus')).read(), n)
     db = repeat_db_rules_n_times(db, open(os.path.join(_path, '../rules/various.parvus')).read(), n)

@@ -9,7 +9,6 @@ from flask import jsonify
 from flask_cors import CORS
 from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
 from pynsett.discourse import Discourse
-from pynsett.drt import Drs
 from pynsett.extractor import Extractor
 from pynsett.writer.drt_triplets_writer import DRTTripletsWriter
 
@@ -28,6 +27,9 @@ def get_triplets():
     discourse = Discourse(text)
     extractor = Extractor(discourse, knowledge)
     triplets = extractor.extract()
+    
+    ### CONVERT TRIPLETS INTO SOMETHING DIGESTIBLE BI VIS !!!!
+
     return jsonify(triplets)
 
 
@@ -55,7 +57,7 @@ def get_file(filename):
         return str(exc)
 
 
-@app.route('/', defaults={'path': ''})
+@app.route('/', defaults={'path': 'index.html'})
 @app.route('/static/<path>')
 def get_resource(path):
     mimetypes = {
@@ -63,8 +65,6 @@ def get_resource(path):
         ".html": "text/html",
         ".js": "application/javascript",
     }
-    if not path:
-        path = 'index.html'
     ext = os.path.splitext(path)[1]
     mimetype = mimetypes.get(ext, "text/html")
     if mimetype != "text/html":
@@ -74,8 +74,16 @@ def get_resource(path):
     return Response(content, mimetype=mimetype)
 
 
+@app.route('/relations')
+def get_relations_page():
+    path = 'relations.html'
+    complete_path = os.path.join(root_dir(), path)
+    content = get_file(complete_path)
+    return Response(content, mimetype='text/html')
+
+
 if __name__ == '__main__':
     port = 4001
     app.run(debug=True, port=port, host='0.0.0.0')
-    triplets = json.loads(requests.post(f'http://localhost:{port}/drt', json={'text': 'test'}).text)
+    json.loads(requests.post(f'http://localhost:{port}/drt', json={'text': 'test'}).text)
     print('Server is up and running!')

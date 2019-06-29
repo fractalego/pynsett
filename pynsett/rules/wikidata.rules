@@ -15,7 +15,7 @@ DEFINE DEGREE AS [PhD, BSc, MEng, MSc, master, degree];
 DEFINE FIELD AS [field, medicine, theory];
 DEFINE MASCOT AS [animal, mammal, puppet];
 DEFINE NATIONALITY AS [nationality, italian, english, american];
-DEFINE ROLE AS [engineer, doctor, researcher, painter, writer, professor, carpenter];
+DEFINE ROLE AS [engineer, doctor, researcher, painter, writer, professor, carpenter, senator, politician];
 DEFINE TEAM AS [team, group, club];
 DEFINE UNIVERSITY AS [university, academy, polytechnic];
 DEFINE LITERATURE AS [book, story, article, series];

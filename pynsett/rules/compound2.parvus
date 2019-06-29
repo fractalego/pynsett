@@ -1,4 +1,0 @@
-MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'COMPOUND'}(a,b), {'tag': 'n'}(b)
-WHERE (== (get a "entity") "")
-DELETE r
-CREATE {}(a), {'type': 'of'}(a,b), {}(b);

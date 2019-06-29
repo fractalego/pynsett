@@ -1,0 +1,16 @@
+# Deleting punctuation
+
+MATCH {'tag': '.'}(a), {'name': 'r'}(b,a), {}(b)
+DELETE a, r;
+
+MATCH {'tag': ','}(a), {'name': 'r'}(b,a), {}(b)
+DELETE a, r;
+
+MATCH {'tag': '\'\''}(a), {'name': 'r'}(b,a), {}(b)
+DELETE a, r;
+
+MATCH {}(a), {'name': 'r', 'type': 'PUNCT'}(b,a), {}(b)
+DELETE a, r;
+
+MATCH {}(a), {'name': 'r', 'type': 'PUNCT'}(a,b), {}(b)
+DELETE a, r;

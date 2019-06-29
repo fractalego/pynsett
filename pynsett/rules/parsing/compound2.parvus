@@ -1,0 +1,11 @@
+MATCH {'tag': 'n'}(a), {'name': 'r1', 'type':'COMPOUND'}(a,b), {'tag': 'n'}(b)
+                     , {'name': 'r2', 'type':'COMPOUND'}(b,c), {'tag': 'n'}(c)
+WHERE (== (get a "entity") "")
+DELETE r1, r2
+CREATE {}(a), {'type': 'of'}(a,b), {}(b), {'type': 'of'}(b,c), {}(c);
+
+
+MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'COMPOUND'}(a,b), {'tag': 'n'}(b)
+WHERE (== (get a "entity") "")
+DELETE r
+CREATE {}(a), {'type': 'of'}(a,b), {}(b);

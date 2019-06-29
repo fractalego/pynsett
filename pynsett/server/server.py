@@ -8,6 +8,7 @@ from flask import request
 from flask import jsonify
 from flask_cors import CORS
 from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
+from pynsett.auxiliary.transform import transform_triplets_into_api_edges_and_nodes
 from pynsett.discourse import Discourse
 from pynsett.extractor import Extractor
 from pynsett.writer.drt_triplets_writer import DRTTripletsWriter
@@ -27,10 +28,7 @@ def get_triplets():
     discourse = Discourse(text)
     extractor = Extractor(discourse, knowledge)
     triplets = extractor.extract()
-    
-    ### CONVERT TRIPLETS INTO SOMETHING DIGESTIBLE BI VIS !!!!
-
-    return jsonify(triplets)
+    return jsonify(transform_triplets_into_api_edges_and_nodes(triplets))
 
 
 @app.route('/api/drt', methods=['POST'])

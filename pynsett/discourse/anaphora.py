@@ -60,8 +60,6 @@ class AllenCoreferenceVisitorsFactory:
     def create(self):
         return AllenCoreferenceVisitor(self._coreference_dict)
 
-    # Private
-
     def __create_coreference_dict(self, word_nodes):
         coreference_dict = {}
 

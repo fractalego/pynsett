@@ -201,10 +201,6 @@ The server provides three web interfaces:
 ![Image about A Neo-Davidsonian representation](images/asimov_drt.png)
 
 
-#### A Programmable relation extractor at http://localhost:4001/relations
-![Image about a programmable rule](images/relations_web.png)
-
-
 ## API
 
 The wikidata relation extractor API can be called with
@@ -271,9 +267,25 @@ with output:
 ```
 
 
+Pre-Formatting of the Text
+--------------------------
+
+The text must be submitted respecting the following rules:
+* No parenthesis (...) nor brackets [...]. The parser is confused by those.
+* The paragraphs must be separated but *2 empty lines*. Dividing a text into paragraphs helps with anaphora.
+   ```bash
+   This is paragraph 1.
+
+
+   This is paragraph 2.
+   ```
+
+
+
 Known issues and shortcomings
 -----------------------------
 
 * Speed! Parsing is done one sentence at a time
 * Anaphora is only works inside paragraphs
 * Anaphora is done through AllenNLP, with can be slow-ish without a GPU
+* The text needs to be cleaned and pre-formatted. This is not an issue `per se` but it must be kept in mind

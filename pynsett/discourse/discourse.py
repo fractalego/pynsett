@@ -60,10 +60,6 @@ class Paragraph(DiscourseBase):
             except Exception as e:
                 _logger.warning('Exception caught in Discourse: ' + str(e))
 
-        if len(self._drs_list) < 1:
-            self._discourse = self._drs_list[0]
-            return
-
         coreference_visitor_factory = AllenCoreferenceVisitorsFactory(word_nodes)
         for i, drs in enumerate(self._drs_list):
             drs.apply(coreference_visitor_factory.create())
@@ -71,6 +67,9 @@ class Paragraph(DiscourseBase):
         self.__create_discourse_graph()
 
     def __create_discourse_graph(self):
+        if len(self._drs_list) == 1:
+            self._discourse = self._drs_list[0]
+            return
         for drs in self._drs_list:
             self._discourse.apply(GraphJoinerVisitor(drs))
         self._discourse.apply(CoreferenceJoinerVisitor())

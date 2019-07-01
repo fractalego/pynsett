@@ -62,6 +62,10 @@ CREATE (BIRTH_PLACE 1 2);
 
 # Rules for BIRTH_DAY
 
+MATCH "PERSON#1 was born on DATE#2"
+CREATE (BIRTH_DAY 1 2);
+
+
 MATCH "PERSON#1 was born in DATE#2"
 CREATE (BIRTH_DAY 1 2);
 

@@ -8,30 +8,21 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" rel="stylesheet" type="text/css"/>
     <link href="https://fonts.googleapis.com/css?family=Dosis:400,700" rel="stylesheet"/>
-    <link href="static/rel_style.css" rel="stylesheet"/>
+    <link href="static/wiki_style.css" rel="stylesheet"/>
     <style type="text/css">
     #graph {
       width: 1200px;
       height: 1000px;
     }
-
     </style>
 </head>
 
 
 <body>
-<script src="static/rel_scripts.js"></script>
-<script src="static/rel_triplets.js"></script>
 <div class="row">
     <div class="left_column">
-        <div class="container">
-            <textarea id="query"></textarea>
-            <button type="button" onclick="draw_drt()">Parse</button>
-        </div>
-        <div class="container">
-            <textarea id="rules"></textarea>
-            <button type="button" onclick="submit_rules()">Submit Rules</button>
-        </div>
+        <textarea id="query"></textarea>
+        <button type="button" onclick="draw_drt()">Parse</button>
     </div>
     <div class="main_column">
         <div id="graph"></div>
@@ -39,5 +30,6 @@
 </div>
 
 </body>
-
+<script src="static/wiki_scripts.js"></script>
+<script src="static/wiki_triplets.js"></script>
 </html>

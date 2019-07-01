@@ -27,8 +27,6 @@ class GloveMetric(MetricBase):
         self._filename = '../data/glove.6B.50d.txt'
         self._model = KeyedVectors.load_word2vec_format(os.path.join(self._path, self._filename))
 
-    # Private
-
     def _get_vector(self, word):
         try:
             return self._model[word]
@@ -43,8 +41,6 @@ class SpacyMetric(MetricBase):
         self._parser = spacy.load('en_core_web_lg')
         self._vocab = self._parser.vocab
 
-    # Private
-
     def _get_vector(self, word):
         try:
             return self._vocab[word].vector
@@ -56,6 +52,6 @@ class MetricFactory:
     @staticmethod
     def get_best_available_metric():
         try:
-            return GloveMetric()
-        except:
             return SpacyMetric()
+        except:
+            return GloveMetric()

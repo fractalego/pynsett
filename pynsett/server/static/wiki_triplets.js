@@ -11,12 +11,3 @@ function draw_drt() {
         var network = new vis.Network(container, data, options);
     });
 }
-
-function submit_rules() {
-    document.getElementById('rules').disabled=true
-    new submit_rules_to_api(function (data, err) {
-            data = JSON.parse(data)
-            console.log(data)
-            document.getElementById('rules').disabled=false
-    });
-}

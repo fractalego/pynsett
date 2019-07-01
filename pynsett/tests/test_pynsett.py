@@ -183,6 +183,17 @@ class PynsettUnitTests(unittest.TestCase):
         expected_list = [('John', 'BIRTH_DAY', '1582')]
         self.assertEqual(lst, expected_list)
 
+    def test_birth_date2(self):
+        sentence = 'John was born in 10 August 1582'
+        drs = Drs.create_from_natural_language(sentence)
+        fi = ForwardInference(drs, _knowledge)
+        drs_and_weight = fi.compute()
+        writer = RelationTripletsWriter()
+        lst = drs_and_weight[0][0].apply(writer)
+        expected_list = [('John', 'BIRTH_DAY', '10_August_1582')]
+        self.assertEqual(lst, expected_list)
+
+
     def test_multi_sentence_anaphora_masculine_names(self):
         text = "John is happy. He is a carpenter"
         discourse = Discourse(text)

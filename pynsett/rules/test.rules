@@ -6,6 +6,9 @@ DEFINE ANIMAL AS [cat, dog, mammal]
 DEFINE NATIONALITY AS [nationality, italian, english, american];
 
 
+MATCH "PERSON#1 was born on DATE#2"
+CREATE (BIRTH_DAY 1 2);
+
 MATCH "PERSON#1 was born in DATE#2"
 CREATE (BIRTH_DAY 1 2);
 

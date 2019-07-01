@@ -272,10 +272,9 @@ Pre-Formatting of the Text
 
 The text must be submitted respecting the following rules:
 * No parenthesis (...) nor brackets [...]. The parser is confused by those.
-* The paragraphs must be separated but *2 empty lines*. Dividing a text into paragraphs helps with anaphora.
+* The paragraphs must be separated by *1 empty line*. Dividing a text into paragraphs helps with anaphora.
    ```bash
    This is paragraph 1.
-
 
    This is paragraph 2.
    ```

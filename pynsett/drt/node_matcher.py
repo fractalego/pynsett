@@ -1,5 +1,3 @@
-from functools import lru_cache
-
 from parvusdb.utils.node_matcher import StringNodeMatcher
 
 
@@ -9,7 +7,7 @@ class VectorNodeMatcher(StringNodeMatcher):
     The word within each node is compared according to vector distance.
     """
 
-    _threshold = 3
+    _threshold = 5
 
     def __init__(self, metric):
         self._metric = metric

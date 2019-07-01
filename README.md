@@ -4,17 +4,24 @@ Pynsett: A lightweight relation extraction tool
 Installation
 ------------
 
+Before installing the package you need to install the tools for compiling python-igraph
+```bash
+sudo apt-get install build-essential python-dev python3-dev
+```
+
 The basic version can be installed by typing
 ```bash
-pip3 install pynsett
+virtualenv --python=/usr/bin/python3 .env
+pip install pynsett
 ```
 
-The system is now installed, however the parser requires an additional module. You will need to type
+The system is now installed, however the parser requires an additional module from Spacy. You will need to type
 ```bash
-python3 -m spacy download en_core_web_sm
+python3 -m spacy download en_core_web_lg
 ```
 
-If you want a better synonym matching, please another additional models with the glove vectors
+## Obsolete
+If you want to use 50-dim glove vectors for synonym matching, please another additional models with the glove vectors
 ```bash
 python3 -m pynsett download
 ```
@@ -39,15 +46,14 @@ from pynsett.extractor import Extractor
 from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
 
 
-if __name__ == "__main__":
-    text = open('test.txt').read()
-    discourse = Discourse(text)
+text = open('test.txt').read()
+discourse = Discourse(text)
 
-    extractor = Extractor(discourse, get_wikidata_knowledge())
-    triplets = extractor.extract()
+extractor = Extractor(discourse, get_wikidata_knowledge())
+triplets = extractor.extract()
 
-    for triplet in triplets:
-        print(triplet)
+for triplet in triplets:
+    print(triplet)
 ```
 
 The distribution comes with two sets of rules: The generic knowledge, accessible using
@@ -121,18 +127,17 @@ from pynsett.extractor import Extractor
 from pynsett.knowledge import Knowledge
 
 
-if __name__ == "__main__":
-    text = open('test.txt').read()
-    discourse = Discourse(text)
+text = open('test.txt').read()
+discourse = Discourse(text)
 
-    knowledge = Knowledge()
-    knowledge.add_rules(open('./my_own_rules.rules').read())
+knowledge = Knowledge()
+knowledge.add_rules(open('./my_own_rules.rules').read())
 
-    extractor = Extractor(discourse, knowledge)
-    triplets = extractor.extract()
+extractor = Extractor(discourse, knowledge)
+triplets = extractor.extract()
 
-    for triplet in triplets:
-        print(triplet)
+for triplet in triplets:
+    print(triplet)
 ```
 
 Import the triplets into Neo4J
@@ -148,32 +153,63 @@ from pynsett.discourse import Discourse
 from pynsett.extractor import Extractor
 from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
 
-if __name__ == "__main__":
-    knowledge = get_wikidata_knowledge()
+knowledge = get_wikidata_knowledge()
+text = open('sample_wikipedia.txt').read()
 
-    text = open('sample_wikipedia.txt').read()
+discourse = Discourse(text)
+extractor = Extractor(discourse, knowledge)
+triplets = extractor.extract()
 
-    discourse = Discourse(text)
-    extractor = Extractor(discourse, knowledge)
-    triplets = extractor.extract()
-
-    graph = Graph('http://localhost:7474/db/data/')
-    for triplet in triplets:
-        graph.run('MERGE (a {text: "%s"}) MERGE (b {text: "%s"}) CREATE (a)-[:%s]->(b)'
-                  % (triplet[0],
-                     triplet[2],
-                     triplet[1]))
-
+graph = Graph('http://localhost:7474/db/data/')
+for triplet in triplets:
+    graph.run('MERGE (a {text: "%s"}) MERGE (b {text: "%s"}) CREATE (a)-[:%s]->(b)'
+              % (triplet[0],
+                 triplet[2],
+                 triplet[1]))
 ```
 
-This script works on an example page called 'sample_wikipedia.txt' that you will have to provide. The result 
-on the Neo4J browser should look like the next picture (Extracted from the Wikipedia page of Franz Hals the Elder):
+This script works on an example page called 'sample_wikipedia.txt' that you will have to provide.
 
-![Extracted triplets from the Wikipedia page of Franz Hals the Elder](images/franz_hans_the_elder.png)
 
+Using the internal Web Server
+----------------------------
+
+To start the internal web server you can write the following
+
+```python3
+from pynsett.server import pynsett_app
+
+pynsett_app.run(debug=True, port=4001, host='0.0.0.0')
+```
+
+which will open a flask app at `localhost:4001`.
+
+### Web interface
+
+The server provides three web interfaces:
+
+#### A Wikidata relation extractor at http://localhost:4001/wikidata
+
+![Image about Asimov's Wikipedia page](images/asimov_wikidata.png)
+
+#### A Programmable relation extractor at http://localhost:4001/relations
+![Image about a programmable rule](images/relations_web.png)
+
+
+#### A Neo-Davidsonian representation of a text at http://localhost:4001
+
+![Image about A Neo-Davidsonian representation](images/asimov_drt.png)
+
+
+## A Programmable relation extractor at http://localhost:4001/relations
+![Image about a programmable rule](images/relations_web.png)
+
+
+# API
 
 Known issues and shortcomings
 -----------------------------
 
-* The system is still a little bit slow (about 0.07 sec per sentence)
-* Anaphora needs to be improved
+* Speed! Parsing is done one sentence at a time
+* Anaphora is only works inside paragraphs
+* Anaphora is done through AllenNLP, with can be slow-ish without a GPU

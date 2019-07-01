@@ -201,11 +201,75 @@ The server provides three web interfaces:
 ![Image about A Neo-Davidsonian representation](images/asimov_drt.png)
 
 
-## A Programmable relation extractor at http://localhost:4001/relations
+#### A Programmable relation extractor at http://localhost:4001/relations
 ![Image about a programmable rule](images/relations_web.png)
 
 
-# API
+## API
+
+The wikidata relation extractor API can be called with
+
+```python3
+import json
+import requests
+
+text = "John is a writer."
+triplets = json.loads(requests.post('http://localhost:4001/api/wikidata', json={'text': text}).text)
+print(triplets)
+```
+
+with output:
+```python3
+[['John', 'JOB_TITLE', 'writer']]
+```
+
+The rules can programmed by posting as in the following
+```python3
+import json
+import requests
+
+rules = """
+DEFINE PERSON AS {PERSON};
+DEFINE ORG AS {ORG};
+DEFINE ROLE AS [engineer, author, doctor, researcher];
+
+MATCH "PERSON#1 was ROLE at ORG#2"
+CREATE (WORKED_AT 1 2);
+"""
+
+triplets = json.loads(requests.post('http://localhost:4001/api/set_rules', json={'text': rules}).text)
+```
+
+These rules are then used at the following API endpoint
+```python3
+import json
+import requests
+
+text = "Isaac Asimov was an American writer and professor of biochemistry at Boston University."
+triplets = json.loads(requests.post('http://localhost:4001/api/relations', json={'text': text}).text)
+print(triplets)
+```
+
+
+The Neo-Davidsonian representation API can be called with
+
+```python3
+import json
+import requests
+text = "John is tall."
+graph = json.loads(requests.post('http://localhost:4001/drt', json={'text': text}).text)
+print(graph)
+```
+
+with output:
+```python3
+{'edges': [{'arrows': 'to', 'from': 'v1', 'label': 'AGENT', 'to': 'v0'},
+                                       {'arrows': 'to', 'from': 'v1', 'label': 'ADJECTIVE', 'to': 'v2'}],
+                             'nodes': [{'id': 'v1', 'label': 'is'},
+                                       {'id': 'v0', 'label': 'John'},
+                                       {'id': 'v2', 'label': 'tall'}]}
+```
+
 
 Known issues and shortcomings
 -----------------------------

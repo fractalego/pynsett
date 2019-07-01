@@ -201,10 +201,6 @@ The server provides three web interfaces:
 ![Image about A Neo-Davidsonian representation](images/asimov_drt.png)
 
 
-#### A Programmable relation extractor at http://localhost:4001/relations
-![Image about a programmable rule](images/relations_web.png)
-
-
 ## API
 
 The wikidata relation extractor API can be called with

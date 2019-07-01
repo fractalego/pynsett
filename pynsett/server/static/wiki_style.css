@@ -21,13 +21,5 @@
 
 textarea#query {
   width: 400px;
-  height: 350px;
-}
-textarea#rules {
-  width: 400px;
-  height: 350px;
-}
-
-.container {
-  padding-bottom: 7px;
+  height: 500px;
 }

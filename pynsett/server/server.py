@@ -1,8 +1,6 @@
 import json
 import os
 
-import requests
-
 from flask import Flask, Response
 from flask import request
 from flask import jsonify
@@ -11,15 +9,29 @@ from pynsett.auxiliary.prior_knowedge import get_wikidata_knowledge
 from pynsett.auxiliary.transform import transform_triplets_into_api_edges_and_nodes
 from pynsett.discourse import Discourse
 from pynsett.extractor import Extractor
+from pynsett.knowledge import Knowledge
 from pynsett.writer.drt_triplets_writer import DRTTripletsWriter
 
-app = Flask(__name__)
-CORS(app)
+pynsett_app = Flask('Pynsett')
+CORS(pynsett_app)
 
-knowledge = get_wikidata_knowledge()
+wiki_knowledge = get_wikidata_knowledge()
+knowledge = Knowledge()
 
 
-@app.route('/api/triplets', methods=['POST'])
+@pynsett_app.route('/api/wikidata', methods=['POST'])
+def get_wikidata_triplets():
+    if request.method != 'POST':
+        return []
+    data = json.loads(request.data)
+    text = data['text']
+    discourse = Discourse(text)
+    extractor = Extractor(discourse, wiki_knowledge)
+    triplets = extractor.extract()
+    return jsonify(transform_triplets_into_api_edges_and_nodes(triplets))
+
+
+@pynsett_app.route('/api/relations', methods=['POST'])
 def get_triplets():
     if request.method != 'POST':
         return []
@@ -31,7 +43,18 @@ def get_triplets():
     return jsonify(transform_triplets_into_api_edges_and_nodes(triplets))
 
 
-@app.route('/api/drt', methods=['POST'])
+@pynsett_app.route('/api/set_rules', methods=['POST'])
+def set_rules():
+    if request.method != 'POST':
+        return []
+    data = json.loads(request.data)
+    global knowledge
+    knowledge = Knowledge()
+    knowledge.add_rules(data['text'])
+    return jsonify({'success': True})
+
+
+@pynsett_app.route('/api/drt', methods=['POST'])
 def get_drt():
     if request.method != 'POST':
         return []
@@ -55,8 +78,8 @@ def get_file(filename):
         return str(exc)
 
 
-@app.route('/', defaults={'path': 'index.html'})
-@app.route('/static/<path>')
+@pynsett_app.route('/', defaults={'path': 'index.html'})
+@pynsett_app.route('/static/<path>')
 def get_resource(path):
     mimetypes = {
         ".css": "text/css",
@@ -72,8 +95,16 @@ def get_resource(path):
     return Response(content, mimetype=mimetype)
 
 
-@app.route('/relations')
-def get_relations_page():
+@pynsett_app.route('/wikidata')
+def get_wikidata_page():
+    path = 'wikidata.html'
+    complete_path = os.path.join(root_dir(), path)
+    content = get_file(complete_path)
+    return Response(content, mimetype='text/html')
+
+
+@pynsett_app.route('/relations')
+def get_programmable_relations_page():
     path = 'relations.html'
     complete_path = os.path.join(root_dir(), path)
     content = get_file(complete_path)
@@ -82,6 +113,4 @@ def get_relations_page():
 
 if __name__ == '__main__':
     port = 4001
-    app.run(debug=True, port=port, host='0.0.0.0')
-    json.loads(requests.post(f'http://localhost:{port}/drt', json={'text': 'test'}).text)
-    print('Server is up and running!')
+    pynsett_app.run(debug=True, port=port, host='0.0.0.0')

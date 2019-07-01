@@ -1,0 +1,1 @@
+from pynsett.server.server import pynsett_app

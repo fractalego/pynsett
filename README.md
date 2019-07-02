@@ -285,6 +285,6 @@ Known issues and shortcomings
 -----------------------------
 
 * Speed! Parsing is done one sentence at a time
-* Anaphora is only works inside paragraphs
+* Anaphora only works inside paragraphs
 * Anaphora is done through AllenNLP, with can be slow-ish without a GPU
-* The text needs to be cleaned and pre-formatted. This is not an issue `per se` but it must be kept in mind
+* The text needs to be cleaned and pre-formatted. This is not an issue _per se_ but it must be kept in mind

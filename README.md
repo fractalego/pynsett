@@ -253,7 +253,7 @@ The Neo-Davidsonian representation API can be called with
 import json
 import requests
 text = "John is tall."
-graph = json.loads(requests.post('http://localhost:4001/drt', json={'text': text}).text)
+graph = json.loads(requests.post('http://localhost:4001/api/drt', json={'text': text}).text)
 print(graph)
 ```
 

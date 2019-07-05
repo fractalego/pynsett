@@ -14,8 +14,8 @@ RUN cp coref-model-2018.02.05.tar.gz pynsett/data/
 
 COPY requirements.txt /
 RUN pip install -r /requirements.txt
-RUN python -m spacy download en_core_web_sm
 RUN python -m spacy download en_core_web_lg
+RUN python -m spacy link en_core_web_lg en_core_web_sm
 RUN python -m nltk.downloader punkt
 
 ENV PORT="4001"

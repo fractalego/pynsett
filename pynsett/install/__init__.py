@@ -7,12 +7,12 @@ class CustomFileDownloader():
 
     def run(self):
         sys.stderr.write('Installing the necessary files for Pynsett.\n')
-        self.__download_glove()
+        self.__download_coref()
 
     # Private
 
-    def __download_glove(self):
+    def __download_coref(self):
         import urllib.request
-        sys.stderr.write('Downloading the Glove dataset. This might take a few minutes.\n')
-        urllib.request.urlretrieve('http://nlulite.com/download/glove',
+        sys.stderr.write('Downloading the AllenNLP coref model. This might take a few minutes.\n')
+        urllib.request.urlretrieve('https://allennlp.s3.amazonaws.com/models/coref-model-2018.02.05.tar.gz',
                                    os.path.join(self._path, '../data/glove.6B.50d.txt'))

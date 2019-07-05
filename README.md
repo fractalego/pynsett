@@ -15,16 +15,12 @@ virtualenv --python=/usr/bin/python3 .env
 pip install pynsett
 ```
 
-The system is now installed, however the parser requires an additional module from Spacy. You will need to type
+The system is now installed, however the parser requires an additional module from Spacy and AllenNLP. You will need to type
 ```bash
 python3 -m spacy download en_core_web_lg
-```
-
-## Obsolete
-If you want to use 50-dim glove vectors for synonym matching, please another additional models with the glove vectors
-```bash
 python3 -m pynsett download
 ```
+
 
 What is Pynsett
 ---------------

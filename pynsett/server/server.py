@@ -113,4 +113,4 @@ def get_programmable_relations_page():
 
 if __name__ == '__main__':
     port = 4001
-    pynsett_app.run(debug=True, port=port, host='0.0.0.0')
+    pynsett_app.run(debug=True, port=port, host='0.0.0.0', use_reloader=False)

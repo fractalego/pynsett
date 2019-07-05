@@ -174,8 +174,7 @@ To start the internal web server you can write the following
 
 ```python3
 from pynsett.server import pynsett_app
-
-pynsett_app.run(debug=True, port=4001, host='0.0.0.0')
+pynsett_app.run(debug=True, port=4001, host='0.0.0.0', use_reloader=False)
 ```
 
 which will open a flask app at `localhost:4001`.

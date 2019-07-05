@@ -4,3 +4,5 @@ include pynsett/data/feminine_names.txt
 include pynsett/data/masculine_names.txt
 include pynsett/rules/*
 include pynsett/rules/parsing/*
+include pynsett/server/*.html
+include pynsett/server/static/*

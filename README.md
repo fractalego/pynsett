@@ -1,4 +1,4 @@
-Pynsett: A lightweight relation extraction tool
+Pynsett: A programmable relation extraction tool
 ===============================================
 
 Installation

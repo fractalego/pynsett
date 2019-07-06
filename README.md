@@ -21,6 +21,7 @@ python3 -m spacy download en_core_web_lg
 python3 -m pynsett download
 ```
 
+A working Docker image can be found [here](https://hub.docker.com/r/fractalego/pynsett)
 
 What is Pynsett
 ---------------

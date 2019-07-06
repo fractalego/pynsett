@@ -1,0 +1,352 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Tutorial &#8212; Pynsett 0.1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="tutorial">
+<h1>Tutorial<a class="headerlink" href="#tutorial" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>Before installing the package you need to install the tools for compiling python-igraph</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install build-essential python-dev python3-dev
+</pre></div>
+</div>
+<p>The basic version can be installed by typing</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>virtualenv --python<span class="o">=</span>/usr/bin/python3 .env
+pip install pynsett
+</pre></div>
+</div>
+<p>The system is now installed, however the parser requires an additional module from Spacy and AllenNLP. You will need to type</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python3 -m spacy download en_core_web_lg
+python3 -m pynsett download
+</pre></div>
+</div>
+<p>A working Docker image can be found at <a class="reference external" href="https://hub.docker.com/r/fractalego/pynsett">https://hub.docker.com/r/fractalego/pynsett</a></p>
+</div>
+<div class="section" id="example-usage">
+<h1>Example usage<a class="headerlink" href="#example-usage" title="Permalink to this headline">¶</a></h1>
+<p>Let’s assume we want to extract wikidata relations from a file named ‘test.txt’.
+An example code would be</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pynsett.discourse</span> <span class="kn">import</span> <span class="n">Discourse</span>
+<span class="kn">from</span> <span class="nn">pynsett.extractor</span> <span class="kn">import</span> <span class="n">Extractor</span>
+<span class="kn">from</span> <span class="nn">pynsett.auxiliary.prior_knowedge</span> <span class="kn">import</span> <span class="n">get_wikidata_knowledge</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;test.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">discourse</span> <span class="o">=</span> <span class="n">Discourse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">Extractor</span><span class="p">(</span><span class="n">discourse</span><span class="p">,</span> <span class="n">get_wikidata_knowledge</span><span class="p">())</span>
+<span class="n">triplets</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">triplet</span> <span class="ow">in</span> <span class="n">triplets</span><span class="p">:</span>
+<span class="k">print</span><span class="p">(</span><span class="n">triplet</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The distribution comes with two sets of rules: The generic knowledge, accessible using
+pynsett.auxiliary.prior_knowledge.get_generic_knowledge(), and the wikidata knowledge, which
+can be loaded using pynsett.auxiliary.prior_knowledge.get_wikidata_knowledge()</p>
+</div>
+<div class="section" id="create-new-rules-for-extraction">
+<h1>Create new rules for extraction<a class="headerlink" href="#create-new-rules-for-extraction" title="Permalink to this headline">¶</a></h1>
+<p>Let’s assume we are writing a new file called “my_own_rules.rules”.
+An example of a new set of rules can be the following:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>MATCH <span class="s2">&quot;Jane#1 is an engineer#2&quot;</span>
+CREATE <span class="o">(</span>HAS_ROLE <span class="m">1</span> <span class="m">2</span><span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>Here the symbol #1 gives a label to ‘Jane’ and #2 gives a label to ‘engineer’.
+These labels can be used when creating the relation ‘(IS_A 1 2)’.</p>
+<p>A more generic rule uses the entity types (Jane is a PERSON)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>MATCH <span class="s2">&quot;{PERSON}#1 is an engineer#2&quot;</span>
+CREATE <span class="o">(</span>HAS_ROLE <span class="m">1</span> <span class="m">2</span><span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>This rule matches all the sentences where the subject is a person (compatibly with the internal
+NER). The name of the person is associated to the node.</p>
+<p>There are 18 entity types that you can type within brackets:
+CARDINAL, DATE, EVENT, FAC, GPE, LANGUAGE, LAW, LOC, MONEY, NORP, ORDINAL,
+ORG, PERCENT, PERSON, PRODUCT, QUANTITY, TIME, WORK_OF_ART</p>
+<p>There you go, a person is now connected with a role: Node 1 is whoever matches for node 1 and
+the profession is “engineer”. The properties of the words are put into node 1 and 2.</p>
+<p>This seems a little bit limiting, because the previous relations only works for engineers.
+Let us define a <cite>word cloud</cite> and call it “ROLE”.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>DEFINE ROLE AS <span class="o">[</span>engineer, architect, physicist, doctor<span class="o">]</span><span class="p">;</span>
+
+MATCH <span class="s2">&quot;{PERSON}#1 is a ROLE#2&quot;</span>
+CREATE <span class="o">(</span>HAS_ROLE <span class="m">1</span> <span class="m">2</span><span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>As a final touch let us make the text a little bit nicer to the eyes: Let’s use PERSON instead
+of {PERSON}</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>DEFINE PERSON AS <span class="o">{</span>PERSON<span class="o">}</span><span class="p">;</span>
+DEFINE ROLE AS <span class="o">[</span>engineer, architect, physicist, doctor<span class="o">]</span><span class="p">;</span>
+
+MATCH <span class="s2">&quot;PERSON#1 is a ROLE#2&quot;</span>
+CREATE <span class="o">(</span>HAS_ROLE <span class="m">1</span> <span class="m">2</span><span class="o">)</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>A working example of pynsett’s rules is in [this file](<a class="reference external" href="https://github.com/fractalego/pynsett/blob/master/pynsett/rules/wikidata.rules">https://github.com/fractalego/pynsett/blob/master/pynsett/rules/wikidata.rules</a>).</p>
+</div>
+<div class="section" id="use-the-extraction-rules">
+<h1>Use the extraction rules<a class="headerlink" href="#use-the-extraction-rules" title="Permalink to this headline">¶</a></h1>
+<p>If you have a specific file with the extraction rules, you can load it by creating a new
+Knowledge object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pynsett.discourse</span> <span class="kn">import</span> <span class="n">Discourse</span>
+<span class="kn">from</span> <span class="nn">pynsett.extractor</span> <span class="kn">import</span> <span class="n">Extractor</span>
+<span class="kn">from</span> <span class="nn">pynsett.knowledge</span> <span class="kn">import</span> <span class="n">Knowledge</span>
+
+
+<span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;test.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">discourse</span> <span class="o">=</span> <span class="n">Discourse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+<span class="n">knowledge</span> <span class="o">=</span> <span class="n">Knowledge</span><span class="p">()</span>
+<span class="n">knowledge</span><span class="o">.</span><span class="n">add_rules</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s1">&#39;./my_own_rules.rules&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">Extractor</span><span class="p">(</span><span class="n">discourse</span><span class="p">,</span> <span class="n">knowledge</span><span class="p">)</span>
+<span class="n">triplets</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">triplet</span> <span class="ow">in</span> <span class="n">triplets</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">triplet</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-the-triplets-into-neo4j">
+<h1>Import the triplets into Neo4J<a class="headerlink" href="#import-the-triplets-into-neo4j" title="Permalink to this headline">¶</a></h1>
+<p>The triplets can be imported into a proper graph database. As an example, let us do it for Neo4j.
+You would need to install the system onto your machine, as well as installing the python package
+‘py2neo’. After everything is set up, you can run the following script.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">py2neo</span> <span class="kn">import</span> <span class="n">Graph</span>
+<span class="kn">from</span> <span class="nn">pynsett.discourse</span> <span class="kn">import</span> <span class="n">Discourse</span>
+<span class="kn">from</span> <span class="nn">pynsett.extractor</span> <span class="kn">import</span> <span class="n">Extractor</span>
+<span class="kn">from</span> <span class="nn">pynsett.auxiliary.prior_knowedge</span> <span class="kn">import</span> <span class="n">get_wikidata_knowledge</span>
+
+<span class="n">knowledge</span> <span class="o">=</span> <span class="n">get_wikidata_knowledge</span><span class="p">()</span>
+<span class="n">text</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;sample_wikipedia.txt&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">discourse</span> <span class="o">=</span> <span class="n">Discourse</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="n">extractor</span> <span class="o">=</span> <span class="n">Extractor</span><span class="p">(</span><span class="n">discourse</span><span class="p">,</span> <span class="n">knowledge</span><span class="p">)</span>
+<span class="n">triplets</span> <span class="o">=</span> <span class="n">extractor</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+
+<span class="n">graph</span> <span class="o">=</span> <span class="n">Graph</span><span class="p">(</span><span class="s1">&#39;http://localhost:7474/db/data/&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">triplet</span> <span class="ow">in</span> <span class="n">triplets</span><span class="p">:</span>
+    <span class="n">graph</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s1">&#39;MERGE (a {text: &quot;</span><span class="si">%s</span><span class="s1">&quot;}) MERGE (b {text: &quot;</span><span class="si">%s</span><span class="s1">&quot;}) CREATE (a)-[:</span><span class="si">%s</span><span class="s1">]-&gt;(b)&#39;</span>
+              <span class="o">%</span> <span class="p">(</span><span class="n">triplet</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                 <span class="n">triplet</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span>
+                 <span class="n">triplet</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>This script works on an example page called ‘sample_wikipedia.txt’ that you will have to provide.</p>
+</div>
+<div class="section" id="using-the-internal-web-server">
+<h1>Using the internal Web Server<a class="headerlink" href="#using-the-internal-web-server" title="Permalink to this headline">¶</a></h1>
+<p>To start the internal web server you can write the following</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pynsett.server</span> <span class="kn">import</span> <span class="n">pynsett_app</span>
+<span class="n">pynsett_app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">4001</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">use_reloader</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>which will open a flask app at <cite>localhost:4001</cite>.</p>
+<div class="section" id="web-interface">
+<h2>Web interface<a class="headerlink" href="#web-interface" title="Permalink to this headline">¶</a></h2>
+<p>The server provides three web interfaces:</p>
+<ul class="simple">
+<li><p>A Wikidata relation extractor at <a class="reference external" href="http://localhost:4001/wikidata">http://localhost:4001/wikidata</a></p></li>
+</ul>
+<p>![Image about Asimov’s Wikipedia page](images/asimov_wikidata.png)</p>
+<ul class="simple">
+<li><p>A Programmable relation extractor at <a class="reference external" href="http://localhost:4001/relations">http://localhost:4001/relations</a></p></li>
+</ul>
+<p>![Image about a programmable rule](images/relations_web.png)</p>
+<ul class="simple">
+<li><p>A Neo-Davidsonian representation of a text at <a class="reference external" href="http://localhost:4001">http://localhost:4001</a></p></li>
+</ul>
+<p>![Image about A Neo-Davidsonian representation](images/asimov_drt.png)</p>
+</div>
+<div class="section" id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>The wikidata relation extractor API can be called with</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;John is a writer.&quot;</span>
+<span class="n">triplets</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:4001/api/wikidata&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span><span class="p">})</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">triplets</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">[[</span><span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="s1">&#39;JOB_TITLE&#39;</span><span class="p">,</span> <span class="s1">&#39;writer&#39;</span><span class="p">]]</span>
+</pre></div>
+</div>
+<p>The rules can programmed by posting as in the following</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">rules</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">DEFINE PERSON AS {PERSON};</span>
+<span class="s2">DEFINE ORG AS {ORG};</span>
+<span class="s2">DEFINE ROLE AS [engineer, author, doctor, researcher];</span>
+
+<span class="s2">MATCH &quot;PERSON#1 was ROLE at ORG#2&quot;</span>
+<span class="s2">CREATE (WORKED_AT 1 2);</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">triplets</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:4001/api/set_rules&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">rules</span><span class="p">})</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These rules are then used at the following API endpoint</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Isaac Asimov was an American writer and professor of biochemistry at Boston University.&quot;</span>
+<span class="n">triplets</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:4001/api/relations&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span><span class="p">})</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">triplets</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The Neo-Davidsonian representation API can be called with</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;John is tall.&quot;</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:4001/api/drt&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">text</span><span class="p">})</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>with output:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s1">&#39;edges&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;arrows&#39;</span><span class="p">:</span> <span class="s1">&#39;to&#39;</span><span class="p">,</span> <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;AGENT&#39;</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;v0&#39;</span><span class="p">},</span>
+                                       <span class="p">{</span><span class="s1">&#39;arrows&#39;</span><span class="p">:</span> <span class="s1">&#39;to&#39;</span><span class="p">,</span> <span class="s1">&#39;from&#39;</span><span class="p">:</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;ADJECTIVE&#39;</span><span class="p">,</span> <span class="s1">&#39;to&#39;</span><span class="p">:</span> <span class="s1">&#39;v2&#39;</span><span class="p">}],</span>
+                             <span class="s1">&#39;nodes&#39;</span><span class="p">:</span> <span class="p">[{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;v1&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;is&#39;</span><span class="p">},</span>
+                                       <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;v0&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;John&#39;</span><span class="p">},</span>
+                                       <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;v2&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span><span class="p">:</span> <span class="s1">&#39;tall&#39;</span><span class="p">}]}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="pre-formatting-of-the-text">
+<h1>Pre-Formatting of the Text<a class="headerlink" href="#pre-formatting-of-the-text" title="Permalink to this headline">¶</a></h1>
+<p>The text must be submitted respecting the following rules:
+* No parenthesis (…) nor brackets […]. The parser is confused by those.
+* The paragraphs must be separated by <em>1 empty line</em>. Dividing a text into paragraphs helps with anaphora.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>This is paragraph <span class="m">1</span>.
+
+This is paragraph <span class="m">2</span>.
+</pre></div>
+</div>
+</div>
+<div class="section" id="known-issues-and-shortcomings">
+<h1>Known issues and shortcomings<a class="headerlink" href="#known-issues-and-shortcomings" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Speed! Parsing is done one sentence at a time</p></li>
+<li><p>Anaphora only works inside paragraphs</p></li>
+<li><p>Anaphora is done through AllenNLP, with can be slow-ish without a GPU</p></li>
+<li><p>The text needs to be cleaned and pre-formatted. This is not an issue <em>per se</em> but it must be kept in mind</p></li>
+</ul>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Pynsett</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#example-usage">Example usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#create-new-rules-for-extraction">Create new rules for extraction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#use-the-extraction-rules">Use the extraction rules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#import-the-triplets-into-neo4j">Import the triplets into Neo4J</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#using-the-internal-web-server">Using the internal Web Server</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#web-interface">Web interface</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#api">API</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#pre-formatting-of-the-text">Pre-Formatting of the Text</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#known-issues-and-shortcomings">Known issues and shortcomings</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Introduction</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Alberto Cetoli.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/tutorial.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

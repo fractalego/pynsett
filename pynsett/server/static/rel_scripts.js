@@ -1,7 +1,7 @@
 
 function drt_triplets_from_api(cb){
     var request = new XMLHttpRequest();
-    request.open('POST', 'http://localhost:4001/api/relations', true);
+    request.open('POST', 'api/relations', true);
     request.setRequestHeader("Content-type", "application/json");
     request.onload = function () {
         data = this.response;
@@ -15,7 +15,7 @@ function drt_triplets_from_api(cb){
 
 function submit_rules_to_api(cb){
     var request = new XMLHttpRequest();
-    request.open('POST', 'http://localhost:4001/api/set_rules', true);
+    request.open('POST', 'api/set_rules', true);
     request.setRequestHeader("Content-type", "application/json");
     request.onload = function () {
         data = this.response;

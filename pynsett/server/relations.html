@@ -25,13 +25,21 @@
 <div class="row">
     <div class="left_column">
         <div class="container">
-            <textarea id="query"></textarea>
-            <button type="button" onclick="draw_drt()">Parse</button>
+            <textarea id="query">Jane is working at ACME Inc as a woodworker. She is quite taller than the average.</textarea>
         </div>
         <div class="container">
-            <textarea id="rules"></textarea>
-            <button type="button" onclick="submit_rules()">Submit Rules</button>
+            <textarea id="rules">DEFINE PERSON AS {PERSON};
+DEFINE ORG AS {ORG};
+DEFINE ROLE AS [carpenter, painter];
+
+MATCH "PERSON#1 works as a ROLE#2."
+CREATE (works_as 1 2);
+
+MATCH "PERSON#2 works at ORG#2 as a ROLE.
+       PERSON is tall."
+CREATE (tall_worker_at 1 2);</textarea>
         </div>
+        <button type="button" onclick="draw_drt()">Parse</button>
     </div>
     <div class="main_column">
         <div id="graph"></div>

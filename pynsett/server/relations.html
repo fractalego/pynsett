@@ -35,11 +35,10 @@ DEFINE ROLE AS [carpenter, painter];
 MATCH "PERSON#1 works as a ROLE#2."
 CREATE (works_as 1 2);
 
-MATCH "PERSON#2 works at ORG#2 as a ROLE.
-       PERSON is tall."
+MATCH "PERSON#1 works at ORG#2 as a ROLE. PERSON is tall."
 CREATE (tall_worker_at 1 2);</textarea>
         </div>
-        <button type="button" onclick="draw_drt()">Parse</button>
+        <button type="button" onclick="submit_rules()">Parse</button>
     </div>
     <div class="main_column">
         <div id="graph"></div>

@@ -7,7 +7,7 @@ class VectorNodeMatcher(StringNodeMatcher):
     The word within each node is compared according to vector distance.
     """
 
-    _threshold = 5
+    _threshold = 0.58
 
     def __init__(self, metric):
         self._metric = metric
@@ -45,6 +45,6 @@ class VectorNodeMatcher(StringNodeMatcher):
         if key == 'lemma':
             if lhs == '*' or rhs == '*':
                 return True
-            return self._metric.similarity(lhs, rhs) < self._threshold
+            return self._metric.similarity(lhs, rhs) > self._threshold
 
         return StringNodeMatcher._match(self, key, lhs, rhs)

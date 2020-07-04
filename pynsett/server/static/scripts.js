@@ -1,7 +1,7 @@
 
 function drt_triplets_from_api(cb){
     var request = new XMLHttpRequest();
-    request.open('POST', 'http://localhost:4001/api/drt', true);
+    request.open('POST', 'api/drt', true);
     request.setRequestHeader("Content-type", "application/json");
     request.onload = function () {
         data = this.response;

@@ -8,11 +8,17 @@ class MetricBase(object):
     _substitution_dict = {}
 
     def similarity(self, lhs, rhs):
+        rhs_vector = self._get_vector(rhs)
         if lhs not in self._substitution_dict:
-            return np.linalg.norm(self._get_vector(lhs) - self._get_vector(rhs))
-        lst = self._substitution_dict[lhs]
-        distance_lst = [np.linalg.norm(self._get_vector(item) - self._get_vector(rhs)) for item in lst]
-        return min(distance_lst)
+            lhs_vector = self._get_vector(lhs)
+            return np.dot(lhs_vector, rhs_vector) / np.linalg.norm(lhs_vector) / np.linalg.norm(rhs_vector)
+        candidates_list = self._substitution_dict[lhs]
+        distance_list = []
+        for item in candidates_list:
+            lhs_vector = self._get_vector(item)
+            distance = np.dot(lhs_vector, rhs_vector) / np.linalg.norm(lhs_vector) / np.linalg.norm(rhs_vector)
+            distance_list.append(distance)
+        return max(distance_list)
 
     def add_substitution(self, name, lst):
         self._substitution_dict[name] = lst

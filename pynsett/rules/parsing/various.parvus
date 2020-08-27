@@ -72,6 +72,14 @@ MATCH {'tag': 'n'}(a), {'name': 'r', 'type':'DET'}(a,b), {}(b)
 WHERE (in (get b "word") ["the" "a" "an"])
 DELETE r, b;
 
-
 MATCH {}(a), {'name': 'r', 'type':'PREDET'}(a,b), {}(b)
 SET (assoc r "type" "DET");
+
+
+# Modifiers
+
+MATCH {}(a), {'name': 'r', 'type':'APPOS'}(a,b), {}(b)
+SET (assoc r "type" "MODIFIER");
+
+MATCH {}(a), {'name': 'r', 'type':'NPADVMOD'}(a,b), {}(b)
+SET (assoc r "type" "MODIFIER");

@@ -91,3 +91,9 @@ CREATE {}(a), {'type': 'MODAL'}(a,b), {}(b);
 MATCH {}(a), {'type': 'AGENT', 'name': 'r1'}(a,b), {}(b), {'type': 'POBJ', 'name': 'r2'}(b,c), {}(c)
 DELETE b, r1, r2
 CREATE {}(a), {'type': 'AGENT'}(a,c), {}(c);
+
+
+# Rules for propagating the AGENT to the subordinate
+MATCH {}(a), {'type': 'AGENT', 'name': 'r1'}(a,b), {}(b), {'type': 'RELATIVE_CLAUSE', 'name': 'r2'}(b,c), {}(c)
+DELETE r2
+CREATE {}(c), {'type': 'AGENT'}(c,b), {}(b);

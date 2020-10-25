@@ -32,6 +32,8 @@ class DRTTripletsWriter(BaseWriter):
 
     def __get_correct_name(self, node):
         coreferent_name = node['refers_to']
+        if node['tag'] in ['v', 'j']:
+            return node['lemma']
         if not coreferent_name:
             return node['compound']
         return '|'.join(coreferent_name)

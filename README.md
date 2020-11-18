@@ -29,6 +29,7 @@ What is Pynsett
 Pynsett is a programmable relation extractor. 
 The user sets up a set of rules which are used to parse any English text. 
 As a result, Pynsett returns a list of triplets as defined in the rules.
+A short paper describing the system has been published at [SEMAPRO2020](http://www.thinkmind.org/articles/semapro_2020_2_40_30017.pdf).
 
 
 Example usage

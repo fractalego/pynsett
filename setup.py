@@ -28,7 +28,7 @@ setup(name='pynsett',
                 ],
       install_requires=[
           'spacy==2.1.3',
-          'nltk==3.2.1',
+          'nltk==3.6.3',
           'rdflib==4.2.2',
           'yappi==1.0',
           'gensim==3.7.2',

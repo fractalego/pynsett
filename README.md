@@ -285,3 +285,26 @@ Known issues and shortcomings
 * Anaphora only works inside paragraphs
 * Anaphora is done through AllenNLP, with can be slow-ish without a GPU
 * The text needs to be cleaned and pre-formatted. This is not an issue _per se_ but it must be kept in mind
+
+
+Citation
+--------
+Please cite the paper as
+
+```latex
+@INPROCEEDINGS{Cetoli2020-Pynsett,
+  title           = "Pynsett: A programmable relation extractor",
+  booktitle       = "The Fourteenth International Conference on Advances in Semantic Processing (SEMAPRO 2020)",
+  author          = "Cetoli, Alberto",
+  editor          = "{Tim vor der Br{\"u}ck}",
+  publisher       = "ThinkMind Digital Library",
+  pages           = "45 to 48",
+  month           =  oct,
+  year            =  2020,
+  address         = "Nice, France",
+  language        = "en",
+  isbn            = "978-1-61208-813-6",
+  issn            = "2308-4510",
+  howpublished    = "\url{https://www.thinkmind.org/index.php?view=article&articleid=semapro_2020_2_40_30017}"
+}
+```

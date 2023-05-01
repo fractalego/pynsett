@@ -35,7 +35,7 @@ setup(name='pynsett',
           'parvusdb==0.0.26',
           'nose==1.3.7',
           'allennlp==0.8.3',
-          'flask==1.0.2',
+          'flask==2.3.2',
           'flask-cors',
       ],
       classifiers=[
